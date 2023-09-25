@@ -1,24 +1,24 @@
 from functions import *
 import os
 
+os.system("cls")
 while True:
-    menu()
-    pergunta = input("")
+    opcao = menu_principal()
     os.system("cls")
 
-    if pergunta == "1":
-        parametro = input(f"""{'-' * 15} Cadastro {'-' * 15}
-
-1 - Cadastrar Turma
-2 - Cadastrar Aluno
-3 - Cadastrar Boletim
-4 - Sair do cadastro
-
-{'-' * 40}\n""") 
+    # A pessoa vai escolher a opção cadastrar
+    if opcao == "1":
+        parametro = menu_cadastro()
         os.system("cls")
         cadastrar(parametro)
 
-    if pergunta == "0":
+    # A pessoa vai escolher a opção editar
+    elif opcao == "2":
+        parametro = menu_editar()
+        os.system("cls")
+        editar(parametro)
+
+    elif opcao == "0":
         os.system("cls")
         print("FIM DO PROGRAMA!!\n")
         break
