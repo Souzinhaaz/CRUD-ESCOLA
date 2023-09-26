@@ -264,6 +264,8 @@ def editar(parametro):
                     if codigo in turmas:
                         print(f"""{'-' * 15} Edição {'-' * 15}""")
                         pergunta = input("\nOque você deseja mudar [Nome, Turno ou Ano]: ")
+
+                        # Se a pessoa desejar mudar o nome
                         if pergunta.upper() == "NOME":
                             print(f"\n{turmas[codigo]['Nome']}\n")
 
@@ -283,8 +285,81 @@ def editar(parametro):
                                         print("\nNovo nome registrado com sucesso!!")
                                         time.sleep(2)
                                         os.system("cls")
+
                             else:
                                 os.system("cls")
+
+                        # Se a pessoa desejar mudar o turno
+                        elif pergunta.upper() == "TURNO":
+                            print(f"\n{turmas[codigo]['Turno']}\n")
+
+                            pergunta = input("Esse é o turno que deseja editar? Sim ou Não? ")
+
+                            if pergunta[0].upper() == "S":
+                                os.system("cls")
+                                print(f"""{'-' * 15} Edição {'-' * 15}""")
+                                novo_turno = input("\nDigite o novo turno: ")
+
+                                # Verificar se o turno é válido
+                                turnos = ["Matutino", "Vespertino", "Noturno", "Integral"]
+                                while True:
+                                    if novo_turno not in turnos:
+                                        print("Turno inválido, digite um turno existente!!\n")
+                                        novo_turno = input("Digite o turno da sua turma [Matutino, Vespertino, Noturno e Integral]: ").capitalize()
+                                    else:
+                                        break
+
+                                pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
+                                if pergunta[0].upper() == "S":
+                                    turmas[codigo]["Turno"] = novo_turno
+
+                                    with open("turmas.json", "w", encoding="utf-8") as turmas_json:
+                                        turmas_json.seek(0, 0)
+                                        json.dump(turmas, turmas_json, indent=4)
+                                        print("\nNovo turno registrado com sucesso!!")
+                                        time.sleep(2)
+                                        os.system("cls")
+
+                        # Se a pessoa desejar mudar o ano
+                        elif pergunta.upper() == "ANO":
+                            print(f"\n{turmas[codigo]['Ano']}\n")
+
+                            pergunta = input("Esse é o ano que deseja editar? Sim ou Não? ")
+
+                            if pergunta[0].upper() == "S":
+                                os.system("cls")
+                                print(f"""{'-' * 15} Edição {'-' * 15}""")
+
+                                novo_ano = input("\nDigite o novo ano: ")
+
+                                # Verifica se o ano da turma está correto
+                                while True:
+                                    if int(novo_ano) not in range(1, 10):
+                                        print("Valor inválido, digite um ano entre (1 e 9): \n")
+                                        novo_ano = input("Digite o ano da turma(1-9): ")
+                                    else:
+                                        novo_ano = novo_ano + "°"
+                                        break
+
+                                pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
+                                if pergunta[0].upper() == "S":
+                                    turmas[codigo]["Ano"] = novo_ano
+
+                                    with open("turmas.json", "w", encoding="utf-8") as turmas_json:
+                                        turmas_json.seek(0, 0)
+                                        json.dump(turmas, turmas_json, indent=4)
+                                        print("\nNovo turno registrado com sucesso!!")
+                                        time.sleep(2)
+                                        os.system("cls")
+
+                        else:
+                            print("Valor informado não existe")
+                            time.sleep(2)     
+                            os.system("cls")           
+                    else:
+                        print("O código informado não existe! ")
+                        time.sleep(2)
+                        os.system("cls")
                 else:
                     print("Nenhum valor cadastrado na turma, por favor cadastrar!")
                     time.sleep(2)
