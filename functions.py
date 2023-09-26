@@ -277,11 +277,14 @@ def editar(parametro):
                                 if pergunta[0].upper() == "S":
                                     turmas[codigo]["Nome"] = novo_nome
 
-                                    turmas_json.seek(0, 0)
-                                    turmas_json = json.dump(turmas, turmas_json, indent=4)
-                                    print("\nNovo nome registrado com sucesso!!")
-                                    time.sleep(2)
-                                    os.system("cls")                        
+                                    with open("turmas.json", "w", encoding="utf-8") as turmas_json:
+                                        turmas_json.seek(0, 0)
+                                        json.dump(turmas, turmas_json, indent=4)
+                                        print("\nNovo nome registrado com sucesso!!")
+                                        time.sleep(2)
+                                        os.system("cls")
+                            else:
+                                os.system("cls")
                 else:
                     print("Nenhum valor cadastrado na turma, por favor cadastrar!")
                     time.sleep(2)
