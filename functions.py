@@ -368,7 +368,6 @@ def editar(parametro):
             print("Nenhuma turma cadastrada ainda, por favor, cadastre alguma turma!")
             time.sleep(2)
             os.system("cls")
-        
 
     # Usuário escolhe a opção de editar os alunos
     elif parametro == "2":
@@ -380,6 +379,18 @@ def editar(parametro):
                 if len(alunos_json) > 0:
                     # carrega o dicionário de alunos_json na variável alunos
                     alunos = json.load(alunos_json)
+
+                    print(f"{'-' * 15} Editar {'-' * 15}\n")
+
+                    codigo = input("Digite o código do aluno que você deseja editar: ")
+                    os.system("cls")
+
+                    if codigo in alunos:
+                        print(f"""{'-' * 15} Edição {'-' * 15}""")
+                        pergunta = input("\nOque você deseja mudar [Nome, Nome, Email ou Telefone]: ")
+
+
+
                 else:
                     print("Nenhum valor cadastrado em alunos, por favor cadastrar!")
                     time.sleep(2)
