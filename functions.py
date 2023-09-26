@@ -191,11 +191,11 @@ def cadastrar(parametro):
                 qnt_faltas = int(input("Digite a quantidade de faltas do aluno inserido: "))
 
                 # Vai guardar as notas do aluno em uma lista
-                n1 = float(input("Digite a primeira nota do aluno inserido: "))
-                n2 = float(input("Digite a segunda nota do aluno inserido: "))
-                n3 = float(input("Digite a terceira nota do aluno inserido: "))
-                n4 = float(input("Digite a quarta nota do aluno inserido: "))
-                notas_aluno = [n1, n2, n3, n4]
+                notas_aluno = []
+                for i in range(1, 4):
+                    nota = float(input(f"Digite a {i}a nota: "))
+                    notas_aluno.append(nota)
+                
                 media = sum(notas_aluno) / len(notas_aluno)
                 aprovado = True
                 situacao = ""
@@ -243,8 +243,9 @@ def cadastrar(parametro):
                 os.system("cls")
 
 
-            
+# Função para editar
 def editar(parametro):
+
     # Usuário escolhe a opção de editar as turmas
     if parametro == "1":
         # Verificar se existe o arquivo na pasta
@@ -369,6 +370,9 @@ def editar(parametro):
             time.sleep(2)
             os.system("cls")
 
+
+
+
     # Usuário escolhe a opção de editar os alunos
     elif parametro == "2":
         # Verificar se existe o arquivo na pasta
@@ -387,9 +391,117 @@ def editar(parametro):
 
                     if codigo in alunos:
                         print(f"""{'-' * 15} Edição {'-' * 15}""")
-                        pergunta = input("\nOque você deseja mudar [Nome, Nome, Email ou Telefone]: ")
+                        pergunta = input("\nOque você deseja mudar [Nome, Email, Telefone ou Turma?]: ")
 
+                        if pergunta.upper() == "NOME":
+                            print(f"\n{alunos[codigo]['Nome']}\n")
 
+                            pergunta = input("Esse é o nome que deseja editar? Sim ou Não? ")
+
+                            if pergunta[0].upper() == "S":
+                                os.system("cls")
+                                print(f"""{'-' * 15} Edição {'-' * 15}""")
+                                novo_nome = input("\nDigite o novo nome: ").title()
+                                pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
+                                if pergunta[0].upper() == "S":
+                                    alunos[codigo]["Nome"] = novo_nome
+
+                                    with open("alunos.json", "w", encoding="utf-8") as alunos_json:
+                                        alunos_json.seek(0, 0)
+                                        json.dump(alunos, alunos_json, indent=4)
+                                        print("\nNovo nome registrado com sucesso!!")
+                                        time.sleep(2)
+                                        os.system("cls")
+                                else:
+                                    os.system("cls")
+
+                            else:
+                                os.system("cls")
+
+                        elif pergunta.upper() == "EMAIL":
+                            print(f"\n{alunos[codigo]['Email']}\n")
+
+                            pergunta = input("Esse é o email que deseja editar? Sim ou Não? ")
+
+                            if pergunta[0].upper() == "S":
+                                os.system("cls")
+                                print(f"""{'-' * 15} Edição {'-' * 15}""")
+                                novo_email = input("\nDigite o novo email: ")
+                                pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
+                                if pergunta[0].upper() == "S":
+                                    alunos[codigo]["Email"] = novo_email
+
+                                    with open("alunos.json", "w", encoding="utf-8") as alunos_json:
+                                        alunos_json.seek(0, 0)
+                                        json.dump(alunos, alunos_json, indent=4)
+                                        print("\nNovo email registrado com sucesso!!")
+                                        time.sleep(2)
+                                        os.system("cls")
+                                else:
+                                    os.system("cls")
+
+                            else:
+                                os.system("cls")
+
+                        elif pergunta.upper() == "TELEFONE":
+                            print(f"\n{alunos[codigo]['Telefone']}\n")
+
+                            pergunta = input("Esse é o telefone que deseja editar? Sim ou Não? ")
+
+                            if pergunta[0].upper() == "S":
+                                os.system("cls")
+                                print(f"""{'-' * 15} Edição {'-' * 15}""")
+                                novo_telefone = input("\nDigite o novo telefone: ")
+                                pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
+                                if pergunta[0].upper() == "S":
+                                    alunos[codigo]["Telefone"] = novo_telefone
+
+                                    with open("alunos.json", "w", encoding="utf-8") as alunos_json:
+                                        alunos_json.seek(0, 0)
+                                        json.dump(alunos, alunos_json, indent=4)
+                                        print("\nNovo telefone registrado com sucesso!!")
+                                        time.sleep(2)
+                                        os.system("cls")
+                                else:
+                                    os.system("cls")
+
+                            else:
+                                os.system("cls")    
+
+                        elif pergunta.upper() == "TURMA":
+                            print(f"\n{alunos[codigo]['Turma']}\n")
+
+                            pergunta = input("Essa é a turma que deseja editar? Sim ou Não? ")
+
+                            if pergunta[0].upper() == "S":
+                                os.system("cls")
+                                print(f"""{'-' * 15} Edição {'-' * 15}""")
+                                nova_turma = input("\nDigite o código da turma: ")
+                                pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
+                                if pergunta[0].upper() == "S":
+                                    alunos[codigo]["Turma"] = nova_turma[nova_turma]["Nome"]
+
+                                    with open("alunos.json", "w", encoding="utf-8") as alunos_json:
+                                        alunos_json.seek(0, 0)
+                                        json.dump(alunos, alunos_json, indent=4)
+                                        print("\nNova turma registrada com sucesso!!")
+                                        time.sleep(2)
+                                        os.system("cls")
+                                else:
+                                    os.system("cls")
+
+                            else:
+                                os.system("cls")    
+
+                        else:
+                            print("Valor inválido")
+                            time.sleep(2)
+                            os.system("cls")
+
+                    else:
+                        print("Esse código não existe!! Cadastre o aluno(a) primeiro!!")
+                        time.sleep(2)
+                        os.system("cls")
 
                 else:
                     print("Nenhum valor cadastrado em alunos, por favor cadastrar!")
@@ -410,6 +522,156 @@ def editar(parametro):
                 if len(boletins_json) > 0:
                     # carrega o dicionário de boletins_json na variável boletins
                     boletins = json.load(boletins_json)
+
+                    print(f"{'-' * 15} Editar {'-' * 15}\n")
+
+                    codigo = input("Digite o código do boletim que você deseja editar: ")
+                    os.system("cls")
+
+                    if codigo in boletins:
+                        print(f"""{'-' * 15} Edição {'-' * 15}""")
+                        pergunta = input("\nOque você deseja mudar [NOME, TURMA, NOTAS, FALTA ou SITUAÇÃO?]: ")
+
+                        if pergunta.upper() == "NOME":
+                            print(f"\n{boletins[codigo]['Nome']}\n")
+
+                            pergunta = input("Esse é o nome que deseja editar? Sim ou Não? ")
+
+                            if pergunta[0].upper() == "S":
+                                os.system("cls")
+                                print(f"""{'-' * 15} Edição {'-' * 15}""")
+                                novo_nome = input("\nDigite o novo nome: ")
+                                pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
+                                if pergunta[0].upper() == "S":
+                                    boletins[codigo]["Nome"] = boletins[codigo][novo_nome]
+
+                                    with open("boletins.json", "w", encoding="utf-8") as boletins_json:
+                                        boletins_json.seek(0, 0)
+                                        json.dump(boletins, boletins_json, indent=4)
+                                        print("\nNovo nome registrado com sucesso!!")
+                                        time.sleep(2)
+                                        os.system("cls")
+                                else:
+                                    os.system("cls")
+                            else:
+                                os.system("cls")
+
+
+                        elif pergunta.upper() == "TURMA":
+                            print(f"\n{boletins[codigo]['Turma']}\n")
+
+                            pergunta = input("Essa é a turma que deseja editar? Sim ou Não? ")
+
+                            if pergunta[0].upper() == "S":
+                                os.system("cls")
+                                print(f"""{'-' * 15} Edição {'-' * 15}""")
+                                nova_turma = input("\nDigite a nova turma: ")
+                                pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
+                                if pergunta[0].upper() == "S":
+                                    boletins[codigo]["Turma"] = boletins[codigo][nova_turma]
+
+                                    with open("boletins.json", "w", encoding="utf-8") as boletins_json:
+                                        boletins_json.seek(0, 0)
+                                        json.dump(boletins, boletins_json, indent=4)
+                                        print("\nNova turma registrada com sucesso!!")
+                                        time.sleep(2)
+                                        os.system("cls")
+                                else:
+                                    os.system("cls")
+                            else:
+                                os.system("cls")
+
+
+                        elif pergunta.upper() == "NOTAS":
+                            print(f"\n{boletins[codigo]['Notas']}\n")
+
+                            pergunta = input("Essa são as notas que deseja editar? Sim ou Não? ")
+
+                            if pergunta[0].upper() == "S":
+                                os.system("cls")
+                                print(f"""{'-' * 15} Edição {'-' * 15}""")
+                                notas_aluno = []
+                                for i in range(1, 4):
+                                    nota = float(input(f"Digite a {i}a nota: "))
+                                    notas_aluno.append(nota)
+
+                                pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
+                                if pergunta[0].upper() == "S":
+                                    boletins[codigo]["Notas"] = boletins[codigo][notas_aluno]
+
+                                    with open("boletins.json", "w", encoding="utf-8") as boletins_json:
+                                        boletins_json.seek(0, 0)
+                                        json.dump(boletins, boletins_json, indent=4)
+                                        print("\nNovo nome registrado com sucesso!!")
+                                        time.sleep(2)
+                                        os.system("cls")
+                                else:
+                                    os.system("cls")
+                            else:
+                                os.system("cls")
+
+                        elif pergunta.upper() == "FALTA":
+                            print(f"\n{boletins[codigo]['Quantidade de Faltas']}\n")
+
+                            pergunta = input("Essa são as faltas que deseja editar? Sim ou Não? ")
+
+                            if pergunta[0].upper() == "S":
+                                os.system("cls")
+                                print(f"""{'-' * 15} Edição {'-' * 15}""")
+                                
+                                faltas_nova = int(input("Digite a nova quantidade de faltas do aluno inserido: "))
+
+                                pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
+                                if pergunta[0].upper() == "S":
+                                    boletins[codigo]["Quantidade de Faltas"] = boletins[codigo][faltas_nova]
+
+                                    with open("boletins.json", "w", encoding="utf-8") as boletins_json:
+                                        boletins_json.seek(0, 0)
+                                        json.dump(boletins, boletins_json, indent=4)
+                                        print("\nNovo nome registrado com sucesso!!")
+                                        time.sleep(2)
+                                        os.system("cls")
+                                else:
+                                    os.system("cls")
+                            else:
+                                os.system("cls")
+
+                        elif pergunta.upper() == "SITUAÇÃO":
+                            print(f"\n{boletins[codigo]['Situação']}\n")
+
+                            pergunta = input("Essa é a situação que deseja editar? Sim ou Não? ")
+
+                            if pergunta[0].upper() == "S":
+                                os.system("cls")
+                                print(f"""{'-' * 15} Edição {'-' * 15}""")
+                                
+                                nova_situacao = input("Qaul a sitação do aluno, Aprovado ou Reprovado? ")
+
+                                if nova_situacao.upper() == "APROVADO" or nova_situacao.upper() == "REPROVADO":
+
+                                    pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
+                                    if pergunta[0].upper() == "S":
+                                        boletins[codigo]["Situação"] = boletins[codigo][nova_situacao]
+
+                                        with open("boletins.json", "w", encoding="utf-8") as boletins_json:
+                                            boletins_json.seek(0, 0)
+                                            json.dump(boletins, boletins_json, indent=4)
+                                            print("\nNovo nome registrado com sucesso!!")
+                                            time.sleep(2)
+                                            os.system("cls")
+                                    else:
+                                        os.system("cls")
+                                else:
+                                    print("Valor inválido!")
+
+                            else:
+                                os.system("cls")
+
+                        else:
+                            print("Valor informado não existe")
+                            time.sleep(2)     
+                            os.system("cls")
+
                 else:
                     print("Nenhum valor cadastrado em boletins, por favor cadastrar!")
                     time.sleep(2)
@@ -418,6 +680,19 @@ def editar(parametro):
             print("Nenhum boletim cadastrado ainda, por favor, cadastre algun boletim!")
             time.sleep(2)
             os.system("cls")
+
+    elif parametro == "4":
+        os.system("cls")
+
+
+    else:
+        print("Valor inválido! ")
+        time.sleep(1)
+        os.system("cls")
+
+
+        
+
 
     
 
