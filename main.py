@@ -18,6 +18,11 @@ while True:
         os.system("cls")
         editar(parametro)
 
+    elif opcao == "3":
+        parametro = menu_remover()
+        os.system("cls")
+        remover(parametro)
+
     elif opcao == "0":
         os.system("cls")
         print("FIM DO PROGRAMA!!\n")
