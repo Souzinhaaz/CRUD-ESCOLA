@@ -850,6 +850,13 @@ def editar(parametro):
                                 parametro = menu_editar()
                                 os.system("cls")
 
+                        else:
+                            print("Esse código não existe!! Cadastre o boletim primeiro!!")
+                            time.sleep(2)
+                            os.system("cls")
+                            parametro = menu_editar()
+                            os.system("cls")
+
                     else:
                         print("Nenhum valor cadastrado em boletins, por favor cadastrar!")
                         time.sleep(2)
@@ -893,17 +900,30 @@ def remover(parametro):
                             pergunta = input("Você tem certeza? Sim ou Não? ")
 
                             if pergunta[0].upper() == "S":
-                                if len(turma) > 1:
-                                    turma[str(int(codigo+1))] = turma[codigo]
-                                    del turma[codigo]
                                 
+                                if len(turma) > 1:
+                                    del turma[codigo]
 
-                                with open("turmas.json", "w", encoding="utf-8") as turmas_json:
-                                    json.dump(turma, turmas_json, indent=4)
-                                    print("\nTurma removida com sucesso!")
-                                    time.sleep(2)
-                                    os.system("cls")
-                                    break
+                                    turma[str(int(codigo)+1)] = codigo # Simplesmente para pegar o próximo id do código digitado ou seja, 2 vai receber 1
+                                
+                                    with open("turmas.json", "w", encoding="utf-8") as turmas_json:
+                                        json.dump(turma, turmas_json, indent=4)
+                                        print("\nTurma removida com sucesso!")
+                                        time.sleep(2)
+                                        os.system("cls")
+                                        break
+                                else:
+                                    with open("turmas.json", "w", encoding="utf-8") as turmas_json:
+                                        json.dump({}, turmas_json)
+                                        print("\nTurma removida com sucesso!")
+                                        time.sleep(2)
+                                        os.system("cls")
+                                        break
+
+                            else:
+                                os.system("cls")
+                                parametro = menu_remover()
+                                os.system("cls")
 
                         else:
                             print("Nenhuma turma existente, por favor, crie uma!")
