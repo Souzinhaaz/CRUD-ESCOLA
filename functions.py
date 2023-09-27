@@ -51,6 +51,7 @@ def menu_remover():
 1 - Remover Turma
 2 - Remover Aluno
 3 - Remover Boletim
+4 - Sair da função
 
 {'-' * 40}\n""")
     
@@ -95,7 +96,6 @@ def cadastrar(parametro):
                     else:
                         break 
 
-
                 turno_turma = input("Digite o turno da sua turma [Matutino, Vespertino, Noturno e Integral]: ").capitalize()
                 turnos = ["Matutino", "Vespertino", "Noturno", "Integral"]
                 while True:
@@ -138,6 +138,7 @@ def cadastrar(parametro):
                 print("Turma Cadastrada com sucesso!!")
                 time.sleep(1.5)
                 os.system("cls")
+                break
                     
             elif parametro == "2":
                 nova_turma = json.load(turmas_json)
@@ -181,6 +182,7 @@ def cadastrar(parametro):
                     print("Aluno(a) Cadastrado(a) com sucesso!!")
                     time.sleep(1.5)
                     os.system("cls")
+                    break
                 
                 else:
                     print("\nO valor digitado não existe")
@@ -189,6 +191,7 @@ def cadastrar(parametro):
                     print("\nPor favor, crie um aluno primeiro! ")
                     time.sleep(1.5)
                     os.system("cls")
+                    break
 
             elif parametro == "3":
                 # A variavel novo_boletim vai receber o dicionário que está no boletins_json e o aluno o que está em alunos_json
@@ -246,6 +249,7 @@ def cadastrar(parametro):
                     print("Boletim Cadastrado com sucesso!!")
                     time.sleep(1.5)
                     os.system("cls")
+                    break
 
                 else:
                     print("\nNenhuma turma existente para cadastrar o(a) aluno(a)")
@@ -312,6 +316,8 @@ def editar(parametro):
                                             print("\nNovo nome registrado com sucesso!!")
                                             time.sleep(2)
                                             os.system("cls")
+                                            break
+                                    break
 
                                 else:
                                     os.system("cls")
@@ -346,6 +352,9 @@ def editar(parametro):
                                             print("\nNovo turno registrado com sucesso!!")
                                             time.sleep(2)
                                             os.system("cls")
+                                            break
+                                    break
+                                    
 
                             # Se a pessoa desejar mudar o ano
                             elif pergunta.upper() == "ANO":
@@ -378,6 +387,9 @@ def editar(parametro):
                                             print("\nNovo ano registrado com sucesso!!")
                                             time.sleep(2)
                                             os.system("cls")
+                                            break
+
+                                    break
 
                             else:
                                 print("Valor informado não existe")
@@ -435,8 +447,11 @@ def editar(parametro):
                                             print("\nNovo nome registrado com sucesso!!")
                                             time.sleep(2)
                                             os.system("cls")
+                                            break
                                     else:
                                         os.system("cls")
+                                    
+                                    break
 
                                 else:
                                     os.system("cls")
@@ -460,8 +475,11 @@ def editar(parametro):
                                             print("\nNovo email registrado com sucesso!!")
                                             time.sleep(2)
                                             os.system("cls")
+                                            break
+
                                     else:
                                         os.system("cls")
+                                        break
 
                                 else:
                                     os.system("cls")
@@ -485,8 +503,10 @@ def editar(parametro):
                                             print("\nNovo telefone registrado com sucesso!!")
                                             time.sleep(2)
                                             os.system("cls")
+                                            break
                                     else:
                                         os.system("cls")
+                                        break
 
                                 else:
                                     os.system("cls")    
@@ -514,11 +534,14 @@ def editar(parametro):
                                                 print("\nNova turma registrada com sucesso!!")
                                                 time.sleep(2)
                                                 os.system("cls")
+                                                break
                                         else:
                                             os.system("cls")
+                                            break
 
                                 else:
-                                    os.system("cls")    
+                                    os.system("cls")  
+                                    break  
 
                             else:
                                 print("Valor inválido")
@@ -578,8 +601,11 @@ def editar(parametro):
                                             print("\nNovo nome registrado com sucesso!!")
                                             time.sleep(2)
                                             os.system("cls")
+                                            break
                                     else:
                                         os.system("cls")
+                                        break
+                                    
                                 else:
                                     os.system("cls")
 
@@ -603,10 +629,13 @@ def editar(parametro):
                                             print("\nNova turma registrada com sucesso!!")
                                             time.sleep(2)
                                             os.system("cls")
+                                            break
                                     else:
                                         os.system("cls")
+                                        break
                                 else:
                                     os.system("cls")
+                                    break
 
 
                             elif pergunta.upper() == "NOTAS":
@@ -636,6 +665,7 @@ def editar(parametro):
                                         os.system("cls")
                                 else:
                                     os.system("cls")
+                                    break
 
                             elif pergunta.upper() == "FALTA":
                                 print(f"\n{boletins[codigo]['Quantidade de Faltas']}\n")
@@ -658,10 +688,13 @@ def editar(parametro):
                                             print("\nNovas faltas registradas com sucesso!!")
                                             time.sleep(2)
                                             os.system("cls")
+                                            break
                                     else:
                                         os.system("cls")
+                                        break
                                 else:
                                     os.system("cls")
+                                    break
 
                             elif pergunta.upper() == "SITUAÇÃO" or pergunta.upper() == "SITUACAO":
                                 print(f"\n{boletins[codigo]['Situação']}\n")
@@ -686,13 +719,16 @@ def editar(parametro):
                                                 print("\nNova situação registrado com sucesso!!")
                                                 time.sleep(2)
                                                 os.system("cls")
+                                                break
                                         else:
                                             os.system("cls")
+                                            break
                                     else:
                                         print("Valor inválido!")
 
                                 else:
                                     os.system("cls")
+                                    break
 
                             else:
                                 print("Valor informado não existe")
@@ -714,19 +750,69 @@ def editar(parametro):
             break
 
         else:
-            print("Valor inválido! ")
+            print("Valor inválido!")
             time.sleep(1)
             os.system("cls")
             parametro = menu_editar()
             os.system("cls")
         
 def remover(parametro):
+    # Loop para não sair da opção de parametro
+    while True:
 
-    # Se o usuário escolher Remover turma
-    if parametro == "1":
-        if os.path.exists("turmas.json"):
-            pass
-    
+        # Se o usuário escolher remover turma
+        if parametro == "1":
+            if os.path.exists("turmas.json"):
+                # Vai abrir o arquivo desejado
+                with open("turmas.json", "r+", encoding="utf-8") as turmas_json:
+                    # carrega o dicionário de turmas_json na variável turmas
+                        turma = json.load(turmas_json)
+                        
+                        codigo = input("Digite o código da turma que você deseja remover: ")
+
+                        if codigo in turma:
+                            print(f"{turma[codigo]}\nEssa é a turma que você deseja remover")
+                            pergunta = input("Você tem certeza? Sim ou Não? ")
+
+                            if pergunta[0].upper() == "S":
+                                if len(turma) > 1:
+                                    turma[str(int(codigo+1))] = turma[codigo]
+                                    del turma[codigo]
+                                
+
+                                with open("turmas.json", "w", encoding="utf-8") as turmas_json:
+                                    json.dump(turma, turmas_json, indent=4)
+                                    print("\nTurma removida com sucesso!")
+                                    time.sleep(2)
+                                    os.system("cls")
+                                    break
+
+                        else:
+                            print("Nenhuma turma existente, por favor, crie uma!")
+                            time.sleep(1.5)
+                            os.system("cls")
+                            break
+        
+        # Se o usuário escolher remover alunos
+        elif parametro == "2":
+            if os.path.exists("alunos.json"):
+                pass
+
+        # Se o usuário esolher remover boletim
+        elif parametro == "3":
+            if os.path.exists("boletim.json"):
+                pass
+
+        elif parametro == "4":
+            os.system("cls")
+            break
+
+        else:
+            print("Valor inválido!")
+            time.sleep(1)
+            os.system("cls")
+            parametro = menu_editar()
+            os.system("cls")
 
 
 

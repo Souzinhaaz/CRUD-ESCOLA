@@ -8,8 +8,7 @@ METAS
 
 Problemas para resolver no projeto
 
-SEM NENHUM BUG POR ENQUANTO
-
+# RESOLVER A PARTE DE REMOVER TURMA
 
 
 
