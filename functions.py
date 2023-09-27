@@ -182,81 +182,80 @@ def cadastrar(parametro):
                     print("Aluno(a) Cadastrado(a) com sucesso!!")
                     time.sleep(1.5)
                     os.system("cls")
-                    break
-                
+                        
                 else:
-                    print("\nO valor digitado não existe")
+                    os.system("cls")
+                    print("\nPor favor, crie uma turma primeiro! ")
                     time.sleep(1.5)
                     os.system("cls")
-                    print("\nPor favor, crie um aluno primeiro! ")
-                    time.sleep(1.5)
+                    parametro = menu_cadastro()
                     os.system("cls")
-                    break
-
+                
             elif parametro == "3":
                 # A variavel novo_boletim vai receber o dicionário que está no boletins_json e o aluno o que está em alunos_json
                 novo_boletim = json.load(boletins_json)
                 aluno = json.load(alunos_json)
 
-                # Vai pedir o id do aluno referido
-                id_aluno = input("Digite o numero de matricula do Aluno referido: ")
-
                 # Verifica se o json de alunos esta vazio e se o id referido está dentro do alunos_json
-                if len(aluno) > 0 and id_aluno in aluno:
-                    # Vai guardar a quantidade de faltas na variável qnt_faltas
-                    qnt_faltas = int(input("Digite a quantidade de faltas do aluno inserido: "))
+                if len(aluno) > 0:
 
-                    # Vai guardar as notas do aluno em uma lista
-                    notas_aluno = []
-                    for i in range(1, 4):
-                        nota = float(input(f"Digite a {i}a nota: "))
-                        notas_aluno.append(nota)
+                    # Vai pedir o id do aluno referido
+                    id_aluno = input("Digite o numero de matricula do Aluno referido: ")
+                    if id_aluno in aluno:
                     
-                    media = sum(notas_aluno) / len(notas_aluno)
-                    aprovado = True
-                    situacao = ""
+                        # Vai guardar a quantidade de faltas na variável qnt_faltas
+                        qnt_faltas = int(input("Digite a quantidade de faltas do aluno inserido: "))
 
-                    # Faz a verificação para saber se o aluno está aprovado ou não
-                    if media >= 7 and qnt_faltas < 15:
-                        aprovado = True
-                    else:
-                        aprovado = False
+                        # Vai guardar as notas do aluno em uma lista
+                        notas_aluno = []
+                        for i in range(1, 4):
+                            nota = float(input(f"Digite a {i}a nota: "))
+                            notas_aluno.append(nota)
                         
-                    if aprovado:
-                        situacao = "Aprovado"
-                    else:
-                        situacao = "Reprovado"
+                        media = sum(notas_aluno) / len(notas_aluno)
+                        aprovado = True
+                        situacao = ""
 
-                    # Calculo para obter o novo id do boletim
-                    id_boletim = str(1+int(list(novo_boletim.keys())[-1])) if len(novo_boletim) > 0 else "1"
-                    
-                    novo_boletim[id_boletim] = {
-                        "Nome": aluno[id_aluno]["Nome"],
-                        "Turma": aluno[id_aluno]["Turma"],
-                        "Notas": notas_aluno,
-                        "Quantidade de Faltas": qnt_faltas,
-                        "Situação": situacao
-                    } 
+                        # Faz a verificação para saber se o aluno está aprovado ou não
+                        if media >= 7 and qnt_faltas < 15:
+                            aprovado = True
+                        else:
+                            aprovado = False
+                            
+                        if aprovado:
+                            situacao = "Aprovado"
+                        else:
+                            situacao = "Reprovado"
 
-                    print("Carregando...\n")
+                        # Calculo para obter o novo id do boletim
+                        id_boletim = str(1+int(list(novo_boletim.keys())[-1])) if len(novo_boletim) > 0 else "1"
+                        
+                        novo_boletim[id_boletim] = {
+                            "Nome": aluno[id_aluno]["Nome"],
+                            "Turma": aluno[id_aluno]["Turma"],
+                            "Notas": notas_aluno,
+                            "Quantidade de Faltas": qnt_faltas,
+                            "Situação": situacao
+                        } 
 
-                    # Adiciona os dados a boletins_json
-                    boletins_json.seek(0, 0)
-                    json.dump(novo_boletim, boletins_json, indent=4)
+                        print("Carregando...\n")
 
-                    # Volta para a interatividade do site
-                    time.sleep(1)
-                    print("Boletim Cadastrado com sucesso!!")
-                    time.sleep(1.5)
-                    os.system("cls")
-                    break
+                        # Adiciona os dados a boletins_json
+                        boletins_json.seek(0, 0)
+                        json.dump(novo_boletim, boletins_json, indent=4)
+
+                        # Volta para a interatividade do site
+                        time.sleep(1)
+                        print("Boletim Cadastrado com sucesso!!")
+                        time.sleep(1.5)
+                        os.system("cls")
+                        break
 
                 else:
-                    print("\nNenhuma turma existente para cadastrar o(a) aluno(a)")
-                    time.sleep(1.5)
+                    print("\nPara cadastrar boletim é necessário ao menos um aluno e uma turma")
+                    time.sleep(2)
                     os.system("cls")
-                    print("\nPor favor, crie uma turma primeiro! ")
-                    time.sleep(1.5)
+                    parametro = menu_cadastro()
                     os.system("cls")
 
             elif parametro == "4":
