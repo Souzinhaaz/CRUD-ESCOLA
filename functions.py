@@ -316,10 +316,20 @@ def editar(parametro):
                                             time.sleep(2)
                                             os.system("cls")
                                             break
-                                    break
-
+                                    else:   
+                                        os.system("cls")
+                                        parametro = menu_editar()
+                                        os.system("cls")
+                                
                                 else:
                                     os.system("cls")
+                                    pergunta = input("Quer tentar outro código? ")
+                                    if pergunta[0].upper() == "S":
+                                        os.system("cls")
+                                    else:
+                                        os.system("cls")
+                                        parametro = menu_editar()
+                                        os.system("cls")
 
                             # Se a pessoa desejar mudar o turno
                             elif pergunta.upper() == "TURNO":
@@ -352,8 +362,19 @@ def editar(parametro):
                                             time.sleep(2)
                                             os.system("cls")
                                             break
-                                    break
-                                    
+                                    else:
+                                        os.system("cls")
+                                        parametro = menu_editar()
+                                        os.system("cls")  
+                                else:
+                                    os.system("cls")
+                                    pergunta = input("Quer tentar outro código? ")
+                                    if pergunta[0].upper() == "S":
+                                        os.system("cls")
+                                    else:
+                                        os.system("cls")
+                                        parametro = menu_editar()
+                                        os.system("cls")
 
                             # Se a pessoa desejar mudar o ano
                             elif pergunta.upper() == "ANO":
@@ -387,24 +408,43 @@ def editar(parametro):
                                             time.sleep(2)
                                             os.system("cls")
                                             break
-
-                                    break
+                                    else:
+                                        os.system("cls")
+                                        parametro = menu_editar()
+                                        os.system("cls")
+                                else:
+                                    os.system("cls")
+                                    pergunta = input("Quer tentar outro código? ")
+                                    if pergunta[0].upper() == "S":
+                                        os.system("cls")
+                                    else:
+                                        os.system("cls")
+                                        parametro = menu_editar()
+                                        os.system("cls")
 
                             else:
                                 print("Valor informado não existe")
                                 time.sleep(2)     
-                                os.system("cls")           
+                                os.system("cls")      
+                                parametro = menu_editar()
+                                os.system("cls")     
                         else:
                             print("O código informado não existe! ")
                             time.sleep(2)
+                            os.system("cls")
+                            parametro = menu_editar()
                             os.system("cls")
                     else:
                         print("Nenhum valor cadastrado na turma, por favor cadastrar!")
                         time.sleep(2)
                         os.system("cls")
+                        parametro = menu_editar()
+                        os.system("cls")
             else:
                 print("Nenhuma turma cadastrada ainda, por favor, cadastre alguma turma!")
                 time.sleep(2)
+                os.system("cls")
+                parametro = menu_editar()
                 os.system("cls")
 
         # Usuário escolhe a opção de editar os alunos
@@ -454,6 +494,13 @@ def editar(parametro):
 
                                 else:
                                     os.system("cls")
+                                    pergunta = input("Quer tentar outro código? ")
+                                    if pergunta[0].upper() == "S":
+                                        os.system("cls")
+                                    else:
+                                        os.system("cls")
+                                        parametro = menu_editar()
+                                        os.system("cls")
 
                             elif pergunta.upper() == "EMAIL":
                                 print(f"\n{alunos[codigo]['Email']}\n")
@@ -482,6 +529,13 @@ def editar(parametro):
 
                                 else:
                                     os.system("cls")
+                                    pergunta = input("Quer tentar outro código? ")
+                                    if pergunta[0].upper() == "S":
+                                        os.system("cls")
+                                    else:
+                                        os.system("cls")
+                                        parametro = menu_editar()
+                                        os.system("cls")
 
                             elif pergunta.upper() == "TELEFONE":
                                 print(f"\n{alunos[codigo]['Telefone']}\n")
@@ -508,7 +562,14 @@ def editar(parametro):
                                         break
 
                                 else:
-                                    os.system("cls")    
+                                    os.system("cls")
+                                    pergunta = input("Quer tentar outro código? ")
+                                    if pergunta[0].upper() == "S":
+                                        os.system("cls")
+                                    else:
+                                        os.system("cls")
+                                        parametro = menu_editar()
+                                        os.system("cls")    
 
                             elif pergunta.upper() == "TURMA":
                                 print(f"\n{alunos[codigo]['Turma']}\n")
@@ -536,29 +597,44 @@ def editar(parametro):
                                                 break
                                         else:
                                             os.system("cls")
-                                            break
+                                            parametro = menu_editar()
+                                            os.system("cls")
 
                                 else:
-                                    os.system("cls")  
-                                    break  
+                                    os.system("cls")
+                                    pergunta = input("Quer tentar outro código? ")
+                                    if pergunta[0].upper() == "S":
+                                        os.system("cls")
+                                    else:
+                                        os.system("cls")
+                                        parametro = menu_editar()
+                                        os.system("cls")   
 
                             else:
                                 print("Valor inválido")
                                 time.sleep(2)
+                                os.system("cls")
+                                parametro = menu_editar()
                                 os.system("cls")
 
                         else:
                             print("Esse código não existe!! Cadastre o aluno(a) primeiro!!")
                             time.sleep(2)
                             os.system("cls")
+                            parametro = menu_editar()
+                            os.system("cls")
 
                     else:
                         print("Nenhum valor cadastrado em alunos, por favor cadastrar!")
                         time.sleep(2)
                         os.system("cls")
+                        parametro = menu_editar()
+                        os.system("cls")
             else:
                 print("Nenhum aluno(a) cadastrado(a) ainda, por favor, cadastre algum(a) aluno(a)!")
                 time.sleep(2)
+                os.system("cls")
+                parametro = menu_editar()
                 os.system("cls")
 
         # Usuário escolhe a opção de editar os boletins
@@ -607,6 +683,13 @@ def editar(parametro):
                                     
                                 else:
                                     os.system("cls")
+                                    pergunta = input("Quer tentar outro código? ")
+                                    if pergunta[0].upper() == "S":
+                                        os.system("cls")
+                                    else:
+                                        os.system("cls")
+                                        parametro = menu_editar()
+                                        os.system("cls")
 
 
                             elif pergunta.upper() == "TURMA":
@@ -631,11 +714,17 @@ def editar(parametro):
                                             break
                                     else:
                                         os.system("cls")
-                                        break
+                                        parametro = menu_editar()
+                                        os.system("cls")
                                 else:
                                     os.system("cls")
-                                    break
-
+                                    pergunta = input("Quer tentar outro código? ")
+                                    if pergunta[0].upper() == "S":
+                                        os.system("cls")
+                                    else:
+                                        os.system("cls")
+                                        parametro = menu_editar()
+                                        os.system("cls")
 
                             elif pergunta.upper() == "NOTAS":
                                 print(f"\n{boletins[codigo]['Notas']}\n")
@@ -662,9 +751,17 @@ def editar(parametro):
                                             os.system("cls")
                                     else:
                                         os.system("cls")
+                                        parametro = menu_editar()
+                                        os.system("cls")
                                 else:
                                     os.system("cls")
-                                    break
+                                    pergunta = input("Quer tentar outro código? ")
+                                    if pergunta[0].upper() == "S":
+                                        os.system("cls")
+                                    else:
+                                        os.system("cls")
+                                        parametro = menu_editar()
+                                        os.system("cls")
 
                             elif pergunta.upper() == "FALTA":
                                 print(f"\n{boletins[codigo]['Quantidade de Faltas']}\n")
@@ -690,10 +787,17 @@ def editar(parametro):
                                             break
                                     else:
                                         os.system("cls")
-                                        break
+                                        parametro = menu_editar()
+                                        os.system("cls")
                                 else:
                                     os.system("cls")
-                                    break
+                                    pergunta = input("Quer tentar outro código? ")
+                                    if pergunta[0].upper() == "S":
+                                        os.system("cls")
+                                    else:
+                                        os.system("cls")
+                                        parametro = menu_editar()
+                                        os.system("cls")
 
                             elif pergunta.upper() == "SITUAÇÃO" or pergunta.upper() == "SITUACAO":
                                 print(f"\n{boletins[codigo]['Situação']}\n")
@@ -721,28 +825,43 @@ def editar(parametro):
                                                 break
                                         else:
                                             os.system("cls")
-                                            break
+                                            parametro = menu_editar()
+                                            os.system("cls")
                                     else:
                                         print("Valor inválido!")
+                                        os.system("cls")
+                                        parametro = menu_editar()
+                                        os.system("cls")
 
                                 else:
                                     os.system("cls")
-                                    break
+                                    pergunta = input("Quer tentar outro código? ")
+                                    if pergunta[0].upper() == "S":
+                                        os.system("cls")
+                                    else:
+                                        os.system("cls")
+                                        parametro = menu_editar()
+                                        os.system("cls")
 
                             else:
                                 print("Valor informado não existe")
                                 time.sleep(2)     
+                                os.system("cls")
+                                parametro = menu_editar()
                                 os.system("cls")
 
                     else:
                         print("Nenhum valor cadastrado em boletins, por favor cadastrar!")
                         time.sleep(2)
                         os.system("cls")
+                        parametro = menu_editar()
+                        os.system("cls")
             else:
                 print("Nenhum boletim cadastrado ainda, por favor, cadastre algun boletim!")
                 time.sleep(2)
                 os.system("cls")
-                break
+                parametro = menu_editar()
+                os.system("cls")
 
         elif parametro == "4":
             os.system("cls")
@@ -791,16 +910,34 @@ def remover(parametro):
                             time.sleep(1.5)
                             os.system("cls")
                             break
+            else:
+                print("Nenhuma turma cadastrada ainda!")
+                time.sleep(1.5)
+                os.system("cls")
+                parametro = menu_remover()
+                os.system("cls")        
         
         # Se o usuário escolher remover alunos
         elif parametro == "2":
             if os.path.exists("alunos.json"):
                 pass
+            else:
+                print("Nenhum aluno(a) cadastrado(a) ainda!")
+                time.sleep(1.5)
+                os.system("cls")
+                parametro = menu_remover()
+                os.system("cls")  
 
         # Se o usuário esolher remover boletim
         elif parametro == "3":
             if os.path.exists("boletim.json"):
                 pass
+            else:
+                print("Nenhum boletim cadastrado ainda!")
+                time.sleep(1.5)
+                os.system("cls")
+                parametro = menu_remover()
+                os.system("cls")  
 
         elif parametro == "4":
             os.system("cls")
@@ -810,7 +947,7 @@ def remover(parametro):
             print("Valor inválido!")
             time.sleep(1)
             os.system("cls")
-            parametro = menu_editar()
+            parametro = menu_remover()
             os.system("cls")
 
 
