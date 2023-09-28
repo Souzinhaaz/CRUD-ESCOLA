@@ -3,5 +3,20 @@
         "Nome": "Inform\u00e1tica",
         "Turno": "Integral",
         "Ano": "3\u00b0"
+    },
+    "2": {
+        "Nome": "Agricultura",
+        "Turno": "Matutino",
+        "Ano": "4\u00b0"
+    },
+    "3": {
+        "Nome": "GTI",
+        "Turno": "Vespertino",
+        "Ano": "5\u00b0"
+    },
+    "4": {
+        "Nome": "Agropecu\u00e1ria",
+        "Turno": "Noturno",
+        "Ano": "5\u00b0"
     }
 }

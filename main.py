@@ -23,6 +23,11 @@ while True:
         os.system("cls")
         remover(parametro)
 
+    elif opcao == "4":
+        parametro = menu_pesquisar()
+        os.system("cls")
+        pesquisar(parametro)
+
     elif opcao == "0":
         os.system("cls")
         print("FIM DO PROGRAMA!!\n")

@@ -26,7 +26,7 @@ def menu_cadastro():
 1 - Cadastrar Turma
 2 - Cadastrar Aluno
 3 - Cadastrar Boletim
-4 - Sair do cadastro
+4 - Sair 
 
 {'-' * 40}\n""") 
     
@@ -39,19 +39,33 @@ def menu_editar():
 1 - Editar Turma
 2 - Editar Aluno
 3 - Editar Boletim
-4 - Sair da edição
+4 - Sair 
 
 {'-' * 40}\n""")
     
     return parametro
 
+# Cria o modelo do menu remover
 def menu_remover():
     parametro = input(f"""{'-' * 15} Remover {'-' * 15}
 
 1 - Remover Turma
 2 - Remover Aluno
 3 - Remover Boletim
-4 - Sair da função
+4 - Sair 
+
+{'-' * 40}\n""")
+    
+    return parametro
+
+# Cria o modelo do menu pesquisar
+def menu_pesquisar():
+    parametro = input(f"""{'-' * 15} Pesquisar {'-' * 15}
+
+1 - Pesquisar Turma
+2 - Pesquisar Aluno
+3 - Pesquisar Boletim
+4 - Sair 
 
 {'-' * 40}\n""")
     
@@ -288,6 +302,7 @@ def editar(parametro):
                     if len(turmas) > 0:
                         print(f"""{'-' * 15} Edição {'-' * 15}\n""")
 
+                        # Vai pedir o código da turma desejada
                         codigo = input("Digite o código da turma que você deseja editar: ")
                         os.system("cls")
 
@@ -891,45 +906,53 @@ def remover(parametro):
                 # Vai abrir o arquivo desejado
                 with open("turmas.json", "r+", encoding="utf-8") as turmas_json:
                     # carrega o dicionário de turmas_json na variável turmas
-                        turma = json.load(turmas_json)
-                        
-                        codigo = input("Digite o código da turma que você deseja remover: ")
+                    turma = json.load(turmas_json)
+                    
+                    codigo = input("Digite o código da turma que você deseja remover: ")
 
-                        if codigo in turma:
-                            print(f"{turma[codigo]}\nEssa é a turma que você deseja remover")
-                            pergunta = input("Você tem certeza? Sim ou Não? ")
+                    if codigo in turma:
+                        print(f"\n{turma[codigo]}\nEssa é a turma que você selecionou\n")
+                        pergunta = input("Você tem certeza que deseja excluir? Sim ou Não? ")
 
-                            if pergunta[0].upper() == "S":
-                                
-                                if len(turma) > 1:
-                                    del turma[codigo]
+                        if pergunta[0].upper() == "S":
+                            if len(turma) > 1:
 
-                                    turma[str(int(codigo)+1)] = codigo # Simplesmente para pegar o próximo id do código digitado ou seja, 2 vai receber 1
-                                
-                                    with open("turmas.json", "w", encoding="utf-8") as turmas_json:
-                                        json.dump(turma, turmas_json, indent=4)
-                                        print("\nTurma removida com sucesso!")
-                                        time.sleep(2)
-                                        os.system("cls")
-                                        break
-                                else:
-                                    with open("turmas.json", "w", encoding="utf-8") as turmas_json:
-                                        json.dump({}, turmas_json)
-                                        print("\nTurma removida com sucesso!")
-                                        time.sleep(2)
-                                        os.system("cls")
-                                        break
+                                # Código para reescrever o código digitado pelo seu sucessor
+                                turma[codigo] = turma.pop(str(int(codigo) + 1)) # Reescrever no código deletado o dicionário que estava a frente
+
+                                for i in range(1, len(turma) + 1): # Vai percorrer todos os dicionários na turma
+                                    if str(i) in turma:
+                                        turma[str(i)] = turma[str(i)]
+                                    else:
+                                        turma[str(i)] = turma.pop(str(i + 1))
+
+                                with open("turmas.json", "w", encoding="utf-8") as turmas_json:
+                                    json.dump(turma, turmas_json, indent=4)
+                                    print("\nTurma removida com sucesso!")
+                                    time.sleep(2)
+                                    os.system("cls")
+                                    break
 
                             else:
-                                os.system("cls")
-                                parametro = menu_remover()
-                                os.system("cls")
+                                with open("turmas.json", "w", encoding="utf-8") as turmas_json:
+                                    json.dump({}, turmas_json)
+                                    print("\nTurma removida com sucesso!")
+                                    time.sleep(2)
+                                    os.system("cls")
+                                    break
 
                         else:
-                            print("Nenhuma turma existente, por favor, crie uma!")
-                            time.sleep(1.5)
                             os.system("cls")
-                            break
+                            parametro = menu_remover()
+                            os.system("cls")
+
+                    else:
+                        os.system("cls")
+                        print("Nenhuma turma com esse código, por favor, crie uma!")
+                        time.sleep(1.5)
+                        os.system("cls")
+                        parametro = menu_remover()
+                        os.system("cls")
             else:
                 print("Nenhuma turma cadastrada ainda!")
                 time.sleep(1.5)
@@ -940,7 +963,57 @@ def remover(parametro):
         # Se o usuário escolher remover alunos
         elif parametro == "2":
             if os.path.exists("alunos.json"):
-                pass
+                # Vai abrir o arquivo desejado
+                with open("turmas.json", "r+", encoding="utf-8") as alunos_json:
+                    aluno = json.load(alunos_json)
+
+                    codigo = input("Digite o código do(a) aluno(a) que você deseja remover: ")
+
+                    if codigo in aluno:
+                        print(f"\n{aluno[codigo]}\nEsse foi o aluno que você selecionou\n")
+                        pergunta = input("Você tem certeza que quer excluir? Sim ou Não? ")
+                        if pergunta[0].upper() == "S":
+                            # Se tiver mais de um aluno no dicionário
+                            if len(aluno) > 1:
+
+                                # Código para reescrever o código digitado pelo seu sucessor
+                                aluno[codigo] = aluno.pop(str(int(codigo) + 1)) # Reescrever no código deletado o dicionário que estava a frente
+
+                                for i in range(1, len(aluno) + 1): # Vai percorrer todos os dicionários no aluno
+                                    if str(i) in aluno:
+                                        aluno[str(i)] = aluno[str(i)]
+                                    else:
+                                        aluno[str(i)] = aluno.pop(str(i + 1))
+
+                                with open("alunos.json", "w", encoding="utf-8") as alunos_json:
+                                    json.dump(aluno, alunos_json, indent=4)
+                                    print("\nAluno(a) removido(a) com sucesso!")
+                                    time.sleep(2)
+                                    os.system("cls")
+                                    break
+
+                            # Se tiver apenas 1 aluno no dicionário
+                            else:
+                                with open("alunos.json", "w", encoding="utf-8") as alunos_json:
+                                    json.dump({}, alunos_json)    
+                                    print("\nAluno removido com sucesso!")
+                                    time.sleep(2)
+                                    os.system("cls")
+                                    break
+                        
+                        else:
+                            os.system("cls")
+                            parametro = menu_remover()
+                            os.system("cls")
+                    
+                    else:
+                        os.system("cls")
+                        print("Nenhum aluno(o) com esse código, por favor, crie um(a)!")
+                        time.sleep(1.5)
+                        os.system("cls")
+                        parametro = menu_remover()
+                        os.system("cls")
+
             else:
                 print("Nenhum aluno(a) cadastrado(a) ainda!")
                 time.sleep(1.5)
@@ -951,7 +1024,57 @@ def remover(parametro):
         # Se o usuário esolher remover boletim
         elif parametro == "3":
             if os.path.exists("boletim.json"):
-                pass
+                # Vai abrir o arquivo desejado
+                with open("boletim.json", "r+", encoding="utf-8") as boletins_json:
+                    boletim = json.load(boletins_json)
+
+                    codigo = input("Digite o código do boletim que deseja remover: ")
+
+                    if codigo in boletim:
+                        print(f"\n{boletim[codigo]}\nEsse foi o boletim que você selecionou\n")
+                        pergunta = input("Você tem certeza que quer excluir? Sim ou Não? ")
+                        if pergunta[0].upper() == "S":
+                            # Se tiver mais de um dicionário
+                            if len(boletim) > 1:
+                                
+                                # Código para reescrever o código digitado pelo seu sucessor
+                                boletim[codigo] = boletim.pop(str(int(codigo) + 1)) # Reescrever no código deletado o dicionário que estava a frente
+
+                                for i in range(1, len(boletim) + 1): # Vai percorrer todos os dicionários no boletim
+                                    if str(i) in boletim:
+                                        boletim[str(i)] = boletim[str(i)]
+                                    else:
+                                        boletim[str(i)] = boletim.pop(str(i + 1))
+
+                                with open("boletim.json", "w", encoding="utf-8") as boletins_json:
+                                    json.dump(boletim, boletins_json, indent=4)
+                                    print("\nBoletim removido com sucesso!")
+                                    time.sleep(2)
+                                    os.system("cls")
+                                    break
+                        
+                            # Se tiver apenas 1 boletim no dicionário
+                            else:
+                                with open("boletim.json", "w", encoding="utf-8") as boletins_json:
+                                    json.dump({}, boletins_json)    
+                                    print("\nBoletim removido com sucesso!")
+                                    time.sleep(2)
+                                    os.system("cls")
+                                    break
+
+                        else:
+                            os.system("cls")
+                            parametro = menu_remover()
+                            os.system("cls")
+
+                    else:
+                        os.system("cls")
+                        print("Nenhum boletim com esse código, por favor, crie um!")
+                        time.sleep(1.5)
+                        os.system("cls")
+                        parametro = menu_remover()
+                        os.system("cls")
+
             else:
                 print("Nenhum boletim cadastrado ainda!")
                 time.sleep(1.5)
@@ -970,6 +1093,8 @@ def remover(parametro):
             parametro = menu_remover()
             os.system("cls")
 
+def pesquisar():
+    pass
 
 
 
