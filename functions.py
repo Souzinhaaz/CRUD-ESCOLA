@@ -222,7 +222,7 @@ def cadastrar(parametro):
 
                         # Vai guardar as notas do aluno em uma lista
                         notas_aluno = []
-                        for i in range(1, 4):
+                        for i in range(1, 5):
                             nota = float(input(f"Digite a {i}a nota: "))
                             notas_aluno.append(nota)
                         
@@ -750,7 +750,7 @@ def editar(parametro):
                                     os.system("cls")
                                     print(f"""{'-' * 15} Edição {'-' * 15}""")
                                     notas_aluno = []
-                                    for i in range(1, 4):
+                                    for i in range(1, 5):
                                         nota = float(input(f"Digite a {i}a nota: "))
                                         notas_aluno.append(nota)
 
@@ -917,6 +917,17 @@ def remover(parametro):
                         if pergunta[0].upper() == "S":
                             if len(turma) > 1:
 
+                                # Se for o ultimo dicionário vai remover
+                                if int(codigo) == len(turma):
+                                    del turma[codigo]
+
+                                    with open("turmas.json", "w", encoding="utf-8") as turmas_json:
+                                        json.dump(turma, turmas_json, indent=4)
+                                        print("\nTurma removida com sucesso!")
+                                        time.sleep(2)
+                                        os.system("cls")
+                                        break
+
                                 # Código para reescrever o código digitado pelo seu sucessor
                                 turma[codigo] = turma.pop(str(int(codigo) + 1)) # Reescrever no código deletado o dicionário que estava a frente
 
@@ -932,7 +943,7 @@ def remover(parametro):
                                     time.sleep(2)
                                     os.system("cls")
                                     break
-
+                                
                             else:
                                 with open("turmas.json", "w", encoding="utf-8") as turmas_json:
                                     json.dump({}, turmas_json)
@@ -975,6 +986,17 @@ def remover(parametro):
                         if pergunta[0].upper() == "S":
                             # Se tiver mais de um aluno no dicionário
                             if len(aluno) > 1:
+
+                                # Se for o último dicionário vai remover
+                                if int(codigo) == len(aluno):
+                                    del aluno[codigo]
+
+                                    with open("alunos.json", "w", encoding="utf-8") as alunos_json:
+                                        json.dump(aluno, alunos_json, indent=4)
+                                        print("\nAluno(a) removido(a) com sucesso!")
+                                        time.sleep(2)
+                                        os.system("cls")
+                                        break
 
                                 # Código para reescrever o código digitado pelo seu sucessor
                                 aluno[codigo] = aluno.pop(str(int(codigo) + 1)) # Reescrever no código deletado o dicionário que estava a frente
@@ -1036,6 +1058,17 @@ def remover(parametro):
                         if pergunta[0].upper() == "S":
                             # Se tiver mais de um dicionário
                             if len(boletim) > 1:
+
+                                # Se for o ultimo dicionário vai remover
+                                if int(codigo) == len(boletim):
+                                    del boletim[codigo]
+
+                                    with open("boletim.json", "w", encoding="utf-8") as boletins_json:
+                                        json.dump(boletim, boletins_json, indent=4)
+                                        print("\nBoletim removido com sucesso!")
+                                        time.sleep(2)
+                                        os.system("cls")
+                                        break
                                 
                                 # Código para reescrever o código digitado pelo seu sucessor
                                 boletim[codigo] = boletim.pop(str(int(codigo) + 1)) # Reescrever no código deletado o dicionário que estava a frente
