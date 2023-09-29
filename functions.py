@@ -1126,8 +1126,16 @@ def remover(parametro):
             parametro = menu_remover()
             os.system("cls")
 
-def pesquisar():
-    pass
+def pesquisar(parametro):
+    # Loop para não sair da função
+    if parametro == "1":
+        if os.path.exists("turmas.json"):
+            with open("turmas.json", "r+", encoding="utf-8") as turma:
+                opcao = input("Digite oque você ")
+
+        else:
+            os.system("cls")
+            print("Ainda não foi cadastrado nenhuma turma")
 
 
 
