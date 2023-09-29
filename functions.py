@@ -1127,15 +1127,39 @@ def remover(parametro):
             os.system("cls")
 
 def pesquisar(parametro):
-    # Loop para não sair da função
-    if parametro == "1":
-        if os.path.exists("turmas.json"):
-            with open("turmas.json", "r+", encoding="utf-8") as turma:
-                opcao = input("Digite oque você ")
+    verifica()
+    while True:
+        with open("alunos.json", "r") as alunos, open("turmas.json", "r") as turma, open("boletim.json", "r") as boletim:
+            alunos = json.load(alunos)
+            turma = json.load(turma)
+            boletim = json.load(boletim)
 
-        else:
-            os.system("cls")
-            print("Ainda não foi cadastrado nenhuma turma")
+        # Loop para não sair da função
+        if parametro == "1":
+            if os.path.exists("turmas.json"):
+                opcao = input("Como você quer acessar essa turma? pelo código[1], nome[2], turno[3] ou ano[4? ")
+
+                # Usuário seleciona pelo código
+                if opcao == "1":
+                    codigo = input("Digite o código da turma: ")
+
+                elif opcao == "4":
+                    os.system("cls")
+                    break
+                    parametro = menu_pesquisar()
+                                        
+
+                else:
+                    print("Opção inválida")
+                    time.sleep(1)
+                    os.system("cls")
+                    parametro = menu_pesquisar()
+                    os.system("cls")
+
+                    
+            else:
+                os.system("cls")
+                print("Ainda não foi cadastrado nenhuma turma")
 
 
 
