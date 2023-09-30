@@ -1179,6 +1179,7 @@ def pesquisar(parametro):
         # Loop para não sair da função
         if parametro == "1":
             if os.path.exists("turmas.json"):
+                os.system("cls")
                 opcao = input("Como você quer acessar essa turma? pelo código[1], nome[2], turno[3] ou ano[4]? ")
                 os.system("cls")
 
@@ -1196,13 +1197,32 @@ def pesquisar(parametro):
                                 os.system("cls")
 
                 elif opcao == "2":
-                    nome = input("\nDigite o nome da turma:")
+                    nome_turma = input("\nDigite o nome da turma:")
+                    os.system("cls")
+
                     for i in turma:
-                        if nome in i.values():
-                            codigo = str(i)
+                        if nome_turma == turma[str(i)]["Nome"]:
+                            existe = True
+                            break
                         else:
-                            print("Esse nome não existe")
-                                        
+                            existe = False
+
+                    if existe:
+                        for i in turma:
+                            if nome_turma == turma[str(i)]["Nome"]:
+                                codigo = str(i)
+                                rturma(i, codigo)
+                    else:
+                        print("O nome inserido não existe nas turmas!")
+                        time.sleep(1.5)
+                        os.system("cls")    
+
+                    pergunta = input("\nDeseja pesquisar outra turma? Sim ou Não: ")
+                    if pergunta[0].upper() == "N":
+                        os.system("cls")
+                        parametro = menu_pesquisar()
+                        os.system("cls")                 
+                    
                 else:
                     print("Opção inválida")
                     time.sleep(1)

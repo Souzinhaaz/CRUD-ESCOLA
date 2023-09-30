@@ -18,5 +18,10 @@
         "Nome": "Agropecu\u00e1ria",
         "Turno": "Noturno",
         "Ano": "5\u00b0"
+    },
+    "5": {
+        "Nome": "Agricultura",
+        "Turno": "Integral",
+        "Ano": "5\u00b0"
     }
 }
