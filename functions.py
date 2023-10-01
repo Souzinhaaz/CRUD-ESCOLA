@@ -2,48 +2,6 @@ import json
 import os
 import time
 
-def rturma(i, parametro):
-    with open("turmas.json", "r", encoding="utf-8") as turma:
-        turma = json.load(turma)
-    print(f""" {'=' * 15} {turma[parametro]["Nome"]} {'=' * 15}
-{'-' * 40}
-
-ID: {int(parametro)}
-Turno: {turma[parametro]["Turno"]}
-Ano: {turma[parametro]["Ano"]}
-
-{'-' * 40}
-""")
-
-def raluno(i, parametro):
-    with open("alunos.json", "r", encoding="utf-8") as aluno:
-        aluno = json.load(aluno)
-    print(f""" {'=' * 15} {aluno[parametro]["Nome"]} {'=' * 15}
-{'-' * 40}
-
-ID: {int(parametro)}
-Turma: {aluno[parametro]["Turma"]}
-Email: {aluno[parametro]["Email"]}
-Telefone: {aluno[parametro["Telefone"]]}
-
-{'-' * 40}
-""")
-    
-def rboletim(i, parametro):
-    with open("boletim.json", "r", encoding="utf-8") as boletim:
-        boletim = json.load(boletim)
-    print(f""" {'=' * 15} PROPRIETÁRIO DO BOLETIM: {boletim[parametro]["Nome"]} {'=' * 15}
-{'-' * 40}
-
-ID Boletim: {int(parametro)}
-Turma: {boletim[parametro]["Turma"]}
-Notas: {boletim[parametro]["Notas"]}
-Quantidade de Faltas: {boletim[parametro["Quantidade de Faltas"]]}
-Situação: {boletim[parametro]["Situação"]}
-
-{'-' * 40}
-""")
-
 # Cria o modelo do menu principal
 def menu_principal():
     pergunta = input(f""" {'-' * 15} Escola {'-' * 15}
@@ -113,6 +71,63 @@ def menu_pesquisar():
     
     return parametro
 
+def menu_listar():
+    parametro = input(f"""{'-' * 15} Pesquisar {'-' * 15}
+
+1 - Listar Turmas
+2 - Listar Alunos por boletins
+3 - Listar Alunos Aprovados e Boletins
+4 - Listar Alunos Reprovados e Boletins
+5 - Sair
+
+{'-' * 40}\n""")
+    
+    return parametro
+
+# Funções para retornar modelo de pesquisas
+def rturma(i, parametro):
+    with open("turmas.json", "r", encoding="utf-8") as turma:
+        turma = json.load(turma)
+    print(f""" {'=' * 15} {turma[parametro]["Nome"]} {'=' * 15}
+{'-' * 40}
+
+ID: {int(parametro)}
+Turno: {turma[parametro]["Turno"]}
+Ano: {turma[parametro]["Ano"]}
+
+{'-' * 40}
+""")
+
+def raluno(i, parametro):
+    with open("alunos.json", "r", encoding="utf-8") as aluno:
+        aluno = json.load(aluno)
+    print(f""" {'=' * 15} {aluno[parametro]["Nome"]} {'=' * 15}
+{'-' * 40}
+
+ID: {int(parametro)}
+Turma: {aluno[parametro]["Turma"]}
+Email: {aluno[parametro]["Email"]}
+Telefone: {aluno[parametro["Telefone"]]}
+
+{'-' * 40}
+""")
+    
+def rboletim(i, parametro):
+    with open("boletim.json", "r", encoding="utf-8") as boletim:
+        boletim = json.load(boletim)
+    print(f""" {'=' * 15} PROPRIETÁRIO DO BOLETIM: {boletim[parametro]["Nome"]} {'=' * 15}
+{'-' * 40}
+
+ID Boletim: {int(parametro)}
+Código do aluno: {int(parametro)}
+Turma: {boletim[parametro]["Turma"]}
+Notas: {boletim[parametro]["Notas"]}
+Quantidade de Faltas: {boletim[parametro["Quantidade de Faltas"]]}
+Situação: {boletim[parametro]["Situação"]}
+
+{'-' * 40}
+""")
+    
 # Função para verificar se existe os arquivos necessários e cria-los
 def verifica():
     if not os.path.exists("turmas.json"):
@@ -288,6 +303,7 @@ def cadastrar(parametro):
                         
                         novo_boletim[id_boletim] = {
                             "Nome": aluno[codigo]["Nome"],
+                            "Codigo do aluno": codigo,
                             "Turma": aluno[codigo]["Turma"],
                             "Notas": notas_aluno,
                             "Quantidade de Faltas": qnt_faltas,
@@ -306,6 +322,12 @@ def cadastrar(parametro):
                         time.sleep(1.5)
                         os.system("cls")
                         break
+                    else:
+                        print("Aluno referido não existe no sistema, por favor cadastre")
+                        time.sleep(1.5)
+                        os.system("cls")
+                        parametro = menu_cadastro()
+                        os.system("cls")
 
                 else:
                     print("\nPara cadastrar boletim é necessário ao menos um aluno e uma turma")
@@ -1017,7 +1039,7 @@ def remover(parametro):
         elif parametro == "2":
             if os.path.exists("alunos.json"):
                 # Vai abrir o arquivo desejado
-                with open("turmas.json", "r+", encoding="utf-8") as alunos_json:
+                with open("alunos.json", "r+", encoding="utf-8") as alunos_json:
                     aluno = json.load(alunos_json)
 
                     codigo = input("Digite o código do(a) aluno(a) que você deseja remover: ")
@@ -1180,28 +1202,33 @@ def pesquisar(parametro):
         if parametro == "1":
             if os.path.exists("turmas.json"):
                 os.system("cls")
-                opcao = input("Como você quer acessar essa turma? pelo código[1], nome[2], turno[3] ou ano[4]? ")
+                opcao = input("Como você quer pesquisar a turma? pelo código[1], nome[2], turno[3], ano[4] ou sair[5]? ")
                 os.system("cls")
 
                 # Usuário seleciona pelo código
                 if opcao == "1":
                     codigo = input("\nDigite o código da turma: ")
                     if codigo in turma:
-                            for i in turma:
-                                rturma(i, codigo)
-                                break
-                            pergunta = input("\nDeseja pesquisar outra turma? Sim ou Não: ")
-                            if pergunta[0].upper() == "N":
-                                os.system("cls")
-                                parametro = menu_pesquisar()
-                                os.system("cls")
+                        for i in turma:
+                            rturma(i, codigo)
+                            break
+
+                        pergunta = input("\nDeseja pesquisar outra turma? Sim ou Não? ")
+                        if pergunta[0].upper() == "N":
+                            os.system("cls")
+                            parametro = menu_pesquisar()
+                            os.system("cls")
+                    else:
+                        print("O código inserido não existe no sistema!")
+                        time.sleep(1.5)
+                        os.system("cls")
 
                 elif opcao == "2":
-                    nome_turma = input("\nDigite o nome da turma:")
+                    nome = input("\nDigite o nome da turma:")
                     os.system("cls")
 
                     for i in turma:
-                        if nome_turma == turma[str(i)]["Nome"]:
+                        if nome == turma[str(i)]["Nome"]:
                             existe = True
                             break
                         else:
@@ -1209,20 +1236,150 @@ def pesquisar(parametro):
 
                     if existe:
                         for i in turma:
-                            if nome_turma == turma[str(i)]["Nome"]:
+                            if nome == turma[str(i)]["Nome"]:
                                 codigo = str(i)
                                 rturma(i, codigo)
                     else:
-                        print("O nome inserido não existe nas turmas!")
+                        print("O nome inserido não existe no sistema!")
                         time.sleep(1.5)
                         os.system("cls")    
 
-                    pergunta = input("\nDeseja pesquisar outra turma? Sim ou Não: ")
+                    pergunta = input("\nDeseja pesquisar outra turma? Sim ou Não? ")
                     if pergunta[0].upper() == "N":
                         os.system("cls")
                         parametro = menu_pesquisar()
-                        os.system("cls")                 
+                        os.system("cls")       
+
+                elif opcao == "3":
+                    turno = input("Digite o turno da sua turma: ")        
+                    os.system("cls")
+
+                    for i in turma:
+                        if turno == turma[str(i)]["Turno"]:
+                            existe = True
+                            break
+                        else:
+                            existe = False
+                        
+                    if existe:
+                        for i in turma:
+                            if turno == turma[str(i)]["Turno"]:
+                                codigo = str(i)
+                                rturma(i, codigo)
+                    else:
+                        print("O turno inserido não existe no sistema!")
+                        time.sleep(1.5)
+                        os.system("cls")
+
+                    pergunta = input("\nDeseja pesquisar outra turma? Sim ou Não? ")
+                    if pergunta[0].upper() == "N":
+                        os.system("cls")
+                        parametro = menu_pesquisar()
+                        os.system("cls")
+                        
+
+                elif opcao == "4":
+                    ano = input("Digite o ano da sua turma: ")
+                    os.system("cls")
+
+                    for i in turma:
+                        if ano == turma[str(i)]["Ano"][0]:
+                            existe = True
+                        else:
+                            existe = False
                     
+                    if existe:
+                        for i in turma:
+                            if ano == turma[str(i)]["Ano"][0]:
+                                codigo = str(i)
+                                rturma(i, codigo)
+                    else:
+                        print("O ano inserido não existe no sistema!")
+                        time.sleep(1.5)
+                        os.system("cls")
+
+                    pergunta = input("\nDeseja pesquisar outra turma? Sim ou Não? ")
+                    if pergunta[0].upper() == "N":
+                        os.system("cls")
+                        parametro = menu_pesquisar()
+                        os.system("cls")    
+
+                elif opcao == "5":
+                    os.system("cls")
+                    parametro = menu_pesquisar()
+                    os.system("cls")
+
+                else:
+                    print("Opção inválida")
+                    time.sleep(1)
+                    os.system("cls")
+                    parametro = menu_pesquisar()
+                    os.system("cls")
+                    
+            else:
+                os.system("cls")
+                print("Ainda não foi cadastrado nenhuma turma")
+
+
+        # Pesquisar aluno
+        elif parametro == "2":
+            if os.path.exists("alunos.json"):
+                os.system("cls")
+                opcao = input("Como você quer pesquisar o(a) aluno(a)? matricula[1], nome[2] ou sair[3]? ")
+                os.system("cls")
+
+                if opcao == "1":
+                    matricula = input("Digite a matricula do aluno(a): ")
+
+                    if matricula in alunos:
+                        for matricula in alunos:
+                            raluno(i, matricula)
+                            break
+
+                        pergunta = input("\nDeseja pesquisar outro aluno: Sim ou Não? ")
+                        if pergunta[0].upper() == "N":
+                            os.system("cls")
+                            parametro = menu_pesquisar()
+                            os.system("cls")
+
+                    else:
+                        print("A matricula inserida não existe no sistema!")
+                        time.sleep(1.5)
+                        os.system("cls")
+                    
+                elif opcao == "2":
+                    nome = input("\nDigite o nome do aluno(a): ")
+                    os.system("cls")
+
+                    for i in alunos:
+                        if nome == alunos[str(i)]["Nome"]:
+                            existe = True
+                            break
+                        else:
+                            existe = False
+
+                    if existe:
+                        for i in alunos:
+                            if nome == alunos[str(i)]["Nome"]:
+                                codigo = str(i)
+                                raluno(i, codigo)
+                    else:
+                        print("O nome inserido não existe no sistema!")
+                        time.sleep(1.5)
+                        os.system("cls")    
+
+                    pergunta = input("\nDeseja pesquisar outro nome? Sim ou Não? ")
+                    if pergunta[0].upper() == "N":
+                        os.system("cls")
+                        parametro = menu_pesquisar()
+                        os.system("cls")
+
+
+                elif opcao == "3":
+                    os.system("cls")
+                    parametro = menu_pesquisar()
+                    os.system("cls")
+
                 else:
                     print("Opção inválida")
                     time.sleep(1)
@@ -1230,17 +1387,74 @@ def pesquisar(parametro):
                     parametro = menu_pesquisar()
                     os.system("cls")
 
-                    
             else:
                 os.system("cls")
-                print("Ainda não foi cadastrado nenhuma turma")
+                print("Ainda não foi cadastrado nenhum aluno")
 
+        elif parametro == "3":
+            if os.path.exists("boletim.json"):
+                os.system("cls")
+                opcao = input("Como você quer pesquisar o boletim? código do aluno[1], nome do aluno[2] ou sair[3]? ")
+                os.system("cls")
+
+                if opcao == "1":
+                    codigo = input("\nDigite o código do boletim: ")
+                    if codigo in boletim:
+                        for i in boletim:
+                            rboletim(i, codigo)
+                            break
+
+                        pergunta = input("\nDeseja pesquisar outro boletim? Sim ou Não? ")
+                        if pergunta[0].upper() == "N":
+                            os.system("cls")
+                            parametro = menu_pesquisar()
+                            os.system("cls")
+                    else:
+                        print("O código inserido não existe no sistema!")
+                        time.sleep(1.5)
+                        os.system("cls")
+
+                elif opcao == "2":
+                    nome_aluno = input("\nDigite o nome do aluno(a): ")
+                    os.system("cls")
+
+                    for i in boletim:
+                        if nome_aluno == boletim[str(i)]["Nome"]:
+                            existe = True
+                            break
+                        else:
+                            existe = False
+
+                    if existe:
+                        for i in alunos:
+                            if nome_aluno == boletim[str(i)]["Nome"]:
+                                codigo = str(i)
+                                raluno(i, codigo)
+                    else:
+                        print("O nome inserido não existe no sistema!")
+                        time.sleep(1.5)
+                        os.system("cls")    
+
+                    pergunta = input("\nDeseja pesquisar outro boletim? Sim ou Não? ")
+                    if pergunta[0].upper() == "N":
+                        os.system("cls")
+                        parametro = menu_pesquisar()
+                        os.system("cls")
+
+                elif opcao == "3":
+                    os.system("cls")
+                    parametro = menu_pesquisar()
+                    os.system("cls")
+                
         elif parametro == "4":
             os.system("cls")
             break
             
+def listar(parametro):
+    pass
     
 
 
 
-
+def relatorio():
+    pass

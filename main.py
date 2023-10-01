@@ -28,6 +28,14 @@ while True:
         os.system("cls")
         pesquisar(parametro)
 
+    elif opcao == "4":
+        parametro = menu_listar()
+        os.system("cls")
+        listar(parametro)
+
+    elif opcao == "5":
+        relatorio()
+
     elif opcao == "0":
         os.system("cls")
         print("FIM DO PROGRAMA!!\n")
