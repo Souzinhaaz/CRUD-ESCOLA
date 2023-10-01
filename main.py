@@ -1,6 +1,7 @@
 from functions import *
 import os
 
+
 os.system("cls")
 while True:
     opcao = menu_principal()
@@ -28,7 +29,7 @@ while True:
         os.system("cls")
         pesquisar(parametro)
 
-    elif opcao == "4":
+    elif opcao == "5":
         parametro = menu_listar()
         os.system("cls")
         listar(parametro)

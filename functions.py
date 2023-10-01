@@ -75,14 +75,33 @@ def menu_listar():
     parametro = input(f"""{'-' * 15} Pesquisar {'-' * 15}
 
 1 - Listar Turmas
-2 - Listar Alunos por boletins
-3 - Listar Alunos Aprovados e Boletins
-4 - Listar Alunos Reprovados e Boletins
-5 - Sair
+2 - Listar Alunos por Turma
+3 - Listar Alunos e Boletins por Turma
+4 - Listar Alunos Aprovados e Boletins por Turma
+5 - Listar Alunos Reprovados e Boletins por Turma
+6 - Sair
 
 {'-' * 40}\n""")
     
     return parametro
+
+def lisTurma(i):
+    with open("turmas.json", "r", encoding="utf-8") as turma:
+        turma = json.load(turma)
+    print(f"""\n{'=' * 15} {turma[i]["Nome"]} {'=' * 15}
+{'-' * 40}
+
+ID: {int(i)}
+Turno: {turma[i]["Turno"]}
+Ano: {turma[i]["Ano"]}
+
+{'-' * 40}
+""")
+    print(f"\n\033[31m{'-=' * 30}\033[m\n")
+
+
+
+
 
 # Funções para retornar modelo de pesquisas
 def rturma(i, parametro):
@@ -1451,9 +1470,36 @@ def pesquisar(parametro):
             break
             
 def listar(parametro):
-    pass
-    
+    verifica()
+    while True:
+        # Listar por turma
+        if parametro == "1":
+            with open("alunos.json", "r", encoding="utf-8") as alunos, open("turmas.json", "r", encoding="utf-8") as turma, open("boletim.json", "r", encoding="utf-8") as boletim:
+                alunos = json.load(alunos)
+                turma = json.load(turma)
+                boletim = json.load(boletim)
+            
+            if len(turma) > 0:
+                for i in turma:
+                    lisTurma(i)
 
+                pergunta = input("Deseja continuar listando? Sim ou Não? ")
+                if pergunta[0].upper() == "S":
+                    os.system("cls")
+                    parametro = menu_listar()
+                    os.system("cls")                
+                else:
+                    os.system("cls")
+                    break
+            else:
+                print("Não existe turmas!")
+                time.sleep(1.5)
+                os.system("cls")
+                parametro = menu_listar()
+                os.system("cls")
+
+        if parametro == "2":
+            pass
 
 
 def relatorio():
