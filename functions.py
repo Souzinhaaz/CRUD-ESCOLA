@@ -85,6 +85,10 @@ def menu_listar():
     
     return parametro
 
+
+
+
+
 def lisTurma(i):
     with open("turmas.json", "r", encoding="utf-8") as turma:
         turma = json.load(turma)
@@ -94,6 +98,20 @@ def lisTurma(i):
 ID: {int(i)}
 Turno: {turma[i]["Turno"]}
 Ano: {turma[i]["Ano"]}
+
+{'-' * 40}
+""")
+    print(f"\n\033[31m{'-=' * 30}\033[m\n")
+
+def alunosTurma(i):
+    with open("turmas.json", "r", encoding="utf-8") as turma, open("alunos.json", "r", encoding="utf-8") as aluno:
+        turma = json.load(turma)
+        aluno = json.load(aluno)
+    print(f"""\n{'-' * 15} {aluno[i]["Nome"]} - {aluno[i]["Turma"]} {'-' * 15}
+
+ID Aluno: {int(i)}
+email: {aluno[i]["Email"]}
+Telefone: {aluno[i]["Telefone"]}
 
 {'-' * 40}
 """)
@@ -377,9 +395,11 @@ def editar(parametro):
             # Verificar se existe o arquivo na pasta
             if os.path.exists("turmas.json"):
                 # Vai abrir o arquivo desejado
-                with open("turmas.json", "r+", encoding="utf-8") as turmas_json:
+                with open("turmas.json", "r+", encoding="utf-8") as turmas_json, open("alunos.json", "r+", encoding="utf-8") as alunos_json, open("boletim.json", "r+", encoding="utf-8") as boletins_json:
                     # carrega o dicionário de turmas_json na variável turmas
                     turmas = json.load(turmas_json)
+                    alunos = json.load(alunos_json)
+                    boletins = json.load(boletins_json)
 
                     # Verificar se existe algum valor no arquivo
                     if len(turmas) > 0:
@@ -402,14 +422,24 @@ def editar(parametro):
                                 if pergunta[0].upper() == "S":
                                     os.system("cls")
                                     print(f"""{'-' * 15} Edição {'-' * 15}""")
-                                    novo_nome = input("\nDigite o novo nome: ")
+                                    nova_turma = input("\nDigite o novo nome: ")
                                     pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
                                     if pergunta[0].upper() == "S":
-                                        turmas[codigo]["Nome"] = novo_nome
+                                        for aluno in alunos:
+                                            alunos[aluno]["Turma"] = nova_turma
+                                        for boletim in boletins:
+                                            boletins[boletim]["Turma"] = nova_turma
+                                        turmas[codigo]["Nome"] = nova_turma
 
-                                        with open("turmas.json", "w", encoding="utf-8") as turmas_json:
+                                        with open("turmas.json", "w", encoding="utf-8") as turmas_json, open("alunos.json", "w", encoding="utf-8") as alunos_json, open("boletim.json", "w", encoding="utf-8") as boletins_json:
                                             turmas_json.seek(0, 0)
+                                            alunos_json.seek(0, 0)
+                                            boletins_json.seek(0, 0)
+
                                             json.dump(turmas, turmas_json, indent=4)
+                                            json.dump(alunos, alunos_json, indent=4)
+                                            json.dump(boletins, boletins_json, indent=4)
+
                                             print("\nNovo nome registrado com sucesso!!")
                                             time.sleep(2)
                                             os.system("cls")
@@ -550,9 +580,10 @@ def editar(parametro):
             # Verificar se existe o arquivo na pasta
             if os.path.exists("alunos.json"):
                 # Vai abrir o arquivo desejado
-                with open("alunos.json", "r+", encoding="utf-8") as alunos_json:
+                with open("alunos.json", "r+", encoding="utf-8") as alunos_json, open("boletim.json", "r+", encoding="utf-8") as boletins_json:
                     # carrega o dicionário de alunos_json na variável alunos
                     alunos = json.load(alunos_json)
+                    boletins = json.load(boletins_json)
                     
                     # Verificar se existe algum valor no arquivo
                     if len(alunos) > 0:
@@ -576,11 +607,17 @@ def editar(parametro):
                                     novo_nome = input("\nDigite o novo nome: ").title()
                                     pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
                                     if pergunta[0].upper() == "S":
+                                        for boletim in boletins:
+                                            boletins[boletim]["Nome"] = novo_nome
                                         alunos[codigo]["Nome"] = novo_nome
 
-                                        with open("alunos.json", "w", encoding="utf-8") as alunos_json:
+                                        with open("alunos.json", "w", encoding="utf-8") as alunos_json, open("boletim.json", "w", encoding="utf-8") as boletins_json:
                                             alunos_json.seek(0, 0)
+                                            boletins_json.seek(0, 0)
+
                                             json.dump(alunos, alunos_json, indent=4)
+                                            json.dump(boletins, boletins_json, indent=4)
+
                                             print("\nNovo nome registrado com sucesso!!")
                                             time.sleep(2)
                                             os.system("cls")
@@ -684,11 +721,16 @@ def editar(parametro):
                                     else:
                                         pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
                                         if pergunta[0].upper() == "S":
+                                            for boletim in boletins:
+                                                boletins[boletim]["Turma"] = nova_turma
                                             alunos[codigo]["Turma"] = nova_turma
 
-                                            with open("alunos.json", "w", encoding="utf-8") as alunos_json:
+                                            with open("alunos.json", "w", encoding="utf-8") as alunos_json, open("boletim.json", "w", encoding="utf-8") as boletins_json:
                                                 alunos_json.seek(0, 0)
+                                                boletins_json.seek(0, 0)
+
                                                 json.dump(alunos, alunos_json, indent=4)
+                                                json.dump(boletins, boletins_json, indent=4)
                                                 print("\nNova turma registrada com sucesso!!")
                                                 time.sleep(2)
                                                 os.system("cls")
@@ -740,9 +782,10 @@ def editar(parametro):
             # Verificar se existe o arquivo na pasta
             if os.path.exists("boletim.json"):
                 # Vai abrir o arquivo desejado
-                with open("boletim.json", "r+", encoding="utf-8") as boletins_json:
+                with open("boletim.json", "r+", encoding="utf-8") as boletins_json, open("alunos.json", "r+", encoding="utf-8") as alunos_json:
                     # carrega o dicionário de boletins_json na variável boletins
                     boletins = json.load(boletins_json)
+                    alunos = json.load(alunos_json)
 
                     # Verificar se existe algum valor no arquivo
                     if len(boletins) > 0:
@@ -766,11 +809,17 @@ def editar(parametro):
                                     novo_nome = input("\nDigite o novo nome: ")
                                     pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
                                     if pergunta[0].upper() == "S":
+                                        for aluno in alunos:
+                                            alunos[aluno]["Nome"] = novo_nome
                                         boletins[codigo]["Nome"] = novo_nome
 
-                                        with open("boletim.json", "w", encoding="utf-8") as boletins_json:
+                                        with open("boletim.json", "w", encoding="utf-8") as boletins_json, open("alunos.json", "w", encoding="utf-8") as alunos_json:
                                             boletins_json.seek(0, 0)
+                                            alunos_json.seek(0, 0)
+
                                             json.dump(boletins, boletins_json, indent=4)
+                                            json.dump(alunos, alunos_json, indent=4)
+
                                             print("\nNovo nome registrado com sucesso!!")
                                             time.sleep(2)
                                             os.system("cls")
@@ -801,11 +850,17 @@ def editar(parametro):
                                     nova_turma = input("\nDigite a nova turma: ")
                                     pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
                                     if pergunta[0].upper() == "S":
+                                        for aluno in alunos:
+                                            alunos[aluno]["Turma"] = nova_turma
                                         boletins[codigo]["Turma"] = nova_turma
 
-                                        with open("boletim.json", "w", encoding="utf-8") as boletins_json:
+                                        with open("boletim.json", "w", encoding="utf-8") as boletins_json, open("alunos.json", "w", encoding="utf-8") as alunos_json:
                                             boletins_json.seek(0, 0)
+                                            alunos_json.seek(0, 0)
+
                                             json.dump(boletins, boletins_json, indent=4)
+                                            json.dump(alunos, alunos_json, indent=4)
+
                                             print("\nNova turma registrada com sucesso!!")
                                             time.sleep(2)
                                             os.system("cls")
@@ -987,9 +1042,10 @@ def remover(parametro):
         if parametro == "1":
             if os.path.exists("turmas.json"):
                 # Vai abrir o arquivo desejado
-                with open("turmas.json", "r+", encoding="utf-8") as turmas_json:
+                with open("turmas.json", "r+", encoding="utf-8") as turmas_json, open("alunos.json", "r+", encoding="utf-8") as alunos_json:
                     # carrega o dicionário de turmas_json na variável turmas
                     turma = json.load(turmas_json)
+                    aluno = json.load(alunos_json)
                     
                     codigo = input("Digite o código da turma que você deseja remover: ")
 
@@ -998,14 +1054,30 @@ def remover(parametro):
                         pergunta = input("Você tem certeza que deseja excluir? Sim ou Não? ")
 
                         if pergunta[0].upper() == "S":
+
+                            # Vai remover os alunos que estiverem nessa turma
+                            for i in aluno:
+                                aluno[i]["Turma"] == turma[codigo]["Nome"]
+                                del aluno[i]
+                            
+                            aluno[codigo] = aluno.pop(str(int(codigo) + 1)) # Reescrever no código deletado o dicionário que estava a frente
+
+                            for i in range(1,len(aluno) + 1):
+                                if str(i) in aluno:
+                                    aluno[str(i)] = aluno[str(i)]
+                                else:
+                                    aluno[str(i)] = aluno.pop(str(i + 1))
+                                    
+
                             if len(turma) > 1:
 
                                 # Se for o ultimo dicionário vai remover
                                 if int(codigo) == len(turma):
                                     del turma[codigo]
 
-                                    with open("turmas.json", "w", encoding="utf-8") as turmas_json:
+                                    with open("turmas.json", "w", encoding="utf-8") as turmas_json, open("alunos.json", "w", encoding="utf-8") as alunos_json:
                                         json.dump(turma, turmas_json, indent=4)
+                                        json.dump(aluno, alunos_json, indent=4)
                                         print("\nTurma removida com sucesso!")
                                         time.sleep(2)
                                         os.system("cls")
@@ -1020,8 +1092,9 @@ def remover(parametro):
                                     else:
                                         turma[str(i)] = turma.pop(str(i + 1))
 
-                                with open("turmas.json", "w", encoding="utf-8") as turmas_json:
+                                with open("turmas.json", "w", encoding="utf-8") as turmas_json, open("alunos.json", "w", encoding="utf-8") as alunos_json:
                                     json.dump(turma, turmas_json, indent=4)
+                                    json.dump(aluno, alunos_json, indent=4)
                                     print("\nTurma removida com sucesso!")
                                     time.sleep(2)
                                     os.system("cls")
@@ -1030,6 +1103,7 @@ def remover(parametro):
                             else:
                                 with open("turmas.json", "w", encoding="utf-8") as turmas_json:
                                     json.dump({}, turmas_json)
+                                    json.dump()
                                     print("\nTurma removida com sucesso!")
                                     time.sleep(2)
                                     os.system("cls")
@@ -1474,10 +1548,8 @@ def listar(parametro):
     while True:
         # Listar por turma
         if parametro == "1":
-            with open("alunos.json", "r", encoding="utf-8") as alunos, open("turmas.json", "r", encoding="utf-8") as turma, open("boletim.json", "r", encoding="utf-8") as boletim:
-                alunos = json.load(alunos)
+            with open("turmas.json", "r", encoding="utf-8") as turma:
                 turma = json.load(turma)
-                boletim = json.load(boletim)
             
             if len(turma) > 0:
                 for i in turma:
@@ -1498,9 +1570,31 @@ def listar(parametro):
                 parametro = menu_listar()
                 os.system("cls")
 
-        if parametro == "2":
-            pass
+        elif parametro == "2":
+            with open("alunos.json", "r", encoding="utf-8") as aluno:
+                aluno = json.load(aluno)
+                
+            if len(aluno) > 0:
+                for i in aluno:
+                    alunosTurma(i)     
 
+                pergunta = input("Deseja continuar listando? Sim ou Não? ")
+                if pergunta[0].upper() == "S":
+                    os.system("cls")
+                    parametro = menu_listar()
+                    os.system("cls")                
+                else:
+                    os.system("cls")
+                    break
+            else:
+                print("Não existe alunos!")
+                time.sleep(1.5)
+                os.system("cls")
+                parametro = menu_listar()
+                os.system("cls")
+
+        elif parametro == "3":
+            pass
 
 def relatorio():
     pass
