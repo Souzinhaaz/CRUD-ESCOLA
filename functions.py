@@ -1054,34 +1054,8 @@ def remover(parametro):
                         pergunta = input("Você tem certeza que deseja excluir? Sim ou Não? ")
 
                         if pergunta[0].upper() == "S":
-
-                            # Vai remover os alunos que estiverem nessa turma
-                            for i in aluno:
-                                aluno[i]["Turma"] == turma[codigo]["Nome"]
-                                del aluno[i]
-                            
-                            aluno[codigo] = aluno.pop(str(int(codigo) + 1)) # Reescrever no código deletado o dicionário que estava a frente
-
-                            for i in range(1,len(aluno) + 1):
-                                if str(i) in aluno:
-                                    aluno[str(i)] = aluno[str(i)]
-                                else:
-                                    aluno[str(i)] = aluno.pop(str(i + 1))
                                     
-
                             if len(turma) > 1:
-
-                                # Se for o ultimo dicionário vai remover
-                                if int(codigo) == len(turma):
-                                    del turma[codigo]
-
-                                    with open("turmas.json", "w", encoding="utf-8") as turmas_json, open("alunos.json", "w", encoding="utf-8") as alunos_json:
-                                        json.dump(turma, turmas_json, indent=4)
-                                        json.dump(aluno, alunos_json, indent=4)
-                                        print("\nTurma removida com sucesso!")
-                                        time.sleep(2)
-                                        os.system("cls")
-                                        break
 
                                 # Código para reescrever o código digitado pelo seu sucessor
                                 turma[codigo] = turma.pop(str(int(codigo) + 1)) # Reescrever no código deletado o dicionário que estava a frente
@@ -1094,16 +1068,15 @@ def remover(parametro):
 
                                 with open("turmas.json", "w", encoding="utf-8") as turmas_json, open("alunos.json", "w", encoding="utf-8") as alunos_json:
                                     json.dump(turma, turmas_json, indent=4)
-                                    json.dump(aluno, alunos_json, indent=4)
                                     print("\nTurma removida com sucesso!")
                                     time.sleep(2)
                                     os.system("cls")
                                     break
                                 
                             else:
-                                with open("turmas.json", "w", encoding="utf-8") as turmas_json:
+                                with open("turmas.json", "w", encoding="utf-8") as turmas_json, open("alunos.json", "w", encoding="utf-8") as alunos_json:
                                     json.dump({}, turmas_json)
-                                    json.dump()
+                                    json.dump({}, alunos_json)
                                     print("\nTurma removida com sucesso!")
                                     time.sleep(2)
                                     os.system("cls")
