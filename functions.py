@@ -246,11 +246,13 @@ def cadastrar(parametro):
                 print("Turma Cadastrada com sucesso!!")
                 time.sleep(1.5)
                 os.system("cls")
-                break
+                parametro = menu_cadastro()
+                os.system("cls")
                     
+            # Usuário vai cadastrar um aluno
             elif parametro == "2":
                 nova_turma = json.load(turmas_json)
-                # Verifica se existe algum valor no arquivo
+                # Verifica se existe alguma turma
                 if len(nova_turma) > 0:
                     # A variavel novo_aluno vai receber o dicionário que está no alunos_json e a nova_turma o que está em turmas_json
                     novo_aluno = json.load(alunos_json)
@@ -290,6 +292,8 @@ def cadastrar(parametro):
                     print("Aluno(a) Cadastrado(a) com sucesso!!")
                     time.sleep(1.5)
                     os.system("cls")
+                    parametro = menu_cadastro()
+                    os.system("cls")
                         
                 else:
                     os.system("cls")
@@ -306,10 +310,15 @@ def cadastrar(parametro):
 
                 # Verifica se o json de alunos esta vazio e se o id referido está dentro do alunos_json
                 if len(aluno) > 0:
-
-                    # Vai pedir o id do aluno referido
-                    codigo = input("Digite o código do Aluno referido: ")
+                    # Vai pedir o codigo de matricula do aluno referido
+                    codigo = input("Digite o código de matrícula do Aluno referido: ")
                     if codigo in aluno:
+                        for i in novo_boletim:
+                            if codigo == novo_boletim[str(i)]["Matrícula"]:
+                                print("Já existe boletim com esse aluno, por favor selecione outro aluno ou edite ele! ")
+                                time.sleep(1.5)
+                                os.system("cls")
+                                falso = i
                     
                         # Vai guardar a quantidade de faltas na variável qnt_faltas
                         qnt_faltas = int(input("Digite a quantidade de faltas do aluno inserido: "))
@@ -322,7 +331,6 @@ def cadastrar(parametro):
                         
                         media = sum(notas_aluno) / len(notas_aluno)
                         aprovado = True
-                        situacao = ""
 
                         # Faz a verificação para saber se o aluno está aprovado ou não
                         if media >= 7 and qnt_faltas < 15:
@@ -339,8 +347,8 @@ def cadastrar(parametro):
                         id_boletim = str(1+int(list(novo_boletim.keys())[-1])) if len(novo_boletim) > 0 else "1"
                         
                         novo_boletim[id_boletim] = {
+                            "Matrícula": codigo,
                             "Nome": aluno[codigo]["Nome"],
-                            "Codigo do aluno": codigo,
                             "Turma": aluno[codigo]["Turma"],
                             "Notas": notas_aluno,
                             "Quantidade de Faltas": qnt_faltas,
@@ -358,7 +366,8 @@ def cadastrar(parametro):
                         print("Boletim Cadastrado com sucesso!!")
                         time.sleep(1.5)
                         os.system("cls")
-                        break
+                        parametro = menu_cadastro()
+                        os.system("cls")
                     else:
                         print("Aluno referido não existe no sistema, por favor cadastre")
                         time.sleep(1.5)
