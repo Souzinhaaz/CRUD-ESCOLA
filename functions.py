@@ -238,8 +238,9 @@ def cadastrar(parametro):
                 print("Carregando...\n")
 
                 # Adiciona os dados no turmas.json
-                turmas_json.seek(0, 0)
-                json.dump(nova_turma, turmas_json, indent=4)
+                with open("turmas.json", "w", encoding="utf-8") as turmas_json:
+                    turmas_json.seek(0, 0)
+                    json.dump(nova_turma, turmas_json, indent=4)
 
                 # Volta para a interatividade do site
                 time.sleep(1)
@@ -284,8 +285,9 @@ def cadastrar(parametro):
                     print("Carregando...\n")
 
                     # Adiciona os dados no alunos.json
-                    alunos_json.seek(0, 0)
-                    json.dump(novo_aluno, alunos_json, indent=4)
+                    with open("alunos.json", "w", encoding="utf-8") as alunos_json:
+                        alunos_json.seek(0, 0)
+                        json.dump(novo_aluno, alunos_json, indent=4)
 
                     # Volta para a interatividade do site
                     time.sleep(1)
@@ -361,8 +363,9 @@ def cadastrar(parametro):
                         print("Carregando...\n")
 
                         # Adiciona os dados a boletins_json
-                        boletins_json.seek(0, 0)
-                        json.dump(novo_boletim, boletins_json, indent=4)
+                        with open("boletim.json", "w", encoding="utf-8") as boletins_json:
+                            boletins_json.seek(0, 0)
+                            json.dump(novo_boletim, boletins_json, indent=4)
 
                         # Volta para a interatividade do site
                         time.sleep(1)
@@ -1011,14 +1014,42 @@ def remover(parametro):
 
                         # Se for o ultimo dicionário vai remover
                         if int(codigo) == len(turma):
+
+                            # Obtém o nome da turma que será removida
+                            nome_turma_removida = turma[codigo]["Nome"]
+
+                            # Remove todos os alunos com o mesmo nome da turma removida
+                            alunos_para_remover = []
+                            for id_alunos, dados_aluno in aluno.items():
+                                if dados_aluno["Turma"] == nome_turma_removida:
+                                    alunos_para_remover.append(id_alunos)
+
+                            # Remove os alunos do dicionário de alunos
+                            for id_aluno in alunos_para_remover:
+                                del aluno[id_aluno]
+                            
                             del turma[codigo]
 
-                            with open("turmas.json", "w", encoding="utf-8") as turmas_json:
+                            with open("turmas.json", "w", encoding="utf-8") as turmas_json, open("alunos.json", "w", encoding="utf-8") as alunos_json:
                                 json.dump(turma, turmas_json, indent=4)
+                                json.dump(aluno, alunos_json, indent=4)
                                 print("\nTurma removida com sucesso!")
                                 time.sleep(2)
                                 os.system("cls")
                                 break
+
+                        # Obtém o nome da turma que será removida
+                        nome_turma_removida = turma[codigo]["Nome"]
+
+                        # Remove todos os alunos com o mesmo nome da turma removida
+                        alunos_para_remover = []
+                        for id_alunos, dados_aluno in aluno.items():
+                            if dados_aluno["Turma"] == nome_turma_removida:
+                                alunos_para_remover.append(id_alunos)
+
+                        # Remove os alunos do dicionário de alunos
+                        for id_aluno in alunos_para_remover:
+                            del aluno[id_aluno]
 
                         # Código para reescrever o código digitado pelo seu sucessor
                         turma[codigo] = turma.pop(str(int(codigo) + 1)) # Reescrever no código deletado o dicionário que estava a frente
@@ -1029,8 +1060,14 @@ def remover(parametro):
                             else:
                                 turma[str(i)] = turma.pop(str(i + 1))
 
-                        with open("turmas.json", "w", encoding="utf-8") as turmas_json:
+
+                        for i in range(1, len(aluno) + 1): # Vai percorrer todos os dicionários de alunos
+                            if str(i) in aluno:
+                                aluno[str(i)] = aluno[str(i)]
+
+                        with open("turmas.json", "w", encoding="utf-8") as turmas_json, open("alunos.json", "w", encoding="utf-8") as alunos_json:
                             json.dump(turma, turmas_json, indent=4)
+                            json.dump(aluno, alunos_json, indent=4)
                             print("\nTurma removida com sucesso!")
                             time.sleep(2)
                             os.system("cls")
