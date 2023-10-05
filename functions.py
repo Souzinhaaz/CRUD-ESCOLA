@@ -318,7 +318,10 @@ def cadastrar(parametro):
                                 print("Já existe boletim com esse aluno, por favor selecione outro aluno ou edite ele! ")
                                 time.sleep(1.5)
                                 os.system("cls")
-                                falso = i
+                                res = False
+                        
+                        if not res:
+                            break
                     
                         # Vai guardar a quantidade de faltas na variável qnt_faltas
                         qnt_faltas = int(input("Digite a quantidade de faltas do aluno inserido: "))
@@ -397,442 +400,314 @@ def cadastrar(parametro):
 
 # Função para editar
 def editar(parametro):
+
+    verifica()
+
     # Loop para não sair da opção de parametro
     while True:
-        # Usuário escolhe a opção de editar as turmas
-        if parametro == "1":
-            # Verificar se existe o arquivo na pasta
-            if os.path.exists("turmas.json"):
-                # Vai abrir o arquivo desejado
-                with open("turmas.json", "r+", encoding="utf-8") as turmas_json:
-                    # carrega o dicionário de turmas_json na variável turmas
-                    turmas = json.load(turmas_json)
 
-                    # Verificar se existe algum valor no arquivo
-                    if len(turmas) > 0:
-                        print(f"""{'-' * 15} Edição {'-' * 15}\n""")
+        with open("turmas.json", "r+", encoding="utf-8") as turmas_json, open("alunos.json", "r+", encoding="utf-8") as alunos_json, open("boletim.json", "r+", encoding="utf-8") as boletins_json:
+            turmas = json.load(turmas_json)
+            alunos = json.load(alunos_json)
+            boletins = json.load(boletins_json)
 
-                        # Vai pedir o código da turma desejada
-                        codigo = input("Digite o código da turma que você deseja editar: ")
-                        os.system("cls")
+            # Usuário escolhe a opção de editar as turmas
+            if parametro == "1":
+                # Verificar se existe algum valor no arquivo
+                if len(turmas) > 0:
+                    print(f"""{'-' * 15} Edição {'-' * 15}\n""")
 
-                        if codigo in turmas:
-                            print(f"""{'-' * 15} Edição {'-' * 15}""")
-                            pergunta = input("\nOque você deseja mudar [Nome, Turno ou Ano]: ")
+                    # Vai pedir o código da turma desejada
+                    codigo = input("Digite o código da turma que você deseja editar: ")
+                    os.system("cls")
 
-                            # Se a pessoa desejar mudar o nome
-                            if pergunta.upper() == "NOME":
-                                print(f"\n{turmas[codigo]['Nome']}\n")
+                    if codigo in turmas:
+                        print(f"""{'-' * 15} Edição {'-' * 15}""")
+                        pergunta = input("\nOque você deseja mudar [Nome, Turno ou Ano]: ")
 
-                                pergunta = input("Essa é a turma que deseja editar? Sim ou Não? ")
+                        # Se a pessoa desejar mudar o nome
+                        if pergunta.upper() == "NOME":
+                            print(f"\n{turmas[codigo]['Nome']}\n")
 
+                            pergunta = input("Essa é a turma que deseja editar? Sim ou Não? ")
+
+                            if pergunta[0].upper() == "S":
+                                os.system("cls")
+                                print(f"""{'-' * 15} Edição {'-' * 15}""")
+                                novo_nome = input("\nDigite o novo nome: ")
+                                pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
                                 if pergunta[0].upper() == "S":
+                                    turmas[codigo]["Nome"] = novo_nome
+
+                                    with open("turmas.json", "w", encoding="utf-8") as turmas_json:
+                                        turmas_json.seek(0, 0)
+                                        json.dump(turmas, turmas_json, indent=4)
+                                        print("\nNovo nome registrado com sucesso!!")
+                                        time.sleep(2)
+                                        os.system("cls")
+                                        break
+                                else:   
                                     os.system("cls")
-                                    print(f"""{'-' * 15} Edição {'-' * 15}""")
-                                    novo_nome = input("\nDigite o novo nome: ")
-                                    pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
-                                    if pergunta[0].upper() == "S":
-                                        turmas[codigo]["Nome"] = novo_nome
-
-                                        with open("turmas.json", "w", encoding="utf-8") as turmas_json:
-                                            turmas_json.seek(0, 0)
-                                            json.dump(turmas, turmas_json, indent=4)
-                                            print("\nNovo nome registrado com sucesso!!")
-                                            time.sleep(2)
-                                            os.system("cls")
-                                            break
-                                    else:   
-                                        os.system("cls")
-                                        parametro = menu_editar()
-                                        os.system("cls")
-                                
-                                else:
+                                    parametro = menu_editar()
                                     os.system("cls")
-                                    pergunta = input("Quer tentar outro código? ")
-                                    if pergunta[0].upper() == "S":
-                                        os.system("cls")
-                                    else:
-                                        os.system("cls")
-                                        parametro = menu_editar()
-                                        os.system("cls")
-
-                            # Se a pessoa desejar mudar o turno
-                            elif pergunta.upper() == "TURNO":
-                                print(f"\n{turmas[codigo]['Turno']}\n")
-
-                                pergunta = input("Esse é o turno que deseja editar? Sim ou Não? ")
-
-                                if pergunta[0].upper() == "S":
-                                    os.system("cls")
-                                    print(f"""{'-' * 15} Edição {'-' * 15}""")
-                                    novo_turno = input("\nDigite o novo turno: ")
-
-                                    # Verificar se o turno é válido
-                                    turnos = ["Matutino", "Vespertino", "Noturno", "Integral"]
-                                    while True:
-                                        if novo_turno not in turnos:
-                                            print("Turno inválido, digite um turno existente!!\n")
-                                            novo_turno = input("Digite o turno da sua turma [Matutino, Vespertino, Noturno e Integral]: ").capitalize()
-                                        else:
-                                            break
-
-                                    pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
-                                    if pergunta[0].upper() == "S":
-                                        turmas[codigo]["Turno"] = novo_turno
-
-                                        with open("turmas.json", "w", encoding="utf-8") as turmas_json:
-                                            turmas_json.seek(0, 0)
-                                            json.dump(turmas, turmas_json, indent=4)
-                                            print("\nNovo turno registrado com sucesso!!")
-                                            time.sleep(2)
-                                            os.system("cls")
-                                            break
-                                    else:
-                                        os.system("cls")
-                                        parametro = menu_editar()
-                                        os.system("cls")  
-                                else:
-                                    os.system("cls")
-                                    pergunta = input("Quer tentar outro código? ")
-                                    if pergunta[0].upper() == "S":
-                                        os.system("cls")
-                                    else:
-                                        os.system("cls")
-                                        parametro = menu_editar()
-                                        os.system("cls")
-
-                            # Se a pessoa desejar mudar o ano
-                            elif pergunta.upper() == "ANO":
-                                print(f"\n{turmas[codigo]['Ano']}\n")
-
-                                pergunta = input("Esse é o ano que deseja editar? Sim ou Não? ")
-
-                                if pergunta[0].upper() == "S":
-                                    os.system("cls")
-                                    print(f"""{'-' * 15} Edição {'-' * 15}""")
-
-                                    novo_ano = input("\nDigite o novo ano: ")
-
-                                    # Verifica se o ano da turma está correto
-                                    while True:
-                                        if int(novo_ano) not in range(1, 10):
-                                            print("Valor inválido, digite um ano entre (1 e 9): \n")
-                                            novo_ano = input("Digite o ano da turma(1-9): ")
-                                        else:
-                                            novo_ano = novo_ano + "°"
-                                            break
-
-                                    pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
-                                    if pergunta[0].upper() == "S":
-                                        turmas[codigo]["Ano"] = novo_ano
-
-                                        with open("turmas.json", "w", encoding="utf-8") as turmas_json:
-                                            turmas_json.seek(0, 0)
-                                            json.dump(turmas, turmas_json, indent=4)
-                                            print("\nNovo ano registrado com sucesso!!")
-                                            time.sleep(2)
-                                            os.system("cls")
-                                            break
-                                    else:
-                                        os.system("cls")
-                                        parametro = menu_editar()
-                                        os.system("cls")
-                                else:
-                                    os.system("cls")
-                                    pergunta = input("Quer tentar outro código? ")
-                                    if pergunta[0].upper() == "S":
-                                        os.system("cls")
-                                    else:
-                                        os.system("cls")
-                                        parametro = menu_editar()
-                                        os.system("cls")
-
+                            
                             else:
-                                print("Valor informado não existe")
-                                time.sleep(2)     
-                                os.system("cls")      
-                                parametro = menu_editar()
-                                os.system("cls")     
+                                os.system("cls")
+                                pergunta = input("Quer tentar outro código? ")
+                                if pergunta[0].upper() == "S":
+                                    os.system("cls")
+                                else:
+                                    os.system("cls")
+                                    parametro = menu_editar()
+                                    os.system("cls")
+
+                        # Se a pessoa desejar mudar o turno
+                        elif pergunta.upper() == "TURNO":
+                            print(f"\n{turmas[codigo]['Turno']}\n")
+
+                            pergunta = input("Esse é o turno que deseja editar? Sim ou Não? ")
+
+                            if pergunta[0].upper() == "S":
+                                os.system("cls")
+                                print(f"""{'-' * 15} Edição {'-' * 15}""")
+                                novo_turno = input("\nDigite o novo turno: ")
+
+                                # Verificar se o turno é válido
+                                turnos = ["Matutino", "Vespertino", "Noturno", "Integral"]
+                                while True:
+                                    if novo_turno not in turnos:
+                                        print("Turno inválido, digite um turno existente!!\n")
+                                        novo_turno = input("Digite o turno da sua turma [Matutino, Vespertino, Noturno e Integral]: ").capitalize()
+                                    else:
+                                        break
+
+                                pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
+                                if pergunta[0].upper() == "S":
+                                    turmas[codigo]["Turno"] = novo_turno
+
+                                    with open("turmas.json", "w", encoding="utf-8") as turmas_json:
+                                        turmas_json.seek(0, 0)
+                                        json.dump(turmas, turmas_json, indent=4)
+                                        print("\nNovo turno registrado com sucesso!!")
+                                        time.sleep(2)
+                                        os.system("cls")
+                                        break
+                                else:
+                                    os.system("cls")
+                                    parametro = menu_editar()
+                                    os.system("cls")  
+                            else:
+                                os.system("cls")
+                                pergunta = input("Quer tentar outro código? ")
+                                if pergunta[0].upper() == "S":
+                                    os.system("cls")
+                                else:
+                                    os.system("cls")
+                                    parametro = menu_editar()
+                                    os.system("cls")
+
+                        # Se a pessoa desejar mudar o ano
+                        elif pergunta.upper() == "ANO":
+                            print(f"\n{turmas[codigo]['Ano']}\n")
+
+                            pergunta = input("Esse é o ano que deseja editar? Sim ou Não? ")
+
+                            if pergunta[0].upper() == "S":
+                                os.system("cls")
+                                print(f"""{'-' * 15} Edição {'-' * 15}""")
+
+                                novo_ano = input("\nDigite o novo ano: ")
+
+                                # Verifica se o ano da turma está correto
+                                while True:
+                                    if int(novo_ano) not in range(1, 10):
+                                        print("Valor inválido, digite um ano entre (1 e 9): \n")
+                                        novo_ano = input("Digite o ano da turma(1-9): ")
+                                    else:
+                                        novo_ano = novo_ano + "°"
+                                        break
+
+                                pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
+                                if pergunta[0].upper() == "S":
+                                    turmas[codigo]["Ano"] = novo_ano
+
+                                    with open("turmas.json", "w", encoding="utf-8") as turmas_json:
+                                        turmas_json.seek(0, 0)
+                                        json.dump(turmas, turmas_json, indent=4)
+                                        print("\nNovo ano registrado com sucesso!!")
+                                        time.sleep(2)
+                                        os.system("cls")
+                                        break
+                                else:
+                                    os.system("cls")
+                                    parametro = menu_editar()
+                                    os.system("cls")
+                            else:
+                                os.system("cls")
+                                pergunta = input("Quer tentar outro código? ")
+                                if pergunta[0].upper() == "S":
+                                    os.system("cls")
+                                else:
+                                    os.system("cls")
+                                    parametro = menu_editar()
+                                    os.system("cls")
+
                         else:
-                            print("O código informado não existe! ")
-                            time.sleep(2)
-                            os.system("cls")
+                            print("Valor informado não existe")
+                            time.sleep(2)     
+                            os.system("cls")      
                             parametro = menu_editar()
-                            os.system("cls")
+                            os.system("cls")     
                     else:
-                        print("Nenhum valor cadastrado na turma, por favor cadastrar!")
+                        print("O código informado não existe! ")
                         time.sleep(2)
                         os.system("cls")
                         parametro = menu_editar()
                         os.system("cls")
-            else:
-                print("Nenhuma turma cadastrada ainda, por favor, cadastre alguma turma!")
-                time.sleep(2)
-                os.system("cls")
-                parametro = menu_editar()
-                os.system("cls")
+                else:
+                    print("Nenhum valor cadastrado na turma, por favor cadastrar!")
+                    time.sleep(2)
+                    os.system("cls")
+                    parametro = menu_editar()
+                    os.system("cls")
 
-        # Usuário escolhe a opção de editar os alunos
-        elif parametro == "2":
-            # Verificar se existe o arquivo na pasta
-            if os.path.exists("alunos.json"):
-                # Vai abrir o arquivo desejado
-                with open("alunos.json", "r+", encoding="utf-8") as alunos_json:
-                    # carrega o dicionário de alunos_json na variável alunos
-                    alunos = json.load(alunos_json)
-                    
-                    # Verificar se existe algum valor no arquivo
-                    if len(alunos) > 0:
-                        print(f"{'-' * 15} Editar {'-' * 15}\n")
+            # Usuário escolhe a opção de editar os alunos
+            elif parametro == "2":      
+                # Verificar se existe algum valor no arquivo
+                if len(alunos) > 0:
+                    print(f"{'-' * 15} Editar {'-' * 15}\n")
 
-                        codigo = input("Digite o código do aluno que você deseja editar: ")
-                        os.system("cls")
+                    codigo = input("Digite o código do aluno que você deseja editar: ")
+                    os.system("cls")
 
-                        if codigo in alunos:
-                            print(f"""{'-' * 15} Edição {'-' * 15}""")
-                            pergunta = input("\nOque você deseja mudar [Nome, Email, Telefone ou Turma?]: ")
+                    if codigo in alunos:
+                        print(f"""{'-' * 15} Edição {'-' * 15}""")
+                        pergunta = input("\nOque você deseja mudar [Nome, Email, Telefone ou Turma?]: ")
 
-                            if pergunta.upper() == "NOME":
-                                print(f"\n{alunos[codigo]['Nome']}\n")
+                        if pergunta.upper() == "NOME":
+                            print(f"\n{alunos[codigo]['Nome']}\n")
 
-                                pergunta = input("Esse é o nome que deseja editar? Sim ou Não? ")
+                            pergunta = input("Esse é o nome que deseja editar? Sim ou Não? ")
 
+                            if pergunta[0].upper() == "S":
+                                os.system("cls")
+                                print(f"""{'-' * 15} Edição {'-' * 15}""")
+                                novo_nome = input("\nDigite o novo nome: ").title()
+                                pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
+                                if pergunta[0].upper() == "S":
+                                    alunos[codigo]["Nome"] = novo_nome
+
+                                    with open("alunos.json", "w", encoding="utf-8") as alunos_json:
+                                        alunos_json.seek(0, 0)
+                                        json.dump(alunos, alunos_json, indent=4)
+                                        print("\nNovo nome registrado com sucesso!!")
+                                        time.sleep(2)
+                                        os.system("cls")
+                                        break
+                                else:
+                                    os.system("cls")
+                                
+                                break
+
+                            else:
+                                os.system("cls")
+                                pergunta = input("Quer tentar outro código? ")
                                 if pergunta[0].upper() == "S":
                                     os.system("cls")
-                                    print(f"""{'-' * 15} Edição {'-' * 15}""")
-                                    novo_nome = input("\nDigite o novo nome: ").title()
-                                    pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
-                                    if pergunta[0].upper() == "S":
-                                        alunos[codigo]["Nome"] = novo_nome
+                                else:
+                                    os.system("cls")
+                                    parametro = menu_editar()
+                                    os.system("cls")
 
-                                        with open("alunos.json", "w", encoding="utf-8") as alunos_json:
-                                            alunos_json.seek(0, 0)
-                                            json.dump(alunos, alunos_json, indent=4)
-                                            print("\nNovo nome registrado com sucesso!!")
-                                            time.sleep(2)
-                                            os.system("cls")
-                                            break
-                                    else:
+                        elif pergunta.upper() == "EMAIL":
+                            print(f"\n{alunos[codigo]['Email']}\n")
+
+                            pergunta = input("Esse é o email que deseja editar? Sim ou Não? ")
+
+                            if pergunta[0].upper() == "S":
+                                os.system("cls")
+                                print(f"""{'-' * 15} Edição {'-' * 15}""")
+                                novo_email = input("\nDigite o novo email: ")
+                                pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
+                                if pergunta[0].upper() == "S":
+                                    alunos[codigo]["Email"] = novo_email
+
+                                    with open("alunos.json", "w", encoding="utf-8") as alunos_json:
+                                        alunos_json.seek(0, 0)
+                                        json.dump(alunos, alunos_json, indent=4)
+                                        print("\nNovo email registrado com sucesso!!")
+                                        time.sleep(2)
                                         os.system("cls")
-                                    
+                                        break
+
+                                else:
+                                    os.system("cls")
                                     break
 
-                                else:
-                                    os.system("cls")
-                                    pergunta = input("Quer tentar outro código? ")
-                                    if pergunta[0].upper() == "S":
-                                        os.system("cls")
-                                    else:
-                                        os.system("cls")
-                                        parametro = menu_editar()
-                                        os.system("cls")
-
-                            elif pergunta.upper() == "EMAIL":
-                                print(f"\n{alunos[codigo]['Email']}\n")
-
-                                pergunta = input("Esse é o email que deseja editar? Sim ou Não? ")
-
+                            else:
+                                os.system("cls")
+                                pergunta = input("Quer tentar outro código? ")
                                 if pergunta[0].upper() == "S":
                                     os.system("cls")
-                                    print(f"""{'-' * 15} Edição {'-' * 15}""")
-                                    novo_email = input("\nDigite o novo email: ")
-                                    pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
-                                    if pergunta[0].upper() == "S":
-                                        alunos[codigo]["Email"] = novo_email
+                                else:
+                                    os.system("cls")
+                                    parametro = menu_editar()
+                                    os.system("cls")
 
-                                        with open("alunos.json", "w", encoding="utf-8") as alunos_json:
-                                            alunos_json.seek(0, 0)
-                                            json.dump(alunos, alunos_json, indent=4)
-                                            print("\nNovo email registrado com sucesso!!")
-                                            time.sleep(2)
-                                            os.system("cls")
-                                            break
+                        elif pergunta.upper() == "TELEFONE":
+                            print(f"\n{alunos[codigo]['Telefone']}\n")
 
-                                    else:
+                            pergunta = input("Esse é o telefone que deseja editar? Sim ou Não? ")
+
+                            if pergunta[0].upper() == "S":
+                                os.system("cls")
+                                print(f"""{'-' * 15} Edição {'-' * 15}""")
+                                novo_telefone = input("\nDigite o novo telefone: ")
+                                pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
+                                if pergunta[0].upper() == "S":
+                                    alunos[codigo]["Telefone"] = novo_telefone
+
+                                    with open("alunos.json", "w", encoding="utf-8") as alunos_json:
+                                        alunos_json.seek(0, 0)
+                                        json.dump(alunos, alunos_json, indent=4)
+                                        print("\nNovo telefone registrado com sucesso!!")
+                                        time.sleep(2)
                                         os.system("cls")
                                         break
-
                                 else:
                                     os.system("cls")
-                                    pergunta = input("Quer tentar outro código? ")
-                                    if pergunta[0].upper() == "S":
-                                        os.system("cls")
-                                    else:
-                                        os.system("cls")
-                                        parametro = menu_editar()
-                                        os.system("cls")
-
-                            elif pergunta.upper() == "TELEFONE":
-                                print(f"\n{alunos[codigo]['Telefone']}\n")
-
-                                pergunta = input("Esse é o telefone que deseja editar? Sim ou Não? ")
-
-                                if pergunta[0].upper() == "S":
-                                    os.system("cls")
-                                    print(f"""{'-' * 15} Edição {'-' * 15}""")
-                                    novo_telefone = input("\nDigite o novo telefone: ")
-                                    pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
-                                    if pergunta[0].upper() == "S":
-                                        alunos[codigo]["Telefone"] = novo_telefone
-
-                                        with open("alunos.json", "w", encoding="utf-8") as alunos_json:
-                                            alunos_json.seek(0, 0)
-                                            json.dump(alunos, alunos_json, indent=4)
-                                            print("\nNovo telefone registrado com sucesso!!")
-                                            time.sleep(2)
-                                            os.system("cls")
-                                            break
-                                    else:
-                                        os.system("cls")
-                                        break
-
-                                else:
-                                    os.system("cls")
-                                    pergunta = input("Quer tentar outro código? ")
-                                    if pergunta[0].upper() == "S":
-                                        os.system("cls")
-                                    else:
-                                        os.system("cls")
-                                        parametro = menu_editar()
-                                        os.system("cls")    
-
-                            elif pergunta.upper() == "TURMA":
-                                print(f"\n{alunos[codigo]['Turma']}\n")
-
-                                pergunta = input("Essa é a turma que deseja editar? Sim ou Não? ")
-
-                                if pergunta[0].upper() == "S":
-                                    os.system("cls")
-                                    print(f"""{'-' * 15} Edição {'-' * 15}""")
-                                    nova_turma = input("\nDigite o código da turma: ")
-                                    if not nova_turma in turmas:
-                                        print("Essa turma não existe, por favor digite outra!!")
-                                        nova_turma = input("\nDigite o código da turma existente: ")
-                                    else:
-                                        pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
-                                        if pergunta[0].upper() == "S":
-                                            alunos[codigo]["Turma"] = nova_turma
-
-                                            with open("alunos.json", "w", encoding="utf-8") as alunos_json:
-                                                alunos_json.seek(0, 0)
-                                                json.dump(alunos, alunos_json, indent=4)
-                                                print("\nNova turma registrada com sucesso!!")
-                                                time.sleep(2)
-                                                os.system("cls")
-                                                break
-                                        else:
-                                            os.system("cls")
-                                            parametro = menu_editar()
-                                            os.system("cls")
-
-                                else:
-                                    os.system("cls")
-                                    pergunta = input("Quer tentar outro código? ")
-                                    if pergunta[0].upper() == "S":
-                                        os.system("cls")
-                                    else:
-                                        os.system("cls")
-                                        parametro = menu_editar()
-                                        os.system("cls")   
+                                    break
 
                             else:
-                                print("Valor inválido")
-                                time.sleep(2)
                                 os.system("cls")
-                                parametro = menu_editar()
-                                os.system("cls")
-
-                        else:
-                            print("Esse código não existe!! Cadastre o aluno(a) primeiro!!")
-                            time.sleep(2)
-                            os.system("cls")
-                            parametro = menu_editar()
-                            os.system("cls")
-
-                    else:
-                        print("Nenhum valor cadastrado em alunos, por favor cadastrar!")
-                        time.sleep(2)
-                        os.system("cls")
-                        parametro = menu_editar()
-                        os.system("cls")
-            else:
-                print("Nenhum aluno(a) cadastrado(a) ainda, por favor, cadastre algum(a) aluno(a)!")
-                time.sleep(2)
-                os.system("cls")
-                parametro = menu_editar()
-                os.system("cls")
-
-        # Usuário escolhe a opção de editar os boletins
-        elif parametro == "3":
-            # Verificar se existe o arquivo na pasta
-            if os.path.exists("boletim.json"):
-                # Vai abrir o arquivo desejado
-                with open("boletim.json", "r+", encoding="utf-8") as boletins_json:
-                    # carrega o dicionário de boletins_json na variável boletins
-                    boletins = json.load(boletins_json)
-
-                    # Verificar se existe algum valor no arquivo
-                    if len(boletins) > 0:
-                        print(f"{'-' * 15} Editar {'-' * 15}\n")
-
-                        codigo = input("Digite o código do boletim que você deseja editar: ")
-                        os.system("cls")
-
-                        if codigo in boletins:
-                            print(f"""{'-' * 15} Edição {'-' * 15}""")
-                            pergunta = input("\nOque você deseja mudar [NOME, TURMA, NOTAS, FALTA ou SITUAÇÃO?]: ")
-
-                            if pergunta.upper() == "NOME":
-                                print(f"\n{boletins[codigo]['Nome']}\n")
-
-                                pergunta = input("Esse é o nome que deseja editar? Sim ou Não? ")
-
+                                pergunta = input("Quer tentar outro código? ")
                                 if pergunta[0].upper() == "S":
                                     os.system("cls")
-                                    print(f"""{'-' * 15} Edição {'-' * 15}""")
-                                    novo_nome = input("\nDigite o novo nome: ")
-                                    pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
-                                    if pergunta[0].upper() == "S":
-                                        boletins[codigo]["Nome"] = novo_nome
-
-                                        with open("boletim.json", "w", encoding="utf-8") as boletins_json:
-                                            boletins_json.seek(0, 0)
-                                            json.dump(boletins, boletins_json, indent=4)
-                                            print("\nNovo nome registrado com sucesso!!")
-                                            time.sleep(2)
-                                            os.system("cls")
-                                            break
-                                    else:
-                                        os.system("cls")
-                                        break
-                                    
                                 else:
                                     os.system("cls")
-                                    pergunta = input("Quer tentar outro código? ")
-                                    if pergunta[0].upper() == "S":
-                                        os.system("cls")
-                                    else:
-                                        os.system("cls")
-                                        parametro = menu_editar()
-                                        os.system("cls")
+                                    parametro = menu_editar()
+                                    os.system("cls")    
 
+                        elif pergunta.upper() == "TURMA":
+                            print(f"\n{alunos[codigo]['Turma']}\n")
 
-                            elif pergunta.upper() == "TURMA":
-                                print(f"\n{boletins[codigo]['Turma']}\n")
+                            pergunta = input("Essa é a turma que deseja editar? Sim ou Não? ")
 
-                                pergunta = input("Essa é a turma que deseja editar? Sim ou Não? ")
-
-                                if pergunta[0].upper() == "S":
-                                    os.system("cls")
-                                    print(f"""{'-' * 15} Edição {'-' * 15}""")
-                                    nova_turma = input("\nDigite a nova turma: ")
+                            if pergunta[0].upper() == "S":
+                                os.system("cls")
+                                print(f"""{'-' * 15} Edição {'-' * 15}""")
+                                nova_turma = input("\nDigite o código da turma: ")
+                                if not nova_turma in turmas:
+                                    print("Essa turma não existe, por favor digite outra!!")
+                                    nova_turma = input("\nDigite o código da turma existente: ")
+                                else:
                                     pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
                                     if pergunta[0].upper() == "S":
-                                        boletins[codigo]["Turma"] = nova_turma
+                                        alunos[codigo]["Turma"] = nova_turma
 
-                                        with open("boletim.json", "w", encoding="utf-8") as boletins_json:
-                                            boletins_json.seek(0, 0)
-                                            json.dump(boletins, boletins_json, indent=4)
+                                        with open("alunos.json", "w", encoding="utf-8") as alunos_json:
+                                            alunos_json.seek(0, 0)
+                                            json.dump(alunos, alunos_json, indent=4)
                                             print("\nNova turma registrada com sucesso!!")
                                             time.sleep(2)
                                             os.system("cls")
@@ -841,72 +716,215 @@ def editar(parametro):
                                         os.system("cls")
                                         parametro = menu_editar()
                                         os.system("cls")
-                                else:
-                                    os.system("cls")
-                                    pergunta = input("Quer tentar outro código? ")
-                                    if pergunta[0].upper() == "S":
-                                        os.system("cls")
-                                    else:
-                                        os.system("cls")
-                                        parametro = menu_editar()
-                                        os.system("cls")
 
-                            elif pergunta.upper() == "NOTAS":
-                                print(f"\n{boletins[codigo]['Notas']}\n")
-
-                                pergunta = input("Essa são as notas que deseja editar? Sim ou Não? ")
-
+                            else:
+                                os.system("cls")
+                                pergunta = input("Quer tentar outro código? ")
                                 if pergunta[0].upper() == "S":
                                     os.system("cls")
-                                    print(f"""{'-' * 15} Edição {'-' * 15}""")
-                                    notas_aluno = []
-                                    for i in range(1, 5):
-                                        nota = float(input(f"Digite a {i}a nota: "))
-                                        notas_aluno.append(nota)
+                                else:
+                                    os.system("cls")
+                                    parametro = menu_editar()
+                                    os.system("cls")   
+
+                        else:
+                            print("Valor inválido")
+                            time.sleep(2)
+                            os.system("cls")
+                            parametro = menu_editar()
+                            os.system("cls")
+
+                    else:
+                        print("Esse código não existe!! Cadastre o aluno(a) primeiro!!")
+                        time.sleep(2)
+                        os.system("cls")
+                        parametro = menu_editar()
+                        os.system("cls")
+
+                else:
+                    print("Nenhum valor cadastrado em alunos, por favor cadastrar!")
+                    time.sleep(2)
+                    os.system("cls")
+                    parametro = menu_editar()
+                    os.system("cls")
+                
+            # Usuário escolhe a opção de editar os boletins
+            elif parametro == "3":
+                
+                # Verificar se existe algum valor no arquivo
+                if len(boletins) > 0:
+                    print(f"{'-' * 15} Editar {'-' * 15}\n")
+
+                    codigo = input("Digite o código do boletim que você deseja editar: ")
+                    os.system("cls")
+
+                    if codigo in boletins:
+                        print(f"""{'-' * 15} Edição {'-' * 15}""")
+                        pergunta = input("\nOque você deseja mudar [NOME, TURMA, NOTAS, FALTA ou SITUAÇÃO?]: ")
+
+                        if pergunta.upper() == "NOME":
+                            print(f"\n{boletins[codigo]['Nome']}\n")
+
+                            pergunta = input("Esse é o nome que deseja editar? Sim ou Não? ")
+
+                            if pergunta[0].upper() == "S":
+                                os.system("cls")
+                                print(f"""{'-' * 15} Edição {'-' * 15}""")
+                                novo_nome = input("\nDigite o novo nome: ")
+                                pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
+                                if pergunta[0].upper() == "S":
+                                    boletins[codigo]["Nome"] = novo_nome
+
+                                    with open("boletim.json", "w", encoding="utf-8") as boletins_json:
+                                        boletins_json.seek(0, 0)
+                                        json.dump(boletins, boletins_json, indent=4)
+                                        print("\nNovo nome registrado com sucesso!!")
+                                        time.sleep(2)
+                                        os.system("cls")
+                                        break
+                                else:
+                                    os.system("cls")
+                                    break
+                                
+                            else:
+                                os.system("cls")
+                                pergunta = input("Quer tentar outro código? ")
+                                if pergunta[0].upper() == "S":
+                                    os.system("cls")
+                                else:
+                                    os.system("cls")
+                                    parametro = menu_editar()
+                                    os.system("cls")
+
+
+                        elif pergunta.upper() == "TURMA":
+                            print(f"\n{boletins[codigo]['Turma']}\n")
+
+                            pergunta = input("Essa é a turma que deseja editar? Sim ou Não? ")
+
+                            if pergunta[0].upper() == "S":
+                                os.system("cls")
+                                print(f"""{'-' * 15} Edição {'-' * 15}""")
+                                nova_turma = input("\nDigite a nova turma: ")
+                                pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
+                                if pergunta[0].upper() == "S":
+                                    boletins[codigo]["Turma"] = nova_turma
+
+                                    with open("boletim.json", "w", encoding="utf-8") as boletins_json:
+                                        boletins_json.seek(0, 0)
+                                        json.dump(boletins, boletins_json, indent=4)
+                                        print("\nNova turma registrada com sucesso!!")
+                                        time.sleep(2)
+                                        os.system("cls")
+                                        break
+                                else:
+                                    os.system("cls")
+                                    parametro = menu_editar()
+                                    os.system("cls")
+                            else:
+                                os.system("cls")
+                                pergunta = input("Quer tentar outro código? ")
+                                if pergunta[0].upper() == "S":
+                                    os.system("cls")
+                                else:
+                                    os.system("cls")
+                                    parametro = menu_editar()
+                                    os.system("cls")
+
+                        elif pergunta.upper() == "NOTAS":
+                            print(f"\n{boletins[codigo]['Notas']}\n")
+
+                            pergunta = input("Essa são as notas que deseja editar? Sim ou Não? ")
+
+                            if pergunta[0].upper() == "S":
+                                os.system("cls")
+                                print(f"""{'-' * 15} Edição {'-' * 15}""")
+                                notas_aluno = []
+                                for i in range(1, 5):
+                                    nota = float(input(f"Digite a {i}a nota: "))
+                                    notas_aluno.append(nota)
+
+                                pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
+                                if pergunta[0].upper() == "S":
+                                    boletins[codigo]["Notas"] = notas_aluno
+
+                                    with open("boletim.json", "w", encoding="utf-8") as boletins_json:
+                                        boletins_json.seek(0, 0)
+                                        json.dump(boletins, boletins_json, indent=4)
+                                        print("Novas notas registradas com sucesso!!")
+                                        time.sleep(2)
+                                        os.system("cls")
+                                else:
+                                    os.system("cls")
+                                    parametro = menu_editar()
+                                    os.system("cls")
+                            else:
+                                os.system("cls")
+                                pergunta = input("Quer tentar outro código? ")
+                                if pergunta[0].upper() == "S":
+                                    os.system("cls")
+                                else:
+                                    os.system("cls")
+                                    parametro = menu_editar()
+                                    os.system("cls")
+
+                        elif pergunta.upper() == "FALTA":
+                            print(f"\n{boletins[codigo]['Quantidade de Faltas']}\n")
+
+                            pergunta = input("Essa são as faltas que deseja editar? Sim ou Não? ")
+
+                            if pergunta[0].upper() == "S":
+                                os.system("cls")
+                                print(f"""{'-' * 15} Edição {'-' * 15}""")
+                                
+                                faltas_nova = int(input("Digite a nova quantidade de faltas do aluno inserido: "))
+
+                                pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
+                                if pergunta[0].upper() == "S":
+                                    boletins[codigo]["Quantidade de Faltas"] = faltas_nova
+
+                                    with open("boletim.json", "w", encoding="utf-8") as boletins_json:
+                                        boletins_json.seek(0, 0)
+                                        json.dump(boletins, boletins_json, indent=4)
+                                        print("\nNovas faltas registradas com sucesso!!")
+                                        time.sleep(2)
+                                        os.system("cls")
+                                        break
+                                else:
+                                    os.system("cls")
+                                    parametro = menu_editar()
+                                    os.system("cls")
+                            else:
+                                os.system("cls")
+                                pergunta = input("Quer tentar outro código? ")
+                                if pergunta[0].upper() == "S":
+                                    os.system("cls")
+                                else:
+                                    os.system("cls")
+                                    parametro = menu_editar()
+                                    os.system("cls")
+
+                        elif pergunta.upper() == "SITUAÇÃO" or pergunta.upper() == "SITUACAO":
+                            print(f"\n{boletins[codigo]['Situação']}\n")
+
+                            pergunta = input("Essa é a situação que deseja editar? Sim ou Não? ")
+
+                            if pergunta[0].upper() == "S":
+                                os.system("cls")
+                                print(f"""{'-' * 15} Edição {'-' * 15}""")
+                                
+                                nova_situacao = input("Qaul a sitação do aluno, Aprovado ou Reprovado? ")
+
+                                if nova_situacao.upper() == "APROVADO" or nova_situacao.upper() == "REPROVADO":
 
                                     pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
                                     if pergunta[0].upper() == "S":
-                                        boletins[codigo]["Notas"] = notas_aluno
+                                        boletins[codigo]["Situação"] = nova_situacao
 
                                         with open("boletim.json", "w", encoding="utf-8") as boletins_json:
                                             boletins_json.seek(0, 0)
                                             json.dump(boletins, boletins_json, indent=4)
-                                            print("Novas notas registradas com sucesso!!")
-                                            time.sleep(2)
-                                            os.system("cls")
-                                    else:
-                                        os.system("cls")
-                                        parametro = menu_editar()
-                                        os.system("cls")
-                                else:
-                                    os.system("cls")
-                                    pergunta = input("Quer tentar outro código? ")
-                                    if pergunta[0].upper() == "S":
-                                        os.system("cls")
-                                    else:
-                                        os.system("cls")
-                                        parametro = menu_editar()
-                                        os.system("cls")
-
-                            elif pergunta.upper() == "FALTA":
-                                print(f"\n{boletins[codigo]['Quantidade de Faltas']}\n")
-
-                                pergunta = input("Essa são as faltas que deseja editar? Sim ou Não? ")
-
-                                if pergunta[0].upper() == "S":
-                                    os.system("cls")
-                                    print(f"""{'-' * 15} Edição {'-' * 15}""")
-                                    
-                                    faltas_nova = int(input("Digite a nova quantidade de faltas do aluno inserido: "))
-
-                                    pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
-                                    if pergunta[0].upper() == "S":
-                                        boletins[codigo]["Quantidade de Faltas"] = faltas_nova
-
-                                        with open("boletim.json", "w", encoding="utf-8") as boletins_json:
-                                            boletins_json.seek(0, 0)
-                                            json.dump(boletins, boletins_json, indent=4)
-                                            print("\nNovas faltas registradas com sucesso!!")
+                                            print("\nNova situação registrado com sucesso!!")
                                             time.sleep(2)
                                             os.system("cls")
                                             break
@@ -915,315 +933,245 @@ def editar(parametro):
                                         parametro = menu_editar()
                                         os.system("cls")
                                 else:
+                                    print("Valor inválido!")
                                     os.system("cls")
-                                    pergunta = input("Quer tentar outro código? ")
-                                    if pergunta[0].upper() == "S":
-                                        os.system("cls")
-                                    else:
-                                        os.system("cls")
-                                        parametro = menu_editar()
-                                        os.system("cls")
-
-                            elif pergunta.upper() == "SITUAÇÃO" or pergunta.upper() == "SITUACAO":
-                                print(f"\n{boletins[codigo]['Situação']}\n")
-
-                                pergunta = input("Essa é a situação que deseja editar? Sim ou Não? ")
-
-                                if pergunta[0].upper() == "S":
+                                    parametro = menu_editar()
                                     os.system("cls")
-                                    print(f"""{'-' * 15} Edição {'-' * 15}""")
-                                    
-                                    nova_situacao = input("Qaul a sitação do aluno, Aprovado ou Reprovado? ")
-
-                                    if nova_situacao.upper() == "APROVADO" or nova_situacao.upper() == "REPROVADO":
-
-                                        pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
-                                        if pergunta[0].upper() == "S":
-                                            boletins[codigo]["Situação"] = nova_situacao
-
-                                            with open("boletim.json", "w", encoding="utf-8") as boletins_json:
-                                                boletins_json.seek(0, 0)
-                                                json.dump(boletins, boletins_json, indent=4)
-                                                print("\nNova situação registrado com sucesso!!")
-                                                time.sleep(2)
-                                                os.system("cls")
-                                                break
-                                        else:
-                                            os.system("cls")
-                                            parametro = menu_editar()
-                                            os.system("cls")
-                                    else:
-                                        print("Valor inválido!")
-                                        os.system("cls")
-                                        parametro = menu_editar()
-                                        os.system("cls")
-
-                                else:
-                                    os.system("cls")
-                                    pergunta = input("Quer tentar outro código? ")
-                                    if pergunta[0].upper() == "S":
-                                        os.system("cls")
-                                    else:
-                                        os.system("cls")
-                                        parametro = menu_editar()
-                                        os.system("cls")
 
                             else:
-                                print("Valor informado não existe")
-                                time.sleep(2)     
                                 os.system("cls")
-                                parametro = menu_editar()
-                                os.system("cls")
+                                pergunta = input("Quer tentar outro código? ")
+                                if pergunta[0].upper() == "S":
+                                    os.system("cls")
+                                else:
+                                    os.system("cls")
+                                    parametro = menu_editar()
+                                    os.system("cls")
 
                         else:
-                            print("Esse código não existe!! Cadastre o boletim primeiro!!")
-                            time.sleep(2)
+                            print("Valor informado não existe")
+                            time.sleep(2)     
                             os.system("cls")
                             parametro = menu_editar()
                             os.system("cls")
 
                     else:
-                        print("Nenhum valor cadastrado em boletins, por favor cadastrar!")
+                        print("Esse código não existe!! Cadastre o boletim primeiro!!")
                         time.sleep(2)
                         os.system("cls")
                         parametro = menu_editar()
                         os.system("cls")
+
+                else:
+                    print("Nenhum valor cadastrado em boletins, por favor cadastrar!")
+                    time.sleep(2)
+                    os.system("cls")
+                    parametro = menu_editar()
+                    os.system("cls")
+
+            elif parametro == "4":
+                os.system("cls")
+                break
+
             else:
-                print("Nenhum boletim cadastrado ainda, por favor, cadastre algun boletim!")
-                time.sleep(2)
+                print("Valor inválido!")
+                time.sleep(1)
                 os.system("cls")
                 parametro = menu_editar()
                 os.system("cls")
-
-        elif parametro == "4":
-            os.system("cls")
-            break
-
-        else:
-            print("Valor inválido!")
-            time.sleep(1)
-            os.system("cls")
-            parametro = menu_editar()
-            os.system("cls")
         
 def remover(parametro):
+
+    verifica()
+
     # Loop para não sair da opção de parametro
     while True:
+        # Vai abrir os arquivos
+        with open("turmas.json", "r+", encoding="utf-8") as turmas_json, open("alunos.json", "r+", encoding="utf-8") as alunos_json, open("boletim.json", "r+", encoding="utf-8") as boletins_json:
+            turma = json.load(turmas_json)
+            aluno = json.load(alunos_json)
+            boletim = json.load(boletins_json)
 
         # Se o usuário escolher remover turma
-        if parametro == "1":
-            if os.path.exists("turmas.json"):
-                # Vai abrir o arquivo desejado
-                with open("turmas.json", "r+", encoding="utf-8") as turmas_json:
-                    # carrega o dicionário de turmas_json na variável turmas
-                    turma = json.load(turmas_json)
-                    
-                    codigo = input("Digite o código da turma que você deseja remover: ")
+        if parametro == "1": 
+            codigo = input("Digite o código da turma que você deseja remover: ")
 
-                    if codigo in turma:
-                        print(f"\n{turma[codigo]}\nEssa é a turma que você selecionou\n")
-                        pergunta = input("Você tem certeza que deseja excluir? Sim ou Não? ")
+            if codigo in turma:
+                print(f"\n{turma[codigo]}\nEssa é a turma que você selecionou\n")
+                pergunta = input("Você tem certeza que deseja excluir? Sim ou Não? ")
 
-                        if pergunta[0].upper() == "S":
-                            if len(turma) > 1:
+                if pergunta[0].upper() == "S":
+                    if len(turma) > 1:
 
-                                # Se for o ultimo dicionário vai remover
-                                if int(codigo) == len(turma):
-                                    del turma[codigo]
+                        # Se for o ultimo dicionário vai remover
+                        if int(codigo) == len(turma):
+                            del turma[codigo]
 
-                                    with open("turmas.json", "w", encoding="utf-8") as turmas_json:
-                                        json.dump(turma, turmas_json, indent=4)
-                                        print("\nTurma removida com sucesso!")
-                                        time.sleep(2)
-                                        os.system("cls")
-                                        break
+                            with open("turmas.json", "w", encoding="utf-8") as turmas_json:
+                                json.dump(turma, turmas_json, indent=4)
+                                print("\nTurma removida com sucesso!")
+                                time.sleep(2)
+                                os.system("cls")
+                                break
 
-                                # Código para reescrever o código digitado pelo seu sucessor
-                                turma[codigo] = turma.pop(str(int(codigo) + 1)) # Reescrever no código deletado o dicionário que estava a frente
+                        # Código para reescrever o código digitado pelo seu sucessor
+                        turma[codigo] = turma.pop(str(int(codigo) + 1)) # Reescrever no código deletado o dicionário que estava a frente
 
-                                for i in range(1, len(turma) + 1): # Vai percorrer todos os dicionários na turma
-                                    if str(i) in turma:
-                                        turma[str(i)] = turma[str(i)]
-                                    else:
-                                        turma[str(i)] = turma.pop(str(i + 1))
-
-                                with open("turmas.json", "w", encoding="utf-8") as turmas_json:
-                                    json.dump(turma, turmas_json, indent=4)
-                                    print("\nTurma removida com sucesso!")
-                                    time.sleep(2)
-                                    os.system("cls")
-                                    break
-                                
+                        for i in range(1, len(turma) + 1): # Vai percorrer todos os dicionários na turma
+                            if str(i) in turma:
+                                turma[str(i)] = turma[str(i)]
                             else:
-                                with open("turmas.json", "w", encoding="utf-8") as turmas_json:
-                                    json.dump({}, turmas_json)
-                                    print("\nTurma removida com sucesso!")
-                                    time.sleep(2)
-                                    os.system("cls")
-                                    break
+                                turma[str(i)] = turma.pop(str(i + 1))
 
-                        else:
+                        with open("turmas.json", "w", encoding="utf-8") as turmas_json:
+                            json.dump(turma, turmas_json, indent=4)
+                            print("\nTurma removida com sucesso!")
+                            time.sleep(2)
                             os.system("cls")
-                            parametro = menu_remover()
-                            os.system("cls")
-
+                            break
+                        
                     else:
-                        os.system("cls")
-                        print("Nenhuma turma com esse código, por favor, crie uma!")
-                        time.sleep(1.5)
-                        os.system("cls")
-                        parametro = menu_remover()
-                        os.system("cls")
+                        with open("turmas.json", "w", encoding="utf-8") as turmas_json:
+                            json.dump({}, turmas_json)
+                            print("\nTurma removida com sucesso!")
+                            time.sleep(2)
+                            os.system("cls")
+                            break
+
+                else:
+                    os.system("cls")
+                    parametro = menu_remover()
+                    os.system("cls")
+
             else:
-                print("Nenhuma turma cadastrada ainda!")
+                os.system("cls")
+                print("Nenhuma turma com esse código, por favor, crie uma!")
                 time.sleep(1.5)
                 os.system("cls")
                 parametro = menu_remover()
-                os.system("cls")        
-        
+                os.system("cls")
+
         # Se o usuário escolher remover alunos
         elif parametro == "2":
-            if os.path.exists("alunos.json"):
-                # Vai abrir o arquivo desejado
-                with open("alunos.json", "r+", encoding="utf-8") as alunos_json:
-                    aluno = json.load(alunos_json)
+            
+            codigo = input("Digite o código do(a) aluno(a) que você deseja remover: ")
 
-                    codigo = input("Digite o código do(a) aluno(a) que você deseja remover: ")
+            if codigo in aluno:
+                print(f"\n{aluno[codigo]}\nEsse foi o aluno que você selecionou\n")
+                pergunta = input("Você tem certeza que quer excluir? Sim ou Não? ")
+                if pergunta[0].upper() == "S":
+                    # Se tiver mais de um aluno no dicionário
+                    if len(aluno) > 1:
 
-                    if codigo in aluno:
-                        print(f"\n{aluno[codigo]}\nEsse foi o aluno que você selecionou\n")
-                        pergunta = input("Você tem certeza que quer excluir? Sim ou Não? ")
-                        if pergunta[0].upper() == "S":
-                            # Se tiver mais de um aluno no dicionário
-                            if len(aluno) > 1:
+                        # Se for o último dicionário vai remover
+                        if int(codigo) == len(aluno):
+                            del aluno[codigo]
 
-                                # Se for o último dicionário vai remover
-                                if int(codigo) == len(aluno):
-                                    del aluno[codigo]
+                            with open("alunos.json", "w", encoding="utf-8") as alunos_json:
+                                json.dump(aluno, alunos_json, indent=4)
+                                print("\nAluno(a) removido(a) com sucesso!")
+                                time.sleep(2)
+                                os.system("cls")
+                                break
 
-                                    with open("alunos.json", "w", encoding="utf-8") as alunos_json:
-                                        json.dump(aluno, alunos_json, indent=4)
-                                        print("\nAluno(a) removido(a) com sucesso!")
-                                        time.sleep(2)
-                                        os.system("cls")
-                                        break
+                        # Código para reescrever o código digitado pelo seu sucessor
+                        aluno[codigo] = aluno.pop(str(int(codigo) + 1)) # Reescrever no código deletado o dicionário que estava a frente
 
-                                # Código para reescrever o código digitado pelo seu sucessor
-                                aluno[codigo] = aluno.pop(str(int(codigo) + 1)) # Reescrever no código deletado o dicionário que estava a frente
-
-                                for i in range(1, len(aluno) + 1): # Vai percorrer todos os dicionários no aluno
-                                    if str(i) in aluno:
-                                        aluno[str(i)] = aluno[str(i)]
-                                    else:
-                                        aluno[str(i)] = aluno.pop(str(i + 1))
-
-                                with open("alunos.json", "w", encoding="utf-8") as alunos_json:
-                                    json.dump(aluno, alunos_json, indent=4)
-                                    print("\nAluno(a) removido(a) com sucesso!")
-                                    time.sleep(2)
-                                    os.system("cls")
-                                    break
-
-                            # Se tiver apenas 1 aluno no dicionário
+                        for i in range(1, len(aluno) + 1): # Vai percorrer todos os dicionários no aluno
+                            if str(i) in aluno:
+                                aluno[str(i)] = aluno[str(i)]
                             else:
-                                with open("alunos.json", "w", encoding="utf-8") as alunos_json:
-                                    json.dump({}, alunos_json)    
-                                    print("\nAluno removido com sucesso!")
-                                    time.sleep(2)
-                                    os.system("cls")
-                                    break
-                        
-                        else:
-                            os.system("cls")
-                            parametro = menu_remover()
-                            os.system("cls")
-                    
-                    else:
-                        os.system("cls")
-                        print("Nenhum aluno(o) com esse código, por favor, crie um(a)!")
-                        time.sleep(1.5)
-                        os.system("cls")
-                        parametro = menu_remover()
-                        os.system("cls")
+                                aluno[str(i)] = aluno.pop(str(i + 1))
 
+                        with open("alunos.json", "w", encoding="utf-8") as alunos_json:
+                            json.dump(aluno, alunos_json, indent=4)
+                            print("\nAluno(a) removido(a) com sucesso!")
+                            time.sleep(2)
+                            os.system("cls")
+                            break
+
+                    # Se tiver apenas 1 aluno no dicionário
+                    else:
+                        with open("alunos.json", "w", encoding="utf-8") as alunos_json:
+                            json.dump({}, alunos_json)    
+                            print("\nAluno removido com sucesso!")
+                            time.sleep(2)
+                            os.system("cls")
+                            break
+                
+                else:
+                    os.system("cls")
+                    parametro = menu_remover()
+                    os.system("cls")
+            
             else:
-                print("Nenhum aluno(a) cadastrado(a) ainda!")
+                os.system("cls")
+                print("Nenhum aluno(o) com esse código, por favor, crie um(a)!")
                 time.sleep(1.5)
                 os.system("cls")
                 parametro = menu_remover()
-                os.system("cls")  
+                os.system("cls")
 
         # Se o usuário esolher remover boletim
         elif parametro == "3":
-            if os.path.exists("boletim.json"):
-                # Vai abrir o arquivo desejado
-                with open("boletim.json", "r+", encoding="utf-8") as boletins_json:
-                    boletim = json.load(boletins_json)
 
-                    codigo = input("Digite o código do boletim que deseja remover: ")
+            codigo = input("Digite o código do boletim que deseja remover: ")
 
-                    if codigo in boletim:
-                        print(f"\n{boletim[codigo]}\nEsse foi o boletim que você selecionou\n")
-                        pergunta = input("Você tem certeza que quer excluir? Sim ou Não? ")
-                        if pergunta[0].upper() == "S":
-                            # Se tiver mais de um dicionário
-                            if len(boletim) > 1:
+            if codigo in boletim:
+                print(f"\n{boletim[codigo]}\nEsse foi o boletim que você selecionou\n")
+                pergunta = input("Você tem certeza que quer excluir? Sim ou Não? ")
+                if pergunta[0].upper() == "S":
+                    # Se tiver mais de um dicionário
+                    if len(boletim) > 1:
 
-                                # Se for o ultimo dicionário vai remover
-                                if int(codigo) == len(boletim):
-                                    del boletim[codigo]
+                        # Se for o ultimo dicionário vai remover
+                        if int(codigo) == len(boletim):
+                            del boletim[codigo]
 
-                                    with open("boletim.json", "w", encoding="utf-8") as boletins_json:
-                                        json.dump(boletim, boletins_json, indent=4)
-                                        print("\nBoletim removido com sucesso!")
-                                        time.sleep(2)
-                                        os.system("cls")
-                                        break
-                                
-                                # Código para reescrever o código digitado pelo seu sucessor
-                                boletim[codigo] = boletim.pop(str(int(codigo) + 1)) # Reescrever no código deletado o dicionário que estava a frente
-
-                                for i in range(1, len(boletim) + 1): # Vai percorrer todos os dicionários no boletim
-                                    if str(i) in boletim:
-                                        boletim[str(i)] = boletim[str(i)]
-                                    else:
-                                        boletim[str(i)] = boletim.pop(str(i + 1))
-
-                                with open("boletim.json", "w", encoding="utf-8") as boletins_json:
-                                    json.dump(boletim, boletins_json, indent=4)
-                                    print("\nBoletim removido com sucesso!")
-                                    time.sleep(2)
-                                    os.system("cls")
-                                    break
+                            with open("boletim.json", "w", encoding="utf-8") as boletins_json:
+                                json.dump(boletim, boletins_json, indent=4)
+                                print("\nBoletim removido com sucesso!")
+                                time.sleep(2)
+                                os.system("cls")
+                                break
                         
-                            # Se tiver apenas 1 boletim no dicionário
+                        # Código para reescrever o código digitado pelo seu sucessor
+                        boletim[codigo] = boletim.pop(str(int(codigo) + 1)) # Reescrever no código deletado o dicionário que estava a frente
+
+                        for i in range(1, len(boletim) + 1): # Vai percorrer todos os dicionários no boletim
+                            if str(i) in boletim:
+                                boletim[str(i)] = boletim[str(i)]
                             else:
-                                with open("boletim.json", "w", encoding="utf-8") as boletins_json:
-                                    json.dump({}, boletins_json)    
-                                    print("\nBoletim removido com sucesso!")
-                                    time.sleep(2)
-                                    os.system("cls")
-                                    break
+                                boletim[str(i)] = boletim.pop(str(i + 1))
 
-                        else:
+                        with open("boletim.json", "w", encoding="utf-8") as boletins_json:
+                            json.dump(boletim, boletins_json, indent=4)
+                            print("\nBoletim removido com sucesso!")
+                            time.sleep(2)
                             os.system("cls")
-                            parametro = menu_remover()
-                            os.system("cls")
-
+                            break
+                
+                    # Se tiver apenas 1 boletim no dicionário
                     else:
-                        os.system("cls")
-                        print("Nenhum boletim com esse código, por favor, crie um!")
-                        time.sleep(1.5)
-                        os.system("cls")
-                        parametro = menu_remover()
-                        os.system("cls")
+                        with open("boletim.json", "w", encoding="utf-8") as boletins_json:
+                            json.dump({}, boletins_json)    
+                            print("\nBoletim removido com sucesso!")
+                            time.sleep(2)
+                            os.system("cls")
+                            break
+
+                else:
+                    os.system("cls")
+                    parametro = menu_remover()
+                    os.system("cls")
 
             else:
-                print("Nenhum boletim cadastrado ainda!")
+                os.system("cls")
+                print("Nenhum boletim com esse código, por favor, crie um!")
                 time.sleep(1.5)
                 os.system("cls")
                 parametro = menu_remover()
-                os.system("cls")  
+                os.system("cls")
 
         elif parametro == "4":
             os.system("cls")
@@ -1499,55 +1447,53 @@ def pesquisar(parametro):
 def listar(parametro):
     verifica()
     while True:
-        # Listar por turma
-        if parametro == "1":
-            with open("turmas.json", "r", encoding="utf-8") as turma:
-                turma = json.load(turma)
-            
-            if len(turma) > 0:
-                for i in turma:
-                    lisTurma(i)
 
-                pergunta = input("Deseja continuar listando? Sim ou Não? ")
-                if pergunta[0].upper() == "S":
-                    os.system("cls")
-                    parametro = menu_listar()
-                    os.system("cls")                
-                else:
-                    os.system("cls")
-                    break
-            else:
-                print("Não existe turmas!")
-                time.sleep(1.5)
-                os.system("cls")
-                parametro = menu_listar()
-                os.system("cls")
-
-        elif parametro == "2":
-            with open("alunos.json", "r", encoding="utf-8") as aluno:
-                aluno = json.load(aluno)
+        with open("turmas.json", "r+", encoding="utf-8") as turma, open("alunos.json", "r+", encoding="utf-8") as aluno, open("boletim.json", "r+", encoding="utf-8") as boletim:
+            # Listar por turma
+            if parametro == "1":
                 
-            if len(aluno) > 0:
-                for i in aluno:
-                    alunosTurma(i)     
+                if len(turma) > 0:
+                    for i in turma:
+                        lisTurma(i)
 
-                pergunta = input("Deseja continuar listando? Sim ou Não? ")
-                if pergunta[0].upper() == "S":
+                    pergunta = input("Deseja continuar listando? Sim ou Não? ")
+                    if pergunta[0].upper() == "S":
+                        os.system("cls")
+                        parametro = menu_listar()
+                        os.system("cls")                
+                    else:
+                        os.system("cls")
+                        break
+                else:
+                    print("Não existe turmas!")
+                    time.sleep(1.5)
                     os.system("cls")
                     parametro = menu_listar()
-                    os.system("cls")                
-                else:
                     os.system("cls")
-                    break
-            else:
-                print("Não existe alunos!")
-                time.sleep(1.5)
-                os.system("cls")
-                parametro = menu_listar()
-                os.system("cls")
 
-        elif parametro == "3":
-            pass
+            elif parametro == "2":
+                    
+                if len(aluno) > 0:
+                    for i in aluno:
+                        alunosTurma(i)     
+
+                    pergunta = input("Deseja continuar listando? Sim ou Não? ")
+                    if pergunta[0].upper() == "S":
+                        os.system("cls")
+                        parametro = menu_listar()
+                        os.system("cls")                
+                    else:
+                        os.system("cls")
+                        break
+                else:
+                    print("Não existe alunos!")
+                    time.sleep(1.5)
+                    os.system("cls")
+                    parametro = menu_listar()
+                    os.system("cls")
+
+            elif parametro == "3":
+                pass
 
 def relatorio():
     pass
