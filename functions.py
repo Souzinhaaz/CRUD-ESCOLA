@@ -396,8 +396,6 @@ def cadastrar(parametro):
                 parametro = menu_cadastro()
                 os.system("cls")
 
-
-
 # Função para editar
 def editar(parametro):
 
@@ -595,11 +593,15 @@ def editar(parametro):
                                 novo_nome = input("\nDigite o novo nome: ").title()
                                 pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
                                 if pergunta[0].upper() == "S":
+                                    for i in boletins:
+                                        if boletins[i]["Nome"] == alunos[codigo]["Nome"]:
+                                            boletins[i]["Nome"] = novo_nome
                                     alunos[codigo]["Nome"] = novo_nome
-
-                                    with open("alunos.json", "w", encoding="utf-8") as alunos_json:
+                                    with open("alunos.json", "w", encoding="utf-8") as alunos_json, open("boletim.json", "w", encoding="utf-8") as boletins_json:
                                         alunos_json.seek(0, 0)
+                                        boletins_json.seek(0, 0)
                                         json.dump(alunos, alunos_json, indent=4)
+                                        json.dump(boletins, boletins_json, indent=4)
                                         print("\nNovo nome registrado com sucesso!!")
                                         time.sleep(2)
                                         os.system("cls")
@@ -772,12 +774,16 @@ def editar(parametro):
                                 print(f"""{'-' * 15} Edição {'-' * 15}""")
                                 novo_nome = input("\nDigite o novo nome: ")
                                 pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
+
                                 if pergunta[0].upper() == "S":
+                                    alunos[boletins[codigo]["Matrícula"]]["Nome"] = novo_nome
                                     boletins[codigo]["Nome"] = novo_nome
 
-                                    with open("boletim.json", "w", encoding="utf-8") as boletins_json:
+                                    with open("boletim.json", "w", encoding="utf-8") as boletins_json, open("alunos.json", "w", encoding="utf-8") as alunos_json:
                                         boletins_json.seek(0, 0)
+                                        alunos_json.seek(0, 0)
                                         json.dump(boletins, boletins_json, indent=4)
+                                        json.dump(alunos, alunos_json, indent=4)
                                         print("\nNovo nome registrado com sucesso!!")
                                         time.sleep(2)
                                         os.system("cls")
@@ -1451,7 +1457,7 @@ def listar(parametro):
         with open("turmas.json", "r+", encoding="utf-8") as turma, open("alunos.json", "r+", encoding="utf-8") as aluno, open("boletim.json", "r+", encoding="utf-8") as boletim:
             # Listar por turma
             if parametro == "1":
-                
+
                 if len(turma) > 0:
                     for i in turma:
                         lisTurma(i)
