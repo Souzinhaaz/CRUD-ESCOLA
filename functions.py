@@ -155,7 +155,6 @@ def rboletim(i, parametro):
     print(f""" {'=' * 15} PROPRIETÁRIO DO BOLETIM: {boletim[parametro]["Nome"]} {'=' * 15}
 {'-' * 40}
 
-ID Boletim: {int(parametro)}
 Código do aluno: {int(parametro)}
 Turma: {boletim[parametro]["Turma"]}
 Notas: {boletim[parametro]["Notas"]}
@@ -253,10 +252,12 @@ def cadastrar(parametro):
             # Usuário vai cadastrar um aluno
             elif parametro == "2":
                 nova_turma = json.load(turmas_json)
+
                 # Verifica se existe alguma turma
                 if len(nova_turma) > 0:
                     # A variavel novo_aluno vai receber o dicionário que está no alunos_json e a nova_turma o que está em turmas_json
                     novo_aluno = json.load(alunos_json)
+                    boletim = json.load(boletins_json)
 
                     print(f"{'-' * 15} Cadastro Alunos {'-' * 15}\n")
 
@@ -281,13 +282,17 @@ def cadastrar(parametro):
                         "Telefone": telefone_aluno,
                     }
 
+                    boletim[matricula] = {}
+
                     # Interatividade do aplicativo
                     print("Carregando...\n")
 
                     # Adiciona os dados no alunos.json
-                    with open("alunos.json", "w", encoding="utf-8") as alunos_json:
+                    with open("alunos.json", "w", encoding="utf-8") as alunos_json, open("boletim.json", "w", encoding="utf-8") as boletins_json:
                         alunos_json.seek(0, 0)
+                        boletins_json.seek(0, 0)
                         json.dump(novo_aluno, alunos_json, indent=4)
+                        json.dump(boletim, boletins_json, indent=4)
 
                     # Volta para a interatividade do site
                     time.sleep(1)
@@ -305,6 +310,7 @@ def cadastrar(parametro):
                     parametro = menu_cadastro()
                     os.system("cls")
                 
+            # Cadastrar o boletim
             elif parametro == "3":
                 # A variavel novo_boletim vai receber o dicionário que está no boletins_json e o aluno o que está em alunos_json
                 novo_boletim = json.load(boletins_json)
@@ -315,65 +321,61 @@ def cadastrar(parametro):
                     # Vai pedir o codigo de matricula do aluno referido
                     codigo = input("Digite o código de matrícula do Aluno referido: ")
                     if codigo in aluno:
-                        for i in novo_boletim:
-                            if codigo == novo_boletim[str(i)]["Matrícula"]:
-                                print("Já existe boletim com esse aluno, por favor selecione outro aluno ou edite ele! ")
-                                time.sleep(1.5)
-                                os.system("cls")
-                                res = False
-                        
-                        if not res:
-                            break
-                    
-                        # Vai guardar a quantidade de faltas na variável qnt_faltas
-                        qnt_faltas = int(input("Digite a quantidade de faltas do aluno inserido: "))
+                        if not codigo in novo_boletim:
 
-                        # Vai guardar as notas do aluno em uma lista
-                        notas_aluno = []
-                        for i in range(1, 5):
-                            nota = float(input(f"Digite a {i}a nota: "))
-                            notas_aluno.append(nota)
-                        
-                        media = sum(notas_aluno) / len(notas_aluno)
-                        aprovado = True
+                            # Vai guardar a quantidade de faltas na variável qnt_faltas
+                            qnt_faltas = int(input("Digite a quantidade de faltas do aluno inserido: "))
 
-                        # Faz a verificação para saber se o aluno está aprovado ou não
-                        if media >= 7 and qnt_faltas < 15:
-                            aprovado = True
-                        else:
-                            aprovado = False
+                            # Vai guardar as notas do aluno em uma lista
+                            notas_aluno = []
+                            for i in range(1, 5):
+                                nota = float(input(f"Digite a {i}a nota: "))
+                                notas_aluno.append(nota)
                             
-                        if aprovado:
-                            situacao = "Aprovado"
-                        else:
-                            situacao = "Reprovado"
+                            media = sum(notas_aluno) / len(notas_aluno)
+                            aprovado = True
 
-                        # Calculo para obter o novo id do boletim
-                        id_boletim = str(1+int(list(novo_boletim.keys())[-1])) if len(novo_boletim) > 0 else "1"
+                            # Faz a verificação para saber se o aluno está aprovado ou não
+                            if media >= 7 and qnt_faltas < 15:
+                                aprovado = True
+                            else:
+                                aprovado = False
+                                
+                            if aprovado:
+                                situacao = "Aprovado"
+                            else:
+                                situacao = "Reprovado"
+                            
+                            novo_boletim[codigo] = {
+                                "Nome": aluno[codigo]["Nome"],
+                                "Turma": aluno[codigo]["Turma"],
+                                "Notas": notas_aluno,
+                                "Quantidade de Faltas": qnt_faltas,
+                                "Situação": situacao
+                            } 
+
+                            print("Carregando...\n")
+
+                            # Adiciona os dados a boletins_json
+                            with open("boletim.json", "w", encoding="utf-8") as boletins_json:
+                                boletins_json.seek(0, 0)
+                                json.dump(novo_boletim, boletins_json, indent=4)
+
+                            # Volta para a interatividade do site
+                            time.sleep(1)
+                            print("Boletim Cadastrado com sucesso!!")
+                            time.sleep(1.5)
+                            os.system("cls")
+                            parametro = menu_cadastro()
+                            os.system("cls")
                         
-                        novo_boletim[id_boletim] = {
-                            "Matrícula": codigo,
-                            "Nome": aluno[codigo]["Nome"],
-                            "Turma": aluno[codigo]["Turma"],
-                            "Notas": notas_aluno,
-                            "Quantidade de Faltas": qnt_faltas,
-                            "Situação": situacao
-                        } 
+                        else:
+                            print("Aluno já possui um boletim, por favor selecione outro aluno, ou remova esse")
+                            time.sleep(1.5)
+                            os.system("cls")
+                            parametro == menu_cadastro()
+                            os.system("cls")
 
-                        print("Carregando...\n")
-
-                        # Adiciona os dados a boletins_json
-                        with open("boletim.json", "w", encoding="utf-8") as boletins_json:
-                            boletins_json.seek(0, 0)
-                            json.dump(novo_boletim, boletins_json, indent=4)
-
-                        # Volta para a interatividade do site
-                        time.sleep(1)
-                        print("Boletim Cadastrado com sucesso!!")
-                        time.sleep(1.5)
-                        os.system("cls")
-                        parametro = menu_cadastro()
-                        os.system("cls")
                     else:
                         print("Aluno referido não existe no sistema, por favor cadastre")
                         time.sleep(1.5)
@@ -1028,11 +1030,18 @@ def remover(parametro):
                             for id_aluno in alunos_para_remover:
                                 del aluno[id_aluno]
                             
+                            novo_aluno = {}
+                            contador = 1
+                            # Itere sobre o dicionário original e reorganize as chaves
+                            for chave, valor in sorted(aluno.items()):
+                                novo_aluno[str(contador)] = valor
+                                contador += 1
+                            
                             del turma[codigo]
 
                             with open("turmas.json", "w", encoding="utf-8") as turmas_json, open("alunos.json", "w", encoding="utf-8") as alunos_json:
                                 json.dump(turma, turmas_json, indent=4)
-                                json.dump(aluno, alunos_json, indent=4)
+                                json.dump(novo_aluno, alunos_json, indent=4)
                                 print("\nTurma removida com sucesso!")
                                 time.sleep(2)
                                 os.system("cls")
@@ -1051,6 +1060,14 @@ def remover(parametro):
                         for id_aluno in alunos_para_remover:
                             del aluno[id_aluno]
 
+
+                        novo_aluno = {}
+                        contador = 1
+                        # Itere sobre o dicionário original e reorganize as chaves
+                        for chave, valor in sorted(aluno.items()):
+                            novo_aluno[str(contador)] = valor
+                            contador += 1   
+
                         # Código para reescrever o código digitado pelo seu sucessor
                         turma[codigo] = turma.pop(str(int(codigo) + 1)) # Reescrever no código deletado o dicionário que estava a frente
 
@@ -1059,27 +1076,44 @@ def remover(parametro):
                                 turma[str(i)] = turma[str(i)]
                             else:
                                 turma[str(i)] = turma.pop(str(i + 1))
-
-
-                        for i in range(1, len(aluno) + 1): # Vai percorrer todos os dicionários de alunos
-                            if str(i) in aluno:
-                                aluno[str(i)] = aluno[str(i)]
+                     
 
                         with open("turmas.json", "w", encoding="utf-8") as turmas_json, open("alunos.json", "w", encoding="utf-8") as alunos_json:
                             json.dump(turma, turmas_json, indent=4)
-                            json.dump(aluno, alunos_json, indent=4)
+                            json.dump(novo_aluno, alunos_json, indent=4)
                             print("\nTurma removida com sucesso!")
                             time.sleep(2)
                             os.system("cls")
                             break
                         
                     else:
-                        with open("turmas.json", "w", encoding="utf-8") as turmas_json:
+                        # Obtém o nome da turma que será removida
+                        nome_turma_removida = turma[codigo]["Nome"]
+
+                        # Remove todos os alunos com o mesmo nome da turma removida
+                        alunos_para_remover = []
+                        for id_alunos, dados_aluno in aluno.items():
+                            if dados_aluno["Turma"] == nome_turma_removida:
+                                alunos_para_remover.append(id_alunos)
+
+                        # Remove os alunos do dicionário de alunos
+                        for id_aluno in alunos_para_remover:
+                            del aluno[id_aluno]
+
+                        novo_aluno = {}
+                        contador = 1
+                        # Itere sobre o dicionário original e reorganize as chaves
+                        for chave, valor in sorted(aluno.items()):
+                            novo_aluno[str(contador)] = valor
+                            contador += 1
+
+                        with open("turmas.json", "w", encoding="utf-8") as turmas_json, open("alunos.json", "w", encoding="utf-8") as alunos_json:
                             json.dump({}, turmas_json)
+                            json.dump(novo_aluno, alunos_json, indent=4)
                             print("\nTurma removida com sucesso!")
                             time.sleep(2)
                             os.system("cls")
-                            break
+                            break      
 
                 else:
                     os.system("cls")
@@ -1108,14 +1142,42 @@ def remover(parametro):
 
                         # Se for o último dicionário vai remover
                         if int(codigo) == len(aluno):
+
+                            # Obtém o nome do aluno que será removido
+                            nome_aluno_removido = aluno[codigo]["Nome"]
+
+                            # Remove todos os alunos com o mesmo nome da turma removida
+                            boletins_para_remover = []
+                            for id_boletins, dados_boletins in boletim.items():
+                                if dados_boletins["Matrícula"] == nome_aluno_removido:
+                                    boletins_para_remover.append(id_boletins)
+
+                            # Remove os boletins do dicionário de boletins
+                            for id_boletim in boletins_para_remover:
+                                boletim[id_boletim] = {}
+
                             del aluno[codigo]
 
-                            with open("alunos.json", "w", encoding="utf-8") as alunos_json:
+                            with open("alunos.json", "w", encoding="utf-8") as alunos_json, open("boletim.json", "w", encoding="utf-8") as boletins_json:
                                 json.dump(aluno, alunos_json, indent=4)
+                                json.dump(boletim, boletins_json, indent=4)
                                 print("\nAluno(a) removido(a) com sucesso!")
                                 time.sleep(2)
                                 os.system("cls")
                                 break
+
+                        # Obtém o nome do aluno que será removido
+                        nome_aluno_removido = aluno[codigo]["Nome"]
+
+                        # Remove todos os alunos com o mesmo nome da turma removida
+                        boletins_para_remover = []
+                        for id_boletins, dados_boletins in boletim.items():
+                            if dados_boletins["Matrícula"] == nome_aluno_removido:
+                                boletins_para_remover.append(id_boletins)
+
+                        # Remove os boletins do dicionário de boletins
+                        for id_boletim in boletins_para_remover:
+                            boletim[id_boletim] = {}
 
                         # Código para reescrever o código digitado pelo seu sucessor
                         aluno[codigo] = aluno.pop(str(int(codigo) + 1)) # Reescrever no código deletado o dicionário que estava a frente
@@ -1126,8 +1188,9 @@ def remover(parametro):
                             else:
                                 aluno[str(i)] = aluno.pop(str(i + 1))
 
-                        with open("alunos.json", "w", encoding="utf-8") as alunos_json:
+                        with open("alunos.json", "w", encoding="utf-8") as alunos_json, open("boletim.json", "w", encoding="utf-8") as boletins_json:
                             json.dump(aluno, alunos_json, indent=4)
+                            json.dump(boletim, boletins_json, indent=4)
                             print("\nAluno(a) removido(a) com sucesso!")
                             time.sleep(2)
                             os.system("cls")
@@ -1135,13 +1198,26 @@ def remover(parametro):
 
                     # Se tiver apenas 1 aluno no dicionário
                     else:
-                        with open("alunos.json", "w", encoding="utf-8") as alunos_json:
+                        # Obtém o nome do aluno que será removido
+                        nome_aluno_removido = aluno[codigo]["Nome"]
+
+                        # Remove todos os alunos com o mesmo nome da turma removida
+                        boletins_para_remover = []
+                        for id_boletins, dados_boletins in boletim.items():
+                            if dados_boletins["Matrícula"] == nome_aluno_removido:
+                                boletins_para_remover.append(id_boletins)
+
+                        # Remove os boletins do dicionário de boletins
+                        for id_boletim in boletins_para_remover:
+                            boletim[id_boletim] = {}
+
+                        with open("alunos.json", "w", encoding="utf-8") as alunos_json, open("boletim.json", "w", encoding="utf-8") as boletins_json:
                             json.dump({}, alunos_json)    
+                            json.dump(boletim, boletins_json, indent=4)
                             print("\nAluno removido com sucesso!")
                             time.sleep(2)
                             os.system("cls")
                             break
-                
                 else:
                     os.system("cls")
                     parametro = menu_remover()
@@ -1164,45 +1240,16 @@ def remover(parametro):
                 print(f"\n{boletim[codigo]}\nEsse foi o boletim que você selecionou\n")
                 pergunta = input("Você tem certeza que quer excluir? Sim ou Não? ")
                 if pergunta[0].upper() == "S":
-                    # Se tiver mais de um dicionário
-                    if len(boletim) > 1:
+                    
+                    boletim[codigo] = {}
 
-                        # Se for o ultimo dicionário vai remover
-                        if int(codigo) == len(boletim):
-                            del boletim[codigo]
-
-                            with open("boletim.json", "w", encoding="utf-8") as boletins_json:
-                                json.dump(boletim, boletins_json, indent=4)
-                                print("\nBoletim removido com sucesso!")
-                                time.sleep(2)
-                                os.system("cls")
-                                break
-                        
-                        # Código para reescrever o código digitado pelo seu sucessor
-                        boletim[codigo] = boletim.pop(str(int(codigo) + 1)) # Reescrever no código deletado o dicionário que estava a frente
-
-                        for i in range(1, len(boletim) + 1): # Vai percorrer todos os dicionários no boletim
-                            if str(i) in boletim:
-                                boletim[str(i)] = boletim[str(i)]
-                            else:
-                                boletim[str(i)] = boletim.pop(str(i + 1))
-
-                        with open("boletim.json", "w", encoding="utf-8") as boletins_json:
-                            json.dump(boletim, boletins_json, indent=4)
-                            print("\nBoletim removido com sucesso!")
-                            time.sleep(2)
-                            os.system("cls")
-                            break
+                    with open("boletim.json", "w", encoding="utf-8") as boletins_json:
+                        json.dump(boletim, boletins_json, indent=4)
+                        print("\nBoletim removido com sucesso!")
+                        time.sleep(2)
+                        os.system("cls")
+                        break
                 
-                    # Se tiver apenas 1 boletim no dicionário
-                    else:
-                        with open("boletim.json", "w", encoding="utf-8") as boletins_json:
-                            json.dump({}, boletins_json)    
-                            print("\nBoletim removido com sucesso!")
-                            time.sleep(2)
-                            os.system("cls")
-                            break
-
                 else:
                     os.system("cls")
                     parametro = menu_remover()
