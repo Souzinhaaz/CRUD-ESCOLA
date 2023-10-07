@@ -34,8 +34,10 @@ while True:
         os.system("cls")
         listar(parametro)
 
-    elif opcao == "5":
-        relatorio()
+    elif opcao == "6":
+        parametro = menu_relatorio()
+        os.system("cls")
+        relatorio(parametro)
 
     elif opcao == "0":
         os.system("cls")

@@ -72,7 +72,7 @@ def menu_pesquisar():
     return parametro
 
 def menu_listar():
-    parametro = input(f"""{'-' * 15} Pesquisar {'-' * 15}
+    parametro = input(f"""{'-' * 15} Listar {'-' * 15}
 
 1 - Listar Turmas
 2 - Listar Alunos por Turma
@@ -85,40 +85,103 @@ def menu_listar():
     
     return parametro
 
+def menu_relatorio():
+    parametro = input(f"""{'-' * 15} Relatório {'-' * 15}
 
+1 - Total de Turmas
+2 - Total de Alunos, por Turma
+3 - Total de Alunos Aprovados e Reprovados, por Turma
+4 - Maiores e menores médias, por turma
+5 - Total de Alunos com faltas acima e abaixo do limite, por Turma
+6 - Sair
 
+{'-' * 40}\n""")
+    
+    return parametro
 
 
 def lisTurma(i):
     with open("turmas.json", "r", encoding="utf-8") as turma:
         turma = json.load(turma)
+
+    print(f"\n\033[31m{'-=' * 30}\033[m")
     print(f"""\n{'=' * 15} {turma[i]["Nome"]} {'=' * 15}
 {'-' * 40}
 
 ID: {int(i)}
+
 Turno: {turma[i]["Turno"]}
+
 Ano: {turma[i]["Ano"]}
 
 {'-' * 40}
 """)
-    print(f"\n\033[31m{'-=' * 30}\033[m\n")
+    
 
-def alunosTurma(i):
+def lisAlunos(i):
     with open("turmas.json", "r", encoding="utf-8") as turma, open("alunos.json", "r", encoding="utf-8") as aluno:
         turma = json.load(turma)
         aluno = json.load(aluno)
+
+    print(f"\n\033[31m{'-=' * 30}\033[m")
     print(f"""\n{'-' * 15} {aluno[i]["Nome"]} - {aluno[i]["Turma"]} {'-' * 15}
 
 ID Aluno: {int(i)}
-email: {aluno[i]["Email"]}
+
+Email: {aluno[i]["Email"]}
+
 Telefone: {aluno[i]["Telefone"]}
 
 {'-' * 40}
 """)
-    print(f"\n\033[31m{'-=' * 30}\033[m\n")
+    
+
+def lisAlunosBoletim(i):
+    with open("turmas.json", "r", encoding="utf-8") as turma, open("alunos.json", "r", encoding="utf-8") as aluno, open("boletim.json", "r", encoding="utf-8") as boletim:
+        turma = json.load(turma)
+        aluno = json.load(aluno)
+        boletim = json.load(boletim)
+
+    if boletim.get(str(i)):
+        print(f"\n\033[31m{'-=' * 30}\033[m")
+        print(f"""\n{'-' * 15} {aluno[i]["Nome"]} - {aluno[i]["Turma"]} {'-' * 15}
+
+ID Aluno: {int(i)}
+
+Email: {aluno[i]["Email"]}
+
+Telefone: {aluno[i]["Telefone"]}
+
+{'-' * 15} Boletim {'-' * 15}
+
+Notas: {boletim[i]["Notas"]}
+
+Quantidade de Faltas: {boletim[i]["Quantidade de Faltas"]}
+
+Situação: {boletim[i]["Situação"]}
+
+{'-' * 40}
+""")
+    else:
+        print(f"\n\033[31m{'-=' * 30}\033[m")
+        print(f"""\n{'-' * 15} {aluno[i]["Nome"]} - {aluno[i]["Turma"]} {'-' * 15}
+
+ID Aluno: {int(i)}
+
+Email: {aluno[i]["Email"]}
+
+Telefone: {aluno[i]["Telefone"]}
+
+{'-' * 15} Boletim {'-' * 15}
+
+Vazio
+
+{'-' * 40}
+""")
+        
 
 
-
+     
 
 
 # Funções para retornar modelo de pesquisas
@@ -129,7 +192,9 @@ def rturma(i, parametro):
 {'-' * 40}
 
 ID: {int(parametro)}
+
 Turno: {turma[parametro]["Turno"]}
+
 Ano: {turma[parametro]["Ano"]}
 
 {'-' * 40}
@@ -142,25 +207,50 @@ def raluno(i, parametro):
 {'-' * 40}
 
 ID: {int(parametro)}
+
 Turma: {aluno[parametro]["Turma"]}
+
 Email: {aluno[parametro]["Email"]}
+
 Telefone: {aluno[parametro["Telefone"]]}
 
 {'-' * 40}
 """)
     
 def rboletim(i, parametro):
-    with open("boletim.json", "r", encoding="utf-8") as boletim:
+    with open("boletim.json", "r", encoding="utf-8") as boletim, open("alunos.json", "r", encoding="utf-8") as aluno:
         boletim = json.load(boletim)
-    print(f""" {'=' * 15} PROPRIETÁRIO DO BOLETIM: {boletim[parametro]["Nome"]} {'=' * 15}
+        aluno = json.load(aluno)
+    
+    if boletim.get(str(parametro)):
+        print(f""" {'=' * 15} PROPRIETÁRIO DO BOLETIM: {aluno[parametro]["Nome"]} {'=' * 15}
 {'-' * 40}
 
 Código do aluno: {int(parametro)}
-Turma: {boletim[parametro]["Turma"]}
+
+{'-' * 15} BOLETIM {'-' * 15}
+
+Turma: {aluno[parametro]["Turma"]}
+
 Notas: {boletim[parametro]["Notas"]}
+
 Média: {boletim[parametro]["Média"]}
+
 Quantidade de Faltas: {boletim[parametro["Quantidade de Faltas"]]}
+
 Situação: {boletim[parametro]["Situação"]}
+
+{'-' * 40}
+""")
+    else:
+        print(f""" {'=' * 15} PROPRIETÁRIO DO BOLETIM: {aluno[parametro]["Nome"]} {'=' * 15}
+{'-' * 40}
+
+Código do aluno: {int(parametro)}
+
+{'-' * 15} BOLETIM {'-' * 15}
+
+Vazio
 
 {'-' * 40}
 """)
@@ -1295,6 +1385,7 @@ def pesquisar(parametro):
                 # Usuário seleciona pelo código
                 if opcao == "1":
                     codigo = input("\nDigite o código da turma: ")
+                    os.system("cls")
                     if codigo in turma:
                         for i in turma:
                             rturma(i, codigo)
@@ -1315,7 +1406,7 @@ def pesquisar(parametro):
                     os.system("cls")
 
                     for i in turma:
-                        if nome == turma[str(i)]["Nome"]:
+                        if nome.upper() == turma[str(i)]["Nome"].upper():
                             existe = True
                             break
                         else:
@@ -1323,7 +1414,7 @@ def pesquisar(parametro):
 
                     if existe:
                         for i in turma:
-                            if nome == turma[str(i)]["Nome"]:
+                            if nome.upper() == turma[str(i)]["Nome"].upper():
                                 codigo = str(i)
                                 rturma(i, codigo)
                     else:
@@ -1342,7 +1433,7 @@ def pesquisar(parametro):
                     os.system("cls")
 
                     for i in turma:
-                        if turno == turma[str(i)]["Turno"]:
+                        if turno.upper() == turma[str(i)]["Turno"].upper():
                             existe = True
                             break
                         else:
@@ -1350,7 +1441,7 @@ def pesquisar(parametro):
                         
                     if existe:
                         for i in turma:
-                            if turno == turma[str(i)]["Turno"]:
+                            if turno.upper() == turma[str(i)]["Turno"].upper():
                                 codigo = str(i)
                                 rturma(i, codigo)
                     else:
@@ -1417,6 +1508,7 @@ def pesquisar(parametro):
 
                 if opcao == "1":
                     matricula = input("Digite a matricula do aluno(a): ")
+                    os.system("cls")
 
                     if matricula in alunos:
                         for matricula in alunos:
@@ -1439,7 +1531,7 @@ def pesquisar(parametro):
                     os.system("cls")
 
                     for i in alunos:
-                        if nome == alunos[str(i)]["Nome"]:
+                        if nome.upper() == alunos[str(i)]["Nome"].upper():
                             existe = True
                             break
                         else:
@@ -1447,7 +1539,7 @@ def pesquisar(parametro):
 
                     if existe:
                         for i in alunos:
-                            if nome == alunos[str(i)]["Nome"]:
+                            if nome.upper() == alunos[str(i)]["Nome"].upper():
                                 codigo = str(i)
                                 raluno(i, codigo)
                     else:
@@ -1478,6 +1570,7 @@ def pesquisar(parametro):
                 os.system("cls")
                 print("Ainda não foi cadastrado nenhum aluno")
 
+        # Pesquisar Boletim
         elif parametro == "3":
             if os.path.exists("boletim.json"):
                 os.system("cls")
@@ -1486,6 +1579,8 @@ def pesquisar(parametro):
 
                 if opcao == "1":
                     codigo = input("\nDigite o código do boletim: ")
+                    os.system("cls")
+
                     if codigo in boletim:
                         for i in boletim:
                             rboletim(i, codigo)
@@ -1506,7 +1601,7 @@ def pesquisar(parametro):
                     os.system("cls")
 
                     for i in boletim:
-                        if nome_aluno == boletim[str(i)]["Nome"]:
+                        if nome_aluno.upper() == boletim[str(i)]["Nome"].upper():
                             existe = True
                             break
                         else:
@@ -1514,9 +1609,9 @@ def pesquisar(parametro):
 
                     if existe:
                         for i in alunos:
-                            if nome_aluno == boletim[str(i)]["Nome"]:
+                            if nome_aluno.upper() == boletim[str(i)]["Nome"].upper():
                                 codigo = str(i)
-                                raluno(i, codigo)
+                                rboletim(i, codigo)
                     else:
                         print("O nome inserido não existe no sistema!")
                         time.sleep(1.5)
@@ -1541,8 +1636,13 @@ def listar(parametro):
     verifica()
     while True:
 
-        with open("turmas.json", "r+", encoding="utf-8") as turma, open("alunos.json", "r+", encoding="utf-8") as aluno, open("boletim.json", "r+", encoding="utf-8") as boletim:
+        with open("turmas.json", "r+", encoding="utf-8") as turmas_json, open("alunos.json", "r+", encoding="utf-8") as alunos_json, open("boletim.json", "r+", encoding="utf-8") as boletins_json:
             # Listar por turma
+            turma = json.load(turmas_json)
+            aluno = json.load(alunos_json)
+            boletim = json.load(boletins_json)
+
+            # Listar Turmas
             if parametro == "1":
 
                 if len(turma) > 0:
@@ -1564,11 +1664,12 @@ def listar(parametro):
                     parametro = menu_listar()
                     os.system("cls")
 
+            # Listar Alunos por Turma
             elif parametro == "2":
                     
                 if len(aluno) > 0:
                     for i in aluno:
-                        alunosTurma(i)     
+                        lisAlunos(i)     
 
                     pergunta = input("Deseja continuar listando? Sim ou Não? ")
                     if pergunta[0].upper() == "S":
@@ -1585,8 +1686,140 @@ def listar(parametro):
                     parametro = menu_listar()
                     os.system("cls")
 
+            # Listar Alunos e Boletins por Turma
             elif parametro == "3":
-                pass
 
-def relatorio():
-    pass
+                if len(aluno) > 0:
+                    for i in aluno:
+                        lisAlunosBoletim(i)
+
+                    pergunta = input("Deseja continuar listando? Sim ou Não? ")
+                    if pergunta[0].upper() == "S":
+                        os.system("cls")
+                        parametro = menu_listar()
+                        os.system("cls")
+                    else:
+                        os.system("cls")
+                        break
+                else:
+                    print("Não existe alunos!")
+                    time.sleep(1.5)
+                    os.system("cls")
+                    parametro = menu_listar()
+                    os.system("cls")
+
+            # Listar Alunos Aprovados e Boletins por Turma
+            elif parametro == "4":
+
+                if len(aluno) > 0:
+                    for i in aluno:
+                        if boletim.get(str(i)):
+                            if boletim[i]["Situação"] == "Aprovado":
+                                lisAlunosBoletim(i)
+                                existe = True
+                            else:
+                                existe = False
+                        
+                    if not existe:
+                        os.system("cls")
+                        print("Não existem alunos aprovados!")
+                        time.sleep(1.5)
+                        os.system("cls")
+                        parametro = menu_listar()
+                        os.system("cls")
+
+                    else:
+                        pergunta = input("Deseja continuar listando? Sim ou Não? ")
+                        if pergunta[0].upper() == "S":
+                            os.system("cls")
+                            parametro = menu_listar()
+                            os.system("cls")
+
+                        else:
+                            os.system("cls")
+                else:
+                    print("Não existe alunos!")
+                    time.sleep(1.5)
+                    os.system("cls")
+                    parametro = menu_listar()
+                    os.system("cls")
+
+            # Listar Alunos Reprovados e Boletins por Turma
+            elif parametro == "5":
+
+                if len(aluno) > 0:
+                    for i in aluno:
+                        if boletim.get(str(i)):
+                            if boletim[i]["Situação"] == "Reprovado":
+                                lisAlunosBoletim(i)
+                                existe = True
+                            else:
+                                existe = False
+                    
+                    if not existe:
+                        os.system("cls")
+                        print("Não existem alunos reprovados!")
+                        time.sleep(1.5)
+                        os.system("cls")
+                        parametro = menu_listar()
+                        os.system("cls")
+                    
+                    else:
+                        pergunta = input("Deseja continuar listando? Sim ou Não? ")
+                        if pergunta[0].upper() == "S":
+                            os.system("cls")
+                            parametro = menu_listar()
+                            os.system("cls")
+
+                        else:
+                            os.system("cls")
+                else:
+                    print("Não existe alunos!")
+                    time.sleep(1.5)
+                    os.system("cls")
+                    parametro = menu_listar()
+                    os.system("cls")
+
+            # Sair
+            elif parametro == "6":
+                os.system("cls")
+                break                   
+                        
+
+def relatorio(parametro):
+    verifica()
+
+    while True:
+        with open("turmas.json", "r+", encoding="utf-8") as turmas_json, open("alunos.json", "r+", encoding="utf-8") as alunos_json, open("boletim.json", "r+", encoding="utf-8") as boletins_json:
+            turma = json.load(turmas_json)
+            aluno = json.load(alunos_json)
+            boletim = json.load(boletins_json)
+
+            if parametro == "1":
+                if len(aluno) > 0:
+                    print(f"""{'-' * 15} TOTAL DE TURMAS {'-' * 15}
+
+Total = {len(turma)}
+
+""")
+                    
+                else:
+                    print("Não existe nenhum aluno!")
+                    time.sleep(1.5)
+                    os.system("cls")
+                    parametro = menu_relatorio()
+                    os.system("cls")
+                
+            elif parametro == "2":
+                if len(turma) > 0:
+                    pass
+                
+                    
+                        
+                else:
+                    print("Não existe nenhum aluno!")
+                    time.sleep(1.5)
+                    os.system("cls")
+                    parametro = menu_relatorio()
+                    os.system("cls")
+
