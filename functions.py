@@ -158,6 +158,7 @@ def rboletim(i, parametro):
 Código do aluno: {int(parametro)}
 Turma: {boletim[parametro]["Turma"]}
 Notas: {boletim[parametro]["Notas"]}
+Média: {boletim[parametro]["Média"]}
 Quantidade de Faltas: {boletim[parametro["Quantidade de Faltas"]]}
 Situação: {boletim[parametro]["Situação"]}
 
@@ -321,10 +322,11 @@ def cadastrar(parametro):
                     # Vai pedir o codigo de matricula do aluno referido
                     codigo = input("Digite o código de matrícula do Aluno referido: ")
                     if codigo in aluno:
-                        if not codigo in novo_boletim:
+                        if not novo_boletim.get(codigo):
 
                             # Vai guardar a quantidade de faltas na variável qnt_faltas
                             qnt_faltas = int(input("Digite a quantidade de faltas do aluno inserido: "))
+                            os.system("cls")
 
                             # Vai guardar as notas do aluno em uma lista
                             notas_aluno = []
@@ -350,6 +352,7 @@ def cadastrar(parametro):
                                 "Nome": aluno[codigo]["Nome"],
                                 "Turma": aluno[codigo]["Turma"],
                                 "Notas": notas_aluno,
+                                "Média": media,
                                 "Quantidade de Faltas": qnt_faltas,
                                 "Situação": situacao
                             } 
