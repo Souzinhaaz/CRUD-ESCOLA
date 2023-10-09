@@ -1237,11 +1237,15 @@ def remover(parametro):
                             # Obtém o nome do aluno que será removido
                             nome_aluno_removido = aluno[codigo]["Nome"]
 
-                            # Remove todos os alunos com o mesmo nome da turma removida
+
+                            # Remove todos os boletins com o mesmo nome da turma removida
                             boletins_para_remover = []
                             for id_boletins, dados_boletins in boletim.items():
-                                if dados_boletins["Matrícula"] == nome_aluno_removido:
-                                    boletins_para_remover.append(id_boletins)
+                                if boletim[id_boletins].get("Matrícula"):
+                                    if dados_boletins["Matrícula"] == nome_aluno_removido:
+                                        boletins_para_remover.append(id_boletins)
+                                else:
+                                    continue
 
                             # Remove os boletins do dicionário de boletins
                             for id_boletim in boletins_para_remover:
