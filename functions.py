@@ -19,6 +19,15 @@ def menu_principal():
     
     return pergunta
     
+
+def abrirArquivo():
+    with open("turmas.json", "r+", encoding="utf-8") as turmas_json, open("alunos.json", "r+", encoding="utf-8") as alunos_json, open("boletim.json", "r+", encoding="utf-8") as boletins_json:
+        turma = json.load(turmas_json)
+        aluno = json.load(alunos_json)
+        boletim = json.load(boletins_json)
+        
+
+
 # Cria o modelo do menu cadastro
 def menu_cadastro():
     parametro = input(f"""{'-' * 15} Cadastro {'-' * 15}
@@ -1802,6 +1811,15 @@ def relatorio(parametro):
 Total = {len(turma)}
 
 """)
+
+                    pergunta = input("Deseja continuar listando? Sim ou Não? ")
+                    if pergunta[0].upper() == "S":
+                        os.system("cls")
+                        parametro = menu_listar()
+                        os.system("cls")
+                    else:
+                        os.system("cls")
+                        break
                     
                 else:
                     print("Não existe nenhum aluno!")
@@ -1812,14 +1830,38 @@ Total = {len(turma)}
                 
             elif parametro == "2":
                 if len(turma) > 0:
-                    pass
-                
-                    
-                        
+                    for codigo in turma:
+                        qnt_aluno = 0
+                        nome_turma = turma[codigo]["Nome"]
+                        for turma_aluno in aluno:
+                            if nome_turma == aluno[turma_aluno]["Turma"]:
+                                qnt_aluno += 1
+
+                        print(f"""{'-' * 15} {nome_turma} {'-' * 15}
+
+Total de alunos: {qnt_aluno}
+
+""")         
+
+                    pergunta = input("Deseja continuar listando? Sim ou Não? ")
+                    if pergunta[0].upper() == "S":
+                        os.system("cls")
+                        parametro = menu_listar()
+                        os.system("cls")
+                    else:
+                        os.system("cls")
+                        break  
+
+
                 else:
                     print("Não existe nenhum aluno!")
                     time.sleep(1.5)
                     os.system("cls")
                     parametro = menu_relatorio()
                     os.system("cls")
+
+            elif parametro == "6":
+                os.system("cls")
+                break
+
 
