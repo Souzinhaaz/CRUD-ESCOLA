@@ -29,7 +29,7 @@ def abrirArquivo():
 
     return turma, aluno, boletim
         
-def guardarArquivo(json, variavel_json, guardar):
+def guardarArquivo(json, guardar, variavel_json):
     with open(json, "w", encoding="utf-8") as variavel_json:
         variavel_json.seek(0, 0)
         json.dump(guardar, variavel_json, indent=4)
@@ -1264,11 +1264,14 @@ def remover(parametro):
                         # Obtém o nome do aluno que será removido
                         nome_aluno_removido = aluno[codigo]["Nome"]
 
-                        # Remove todos os alunos com o mesmo nome da turma removida
+                        # Remove todos os boletins com o mesmo nome da turma removida
                         boletins_para_remover = []
                         for id_boletins, dados_boletins in boletim.items():
-                            if dados_boletins["Matrícula"] == nome_aluno_removido:
-                                boletins_para_remover.append(id_boletins)
+                            if boletim[id_boletins].get("Matrícula"):
+                                if dados_boletins["Matrícula"] == nome_aluno_removido:
+                                    boletins_para_remover.append(id_boletins)
+                            else:
+                                continue
 
                         # Remove os boletins do dicionário de boletins
                         for id_boletim in boletins_para_remover:
@@ -1296,11 +1299,14 @@ def remover(parametro):
                         # Obtém o nome do aluno que será removido
                         nome_aluno_removido = aluno[codigo]["Nome"]
 
-                        # Remove todos os alunos com o mesmo nome da turma removida
+                        # Remove todos os boletins com o mesmo nome da turma removida
                         boletins_para_remover = []
                         for id_boletins, dados_boletins in boletim.items():
-                            if dados_boletins["Matrícula"] == nome_aluno_removido:
-                                boletins_para_remover.append(id_boletins)
+                            if boletim[id_boletins].get("Matrícula"):
+                                if dados_boletins["Matrícula"] == nome_aluno_removido:
+                                    boletins_para_remover.append(id_boletins)
+                            else:
+                                continue
 
                         # Remove os boletins do dicionário de boletins
                         for id_boletim in boletins_para_remover:
