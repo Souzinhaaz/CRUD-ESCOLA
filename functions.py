@@ -2,6 +2,7 @@ import json
 import os
 import time
 
+
 # Cria o modelo do menu principal
 def menu_principal():
     pergunta = input(f""" {'-' * 15} Escola {'-' * 15}
@@ -25,6 +26,8 @@ def abrirArquivo():
         turma = json.load(turmas_json)
         aluno = json.load(alunos_json)
         boletim = json.load(boletins_json)
+
+    return turma, aluno, boletim
         
 def guardarArquivo(json, variavel_json, guardar):
     with open(json, "w", encoding="utf-8") as variavel_json:
@@ -289,11 +292,10 @@ def cadastrar(parametro):
         verifica()
 
         # Abre os arquivos a serem usados
-        abrirArquivo()
+        nova_turma, novo_aluno, novo_boletim = abrirArquivo()
         # Usuário escolhe a opção para cadastrar turma
         if parametro == "1":
             # a variavel nova_turma vai receber o dicionário que está no turmas_json
-            nova_turma = json.load(turmas_json)
 
             print(f"{'-' * 15} Cadastro Turmas {'-' * 15}\n")
 
@@ -354,13 +356,10 @@ def cadastrar(parametro):
                 
         # Usuário vai cadastrar um aluno
         elif parametro == "2":
-            nova_turma = json.load(turmas_json)
 
             # Verifica se existe alguma turma
             if len(nova_turma) > 0:
                 # A variavel novo_aluno vai receber o dicionário que está no alunos_json e a nova_turma o que está em turmas_json
-                novo_aluno = json.load(alunos_json)
-                boletim = json.load(boletins_json)
 
                 print(f"{'-' * 15} Cadastro Alunos {'-' * 15}\n")
 
@@ -385,7 +384,7 @@ def cadastrar(parametro):
                     "Telefone": telefone_aluno,
                 }
 
-                boletim[matricula] = {}
+                novo_boletim[matricula] = {}
 
                 # Interatividade do aplicativo
                 print("Carregando...\n")
@@ -395,7 +394,7 @@ def cadastrar(parametro):
                     alunos_json.seek(0, 0)
                     boletins_json.seek(0, 0)
                     json.dump(novo_aluno, alunos_json, indent=4)
-                    json.dump(boletim, boletins_json, indent=4)
+                    json.dump(novo_boletim, boletins_json, indent=4)
 
                 # Volta para a interatividade do site
                 time.sleep(1)
@@ -415,15 +414,11 @@ def cadastrar(parametro):
             
         # Cadastrar o boletim
         elif parametro == "3":
-            # A variavel novo_boletim vai receber o dicionário que está no boletins_json e o aluno o que está em alunos_json
-            novo_boletim = json.load(boletins_json)
-            aluno = json.load(alunos_json)
-
             # Verifica se o json de alunos esta vazio e se o id referido está dentro do alunos_json
-            if len(aluno) > 0:
+            if len(novo_aluno) > 0:
                 # Vai pedir o codigo de matricula do aluno referido
                 codigo = input("Digite o código de matrícula do Aluno referido: ")
-                if codigo in aluno:
+                if codigo in novo_aluno:
                     if not novo_boletim.get(codigo):
 
                         # Vai guardar a quantidade de faltas na variável qnt_faltas
@@ -451,8 +446,8 @@ def cadastrar(parametro):
                             situacao = "Reprovado"
                         
                         novo_boletim[codigo] = {
-                            "Nome": aluno[codigo]["Nome"],
-                            "Turma": aluno[codigo]["Turma"],
+                            "Nome": novo_aluno[codigo]["Nome"],
+                            "Turma": novo_aluno[codigo]["Turma"],
                             "Notas": notas_aluno,
                             "Média": media,
                             "Quantidade de Faltas": qnt_faltas,
@@ -512,7 +507,7 @@ def editar(parametro):
 
     # Loop para não sair da opção de parametro
     while True:
-        abrirArquivo()
+        turmas, alunos, boletins = abrirArquivo()
 
         # Usuário escolhe a opção de editar as turmas
         if parametro == "1":
@@ -702,6 +697,7 @@ def editar(parametro):
                                     if boletins[i]["Nome"] == alunos[codigo]["Nome"]:
                                         boletins[i]["Nome"] = novo_nome
                                 alunos[codigo]["Nome"] = novo_nome
+                                
                                 with open("alunos.json", "w", encoding="utf-8") as alunos_json, open("boletim.json", "w", encoding="utf-8") as boletins_json:
                                     alunos_json.seek(0, 0)
                                     boletins_json.seek(0, 0)
@@ -810,7 +806,7 @@ def editar(parametro):
                             else:
                                 pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
                                 if pergunta[0].upper() == "S":
-                                    alunos[codigo]["Turma"] = nova_turma
+                                    alunos[codigo]["Turma"] = turmas[nova_turma]["Nome"]
 
                                     with open("alunos.json", "w", encoding="utf-8") as alunos_json:
                                         alunos_json.seek(0, 0)
@@ -1097,7 +1093,7 @@ def remover(parametro):
 
     # Loop para não sair da opção de parametro
     while True:
-        abrirArquivo()
+        turma, aluno, boletim = abrirArquivo()
         # Se o usuário escolher remover turma
         if parametro == "1": 
             codigo = input("Digite o código da turma que você deseja remover: ")
@@ -1372,7 +1368,7 @@ def remover(parametro):
 def pesquisar(parametro):
     verifica()
     while True:
-        abrirArquivo()
+        turma, alunos, boletim = abrirArquivo()
         # Loop para não sair da função
         if parametro == "1":
             if os.path.exists("turmas.json"):
@@ -1633,11 +1629,10 @@ def pesquisar(parametro):
 def listar(parametro):
     verifica()
     while True:
-        abrirArquivo()
+        turma, aluno, boletim = abrirArquivo()
 
         # Listar Turmas
         if parametro == "1":
-
             if len(turma) > 0:
                 for i in turma:
                     lisTurma(i)
@@ -1783,7 +1778,8 @@ def relatorio(parametro):
     verifica()
 
     while True:
-        abrirArquivo()
+        turma, aluno, boletim = abrirArquivo()
+
         if parametro == "1":
             if len(aluno) > 0:
                 print(f"""{'-' * 15} TOTAL DE TURMAS {'-' * 15}
