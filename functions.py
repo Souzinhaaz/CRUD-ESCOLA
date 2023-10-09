@@ -1846,6 +1846,44 @@ Total de alunos: {qnt_aluno}
                 parametro = menu_relatorio()
                 os.system("cls")
 
+
+        elif parametro == "3":
+            if len(turma) > 0:
+                for codigo in turma:
+                    qnt_aprovado = 0
+                    qnt_reprovado = 0
+                    nome_turma = turma[codigo]["Nome"]
+                    for aluno_aprovado in aluno:
+                        if nome_turma == aluno[aluno_aprovado]["Turma"] and aluno[aluno_aprovado]["Situação"] == "Aprovado":
+                            qnt_aprovado += 1
+                        if nome_turma == aluno[aluno_aprovado]["Turma"] and aluno[aluno_aprovado]["Situação"] == "Reprovado":
+                            qnt_reprovado += 1
+
+                    print(f"""{'-' * 15} {nome_turma} {'-' * 15}
+
+Total de alunos: {qnt_aluno}
+Alunos Aprovados: {qnt_aprovado}
+Alunos Reprovados: {qnt_reprovado}
+
+""")         
+
+                pergunta = input("Deseja continuar listando? Sim ou Não? ")
+                if pergunta[0].upper() == "S":
+                    os.system("cls")
+                    parametro = menu_listar()
+                    os.system("cls")
+                else:
+                    os.system("cls")
+                    break  
+
+
+            else:
+                print("Não existe nenhum aluno!")
+                time.sleep(1.5)
+                os.system("cls")
+                parametro = menu_relatorio()
+                os.system("cls")
+
         elif parametro == "6":
             os.system("cls")
             break
