@@ -1884,6 +1884,41 @@ Alunos Reprovados: {qnt_reprovado}
                 parametro = menu_relatorio()
                 os.system("cls")
 
+        elif parametro == "4":
+            if len(turma) > 0:
+                for codigo in turma:
+                    medias = {}
+                    nome_turma = turma[codigo]["Nome"]
+                    for media_aluno in aluno:
+                        if nome_turma == aluno[media_aluno]["Turma"]:
+                            media = sum(aluno[media_aluno]["Notas"]) / len(aluno[media_aluno]["Notas"])
+                            medias[alunos[media_aluno]["Nome"]] = media 
+
+                    for i in sorted(medias, key = medias.get):
+                        print(f"""{'-' * 15} {nome_turma} {'-' * 15}
+
+Medias dos alunos em ordem decrescente: {i, medias[i]}
+
+""")         
+
+                pergunta = input("Deseja continuar listando? Sim ou Não? ")
+                if pergunta[0].upper() == "S":
+                    os.system("cls")
+                    parametro = menu_listar()
+                    os.system("cls")
+                else:
+                    os.system("cls")
+                    break  
+
+
+            else:
+                print("Não existe nenhum aluno!")
+                time.sleep(1.5)
+                os.system("cls")
+                parametro = menu_relatorio()
+                os.system("cls")
+
+
         elif parametro == "6":
             os.system("cls")
             break
