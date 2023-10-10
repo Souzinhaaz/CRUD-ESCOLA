@@ -1852,12 +1852,15 @@ Total de alunos: {qnt_aluno}
                 for codigo in turma:
                     qnt_aprovado = 0
                     qnt_reprovado = 0
+                    qnt_aluno = 0
                     nome_turma = turma[codigo]["Nome"]
                     for aluno_aprovado in aluno:
-                        if nome_turma == aluno[aluno_aprovado]["Turma"] and aluno[aluno_aprovado]["Situação"] == "Aprovado":
+                        if nome_turma == aluno[aluno_aprovado]["Turma"] and boletim[aluno_aprovado]["Situação"] == "Aprovado":
                             qnt_aprovado += 1
-                        if nome_turma == aluno[aluno_aprovado]["Turma"] and aluno[aluno_aprovado]["Situação"] == "Reprovado":
+                            qnt_aluno += 1
+                        if nome_turma == aluno[aluno_aprovado]["Turma"] and boletim[aluno_aprovado]["Situação"] == "Reprovado":
                             qnt_reprovado += 1
+                            qnt_aluno += 1
 
                     print(f"""{'-' * 15} {nome_turma} {'-' * 15}
 
@@ -1868,6 +1871,7 @@ Alunos Reprovados: {qnt_reprovado}
 """)         
 
                 pergunta = input("Deseja continuar listando? Sim ou Não? ")
+                os.system("cls")
                 if pergunta[0].upper() == "S":
                     os.system("cls")
                     parametro = menu_listar()
@@ -1891,17 +1895,15 @@ Alunos Reprovados: {qnt_reprovado}
                     nome_turma = turma[codigo]["Nome"]
                     for media_aluno in aluno:
                         if nome_turma == aluno[media_aluno]["Turma"]:
-                            media = sum(aluno[media_aluno]["Notas"]) / len(aluno[media_aluno]["Notas"])
-                            medias[alunos[media_aluno]["Nome"]] = media 
+                            medias[aluno[media_aluno]["Nome"]] = boletim[media_aluno]["Média"] 
 
-                    for i in sorted(medias, key = medias.get):
-                        print(f"""{'-' * 15} {nome_turma} {'-' * 15}
 
-Medias dos alunos em ordem decrescente: {i, medias[i]}
+                    if boletim.get(str(codigo)):
+                        print(f"\n{'-' * 15} {nome_turma} {'-' * 15}\nMedias dos alunos em ordem crescente: \n")
+                        for i in sorted(medias, key = medias.get):
+                            print(f"{f'Aluno: {i}'.ljust(20)}        {f'Média: {medias[i]}'}")         
 
-""")         
-
-                pergunta = input("Deseja continuar listando? Sim ou Não? ")
+                pergunta = input("\nDeseja continuar listando? Sim ou Não? ")
                 if pergunta[0].upper() == "S":
                     os.system("cls")
                     parametro = menu_listar()
