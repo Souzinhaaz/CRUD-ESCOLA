@@ -28,10 +28,20 @@ def abrirArquivo():
 
     return turma, aluno, boletim
         
-def guardarArquivo(json, guardar, variavel_json):
-    with open(json, "w", encoding="utf-8") as variavel_json:
-        variavel_json.seek(0, 0)
-        json.dump(guardar, variavel_json, indent=4)
+def guardarTurma(guardar):
+    with open("turmas.json", "w", encoding="utf-8") as turmas_json:
+        turmas_json.seek(0, 0)
+        json.dump(guardar, turmas_json, indent=4)
+
+def guardarAluno(guardar):
+    with open("alunos.json", "w", encoding="utf-8") as alunos_json:
+        alunos_json.seek(0, 0)
+        json.dump(guardar, alunos_json, indent=4)
+
+def guardarBoletim(guardar):
+    with open("boletim.json", "w", encoding="utf-8") as boletins_json:
+        boletins_json.seek(0, 0)
+        json.dump(guardar, boletins_json, indent=4)
 
 
 # Cria o modelo do menu cadastro
@@ -196,9 +206,6 @@ Vazio
         
 
 
-     
-
-
 # Funções para retornar modelo de pesquisas
 def rturma(i, parametro):
     with open("turmas.json", "r", encoding="utf-8") as turma:
@@ -284,6 +291,8 @@ def verifica():
         with open("boletim.json", "w", encoding="utf-8") as arq:
             json.dump({}, arq)
     
+
+
 # Cria a função para cadastrar
 def cadastrar(parametro):
     while True:
@@ -340,10 +349,8 @@ def cadastrar(parametro):
             # Interatividade do aplicativo
             print("Carregando...\n")
 
-            # Adiciona os dados no turmas.json
-            with open("turmas.json", "w", encoding="utf-8") as turmas_json:
-                turmas_json.seek(0, 0)
-                json.dump(nova_turma, turmas_json, indent=4)
+            # Vai guardar a turma
+            guardarTurma(nova_turma)
 
             # Volta para a interatividade do site
             time.sleep(1)
@@ -388,13 +395,10 @@ def cadastrar(parametro):
                 # Interatividade do aplicativo
                 print("Carregando...\n")
 
-                # Adiciona os dados no alunos.json
-                with open("alunos.json", "w", encoding="utf-8") as alunos_json, open("boletim.json", "w", encoding="utf-8") as boletins_json:
-                    alunos_json.seek(0, 0)
-                    boletins_json.seek(0, 0)
-                    json.dump(novo_aluno, alunos_json, indent=4)
-                    json.dump(novo_boletim, boletins_json, indent=4)
-
+                # Vai guardar os dados de alunos e boletins
+                guardarAluno(novo_aluno)
+                guardarBoletim(novo_boletim)
+                
                 # Volta para a interatividade do site
                 time.sleep(1)
                 print("Aluno(a) Cadastrado(a) com sucesso!!")
@@ -455,10 +459,8 @@ def cadastrar(parametro):
 
                         print("Carregando...\n")
 
-                        # Adiciona os dados a boletins_json
-                        with open("boletim.json", "w", encoding="utf-8") as boletins_json:
-                            boletins_json.seek(0, 0)
-                            json.dump(novo_boletim, boletins_json, indent=4)
+                        # Vai guardar o novo boletim
+                        guardarBoletim(novo_boletim)
 
                         # Volta para a interatividade do site
                         time.sleep(1)
@@ -536,13 +538,12 @@ def editar(parametro):
                             if pergunta[0].upper() == "S":
                                 turmas[codigo]["Nome"] = novo_nome
 
-                                with open("turmas.json", "w", encoding="utf-8") as turmas_json:
-                                    turmas_json.seek(0, 0)
-                                    json.dump(turmas, turmas_json, indent=4)
-                                    print("\nNovo nome registrado com sucesso!!")
-                                    time.sleep(2)
-                                    os.system("cls")
-                                    break
+                                guardarTurma(turmas)
+                                print("\nNovo nome registrado com sucesso!!")
+                                time.sleep(2)
+                                os.system("cls")
+                                break
+
                             else:   
                                 os.system("cls")
                                 parametro = menu_editar()
@@ -582,13 +583,11 @@ def editar(parametro):
                             if pergunta[0].upper() == "S":
                                 turmas[codigo]["Turno"] = novo_turno
 
-                                with open("turmas.json", "w", encoding="utf-8") as turmas_json:
-                                    turmas_json.seek(0, 0)
-                                    json.dump(turmas, turmas_json, indent=4)
-                                    print("\nNovo turno registrado com sucesso!!")
-                                    time.sleep(2)
-                                    os.system("cls")
-                                    break
+                                guardarTurma(turmas)
+                                print("\nNovo turno registrado com sucesso!!")
+                                time.sleep(2)
+                                os.system("cls")
+                                break
                             else:
                                 os.system("cls")
                                 parametro = menu_editar()
@@ -628,13 +627,11 @@ def editar(parametro):
                             if pergunta[0].upper() == "S":
                                 turmas[codigo]["Ano"] = novo_ano
 
-                                with open("turmas.json", "w", encoding="utf-8") as turmas_json:
-                                    turmas_json.seek(0, 0)
-                                    json.dump(turmas, turmas_json, indent=4)
-                                    print("\nNovo ano registrado com sucesso!!")
-                                    time.sleep(2)
-                                    os.system("cls")
-                                    break
+                                guardarBoletim(turmas)
+                                print("\nNovo ano registrado com sucesso!!")
+                                time.sleep(2)
+                                os.system("cls")
+                                break
                             else:
                                 os.system("cls")
                                 parametro = menu_editar()
@@ -697,15 +694,12 @@ def editar(parametro):
                                         boletins[i]["Nome"] = novo_nome
                                 alunos[codigo]["Nome"] = novo_nome
                                 
-                                with open("alunos.json", "w", encoding="utf-8") as alunos_json, open("boletim.json", "w", encoding="utf-8") as boletins_json:
-                                    alunos_json.seek(0, 0)
-                                    boletins_json.seek(0, 0)
-                                    json.dump(alunos, alunos_json, indent=4)
-                                    json.dump(boletins, boletins_json, indent=4)
-                                    print("\nNovo nome registrado com sucesso!!")
-                                    time.sleep(2)
-                                    os.system("cls")
-                                    break
+                                guardarAluno(alunos)
+                                guardarBoletim(boletins)
+                                print("\nNovo nome registrado com sucesso!!")
+                                time.sleep(2)
+                                os.system("cls")
+                                break
                             else:
                                 os.system("cls")
                             
@@ -734,14 +728,11 @@ def editar(parametro):
                             if pergunta[0].upper() == "S":
                                 alunos[codigo]["Email"] = novo_email
 
-                                with open("alunos.json", "w", encoding="utf-8") as alunos_json:
-                                    alunos_json.seek(0, 0)
-                                    json.dump(alunos, alunos_json, indent=4)
-                                    print("\nNovo email registrado com sucesso!!")
-                                    time.sleep(2)
-                                    os.system("cls")
-                                    break
-
+                                guardarAluno(alunos)
+                                print("\nNovo email registrado com sucesso!!")
+                                time.sleep(2)
+                                os.system("cls")
+                                break
                             else:
                                 os.system("cls")
                                 break
@@ -769,13 +760,11 @@ def editar(parametro):
                             if pergunta[0].upper() == "S":
                                 alunos[codigo]["Telefone"] = novo_telefone
 
-                                with open("alunos.json", "w", encoding="utf-8") as alunos_json:
-                                    alunos_json.seek(0, 0)
-                                    json.dump(alunos, alunos_json, indent=4)
-                                    print("\nNovo telefone registrado com sucesso!!")
-                                    time.sleep(2)
-                                    os.system("cls")
-                                    break
+                                guardarAluno(alunos)
+                                print("\nNovo telefone registrado com sucesso!!")
+                                time.sleep(2)
+                                os.system("cls")
+                                break
                             else:
                                 os.system("cls")
                                 break
@@ -807,13 +796,11 @@ def editar(parametro):
                                 if pergunta[0].upper() == "S":
                                     alunos[codigo]["Turma"] = turmas[nova_turma]["Nome"]
 
-                                    with open("alunos.json", "w", encoding="utf-8") as alunos_json:
-                                        alunos_json.seek(0, 0)
-                                        json.dump(alunos, alunos_json, indent=4)
-                                        print("\nNova turma registrada com sucesso!!")
-                                        time.sleep(2)
-                                        os.system("cls")
-                                        break
+                                    guardarAluno(alunos)
+                                    print("\nNova turma registrada com sucesso!!")
+                                    time.sleep(2)
+                                    os.system("cls")
+                                    break
                                 else:
                                     os.system("cls")
                                     parametro = menu_editar()
@@ -879,15 +866,12 @@ def editar(parametro):
                                 alunos[boletins[codigo]["Matrícula"]]["Nome"] = novo_nome
                                 boletins[codigo]["Nome"] = novo_nome
 
-                                with open("boletim.json", "w", encoding="utf-8") as boletins_json, open("alunos.json", "w", encoding="utf-8") as alunos_json:
-                                    boletins_json.seek(0, 0)
-                                    alunos_json.seek(0, 0)
-                                    json.dump(boletins, boletins_json, indent=4)
-                                    json.dump(alunos, alunos_json, indent=4)
-                                    print("\nNovo nome registrado com sucesso!!")
-                                    time.sleep(2)
-                                    os.system("cls")
-                                    break
+                                guardarBoletim(boletins)
+                                guardarAluno(alunos)
+                                print("\nNovo nome registrado com sucesso!!")
+                                time.sleep(2)
+                                os.system("cls")
+                                break
                             else:
                                 os.system("cls")
                                 break
@@ -916,13 +900,11 @@ def editar(parametro):
                             if pergunta[0].upper() == "S":
                                 boletins[codigo]["Turma"] = nova_turma
 
-                                with open("boletim.json", "w", encoding="utf-8") as boletins_json:
-                                    boletins_json.seek(0, 0)
-                                    json.dump(boletins, boletins_json, indent=4)
-                                    print("\nNova turma registrada com sucesso!!")
-                                    time.sleep(2)
-                                    os.system("cls")
-                                    break
+                                guardarBoletim(boletins)
+                                print("\nNova turma registrada com sucesso!!")
+                                time.sleep(2)
+                                os.system("cls")
+                                break
                             else:
                                 os.system("cls")
                                 parametro = menu_editar()
@@ -954,12 +936,11 @@ def editar(parametro):
                             if pergunta[0].upper() == "S":
                                 boletins[codigo]["Notas"] = notas_aluno
 
-                                with open("boletim.json", "w", encoding="utf-8") as boletins_json:
-                                    boletins_json.seek(0, 0)
-                                    json.dump(boletins, boletins_json, indent=4)
-                                    print("Novas notas registradas com sucesso!!")
-                                    time.sleep(2)
-                                    os.system("cls")
+                                guardarBoletim(boletins)
+                                print("Novas notas registradas com sucesso!!")
+                                time.sleep(2)
+                                os.system("cls")
+                                break   
                             else:
                                 os.system("cls")
                                 parametro = menu_editar()
@@ -989,13 +970,11 @@ def editar(parametro):
                             if pergunta[0].upper() == "S":
                                 boletins[codigo]["Quantidade de Faltas"] = faltas_nova
 
-                                with open("boletim.json", "w", encoding="utf-8") as boletins_json:
-                                    boletins_json.seek(0, 0)
-                                    json.dump(boletins, boletins_json, indent=4)
-                                    print("\nNovas faltas registradas com sucesso!!")
-                                    time.sleep(2)
-                                    os.system("cls")
-                                    break
+                                guardarBoletim(boletins)
+                                print("\nNovas faltas registradas com sucesso!!")
+                                time.sleep(2)
+                                os.system("cls")
+                                break
                             else:
                                 os.system("cls")
                                 parametro = menu_editar()
@@ -1027,13 +1006,11 @@ def editar(parametro):
                                 if pergunta[0].upper() == "S":
                                     boletins[codigo]["Situação"] = nova_situacao
 
-                                    with open("boletim.json", "w", encoding="utf-8") as boletins_json:
-                                        boletins_json.seek(0, 0)
-                                        json.dump(boletins, boletins_json, indent=4)
-                                        print("\nNova situação registrado com sucesso!!")
-                                        time.sleep(2)
-                                        os.system("cls")
-                                        break
+                                    guardarBoletim(boletins)
+                                    print("\nNova situação registrado com sucesso!!")
+                                    time.sleep(2)
+                                    os.system("cls")
+                                    break
                                 else:
                                     os.system("cls")
                                     parametro = menu_editar()
@@ -1129,13 +1106,12 @@ def remover(parametro):
                             
                             del turma[codigo]
 
-                            with open("turmas.json", "w", encoding="utf-8") as turmas_json, open("alunos.json", "w", encoding="utf-8") as alunos_json:
-                                json.dump(turma, turmas_json, indent=4)
-                                json.dump(novo_aluno, alunos_json, indent=4)
-                                print("\nTurma removida com sucesso!")
-                                time.sleep(2)
-                                os.system("cls")
-                                break
+                            guardarTurma(turma)
+                            guardarAluno(novo_aluno)
+                            print("\nTurma removida com sucesso!")
+                            time.sleep(2)
+                            os.system("cls")
+                            break
 
                         # Obtém o nome da turma que será removida
                         nome_turma_removida = turma[codigo]["Nome"]
@@ -1167,15 +1143,12 @@ def remover(parametro):
                             else:
                                 turma[str(i)] = turma.pop(str(i + 1))
                      
-
-                        with open("turmas.json", "w", encoding="utf-8") as turmas_json, open("alunos.json", "w", encoding="utf-8") as alunos_json:
-                            json.dump(turma, turmas_json, indent=4)
-                            json.dump(novo_aluno, alunos_json, indent=4)
-                            print("\nTurma removida com sucesso!")
-                            time.sleep(2)
-                            os.system("cls")
-                            break
-                        
+                        guardarTurma(turma)
+                        guardarAluno(novo_aluno)
+                        print("\nTurma removida com sucesso!")
+                        time.sleep(2)
+                        os.system("cls")
+                        break              
                     else:
                         # Obtém o nome da turma que será removida
                         nome_turma_removida = turma[codigo]["Nome"]
@@ -1196,15 +1169,14 @@ def remover(parametro):
                         for chave, valor in sorted(aluno.items()):
                             novo_aluno[str(contador)] = valor
                             contador += 1
-
-                        with open("turmas.json", "w", encoding="utf-8") as turmas_json, open("alunos.json", "w", encoding="utf-8") as alunos_json:
+                        
+                        guardarAluno(novo_aluno)
+                        with open("turmas.json", "w", encoding="utf-8") as turmas_json:
                             json.dump({}, turmas_json)
-                            json.dump(novo_aluno, alunos_json, indent=4)
                             print("\nTurma removida com sucesso!")
                             time.sleep(2)
                             os.system("cls")
                             break      
-
                 else:
                     os.system("cls")
                     parametro = menu_remover()
@@ -1252,13 +1224,12 @@ def remover(parametro):
 
                             del aluno[codigo]
 
-                            with open("alunos.json", "w", encoding="utf-8") as alunos_json, open("boletim.json", "w", encoding="utf-8") as boletins_json:
-                                json.dump(aluno, alunos_json, indent=4)
-                                json.dump(boletim, boletins_json, indent=4)
-                                print("\nAluno(a) removido(a) com sucesso!")
-                                time.sleep(2)
-                                os.system("cls")
-                                break
+                            guardarAluno(aluno)
+                            guardarBoletim(boletim)
+                            print("\nAluno(a) removido(a) com sucesso!")
+                            time.sleep(2)
+                            os.system("cls")
+                            break
 
                         # Obtém o nome do aluno que será removido
                         nome_aluno_removido = aluno[codigo]["Nome"]
@@ -1285,13 +1256,12 @@ def remover(parametro):
                             else:
                                 aluno[str(i)] = aluno.pop(str(i + 1))
 
-                        with open("alunos.json", "w", encoding="utf-8") as alunos_json, open("boletim.json", "w", encoding="utf-8") as boletins_json:
-                            json.dump(aluno, alunos_json, indent=4)
-                            json.dump(boletim, boletins_json, indent=4)
-                            print("\nAluno(a) removido(a) com sucesso!")
-                            time.sleep(2)
-                            os.system("cls")
-                            break
+                        guardarAluno(aluno)
+                        guardarBoletim(boletim)    
+                        print("\nAluno(a) removido(a) com sucesso!")
+                        time.sleep(2)
+                        os.system("cls")
+                        break
 
                     # Se tiver apenas 1 aluno no dicionário
                     else:
@@ -1311,9 +1281,9 @@ def remover(parametro):
                         for id_boletim in boletins_para_remover:
                             boletim[id_boletim] = {}
 
-                        with open("alunos.json", "w", encoding="utf-8") as alunos_json, open("boletim.json", "w", encoding="utf-8") as boletins_json:
+                        guardarBoletim(boletim)
+                        with open("alunos.json", "w", encoding="utf-8") as alunos_json:
                             json.dump({}, alunos_json)    
-                            json.dump(boletim, boletins_json, indent=4)
                             print("\nAluno removido com sucesso!")
                             time.sleep(2)
                             os.system("cls")
@@ -1343,13 +1313,12 @@ def remover(parametro):
                     
                     boletim[codigo] = {}
 
-                    with open("boletim.json", "w", encoding="utf-8") as boletins_json:
-                        json.dump(boletim, boletins_json, indent=4)
-                        print("\nBoletim removido com sucesso!")
-                        time.sleep(2)
-                        os.system("cls")
-                        break
-                
+                    guardarBoletim(boletim)
+                    print("\nBoletim removido com sucesso!")
+                    time.sleep(2)
+                    os.system("cls")
+                    break
+                    
                 else:
                     os.system("cls")
                     parametro = menu_remover()
