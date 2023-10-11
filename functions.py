@@ -2,7 +2,6 @@ import json
 import os
 import time
 
-
 # Cria o modelo do menu principal
 def menu_principal():
     pergunta = input(f""" {'-' * 15} Escola {'-' * 15}
@@ -252,7 +251,7 @@ Notas: {boletim[parametro]["Notas"]}
 
 Média: {boletim[parametro]["Média"]}
 
-Quantidade de Faltas: {boletim[parametro["Quantidade de Faltas"]]}
+Quantidade de Faltas: {boletim[parametro]["Quantidade de Faltas"]}
 
 Situação: {boletim[parametro]["Situação"]}
 
@@ -1801,7 +1800,7 @@ Total = {len(turma)}
                 pergunta = input("Deseja continuar listando? Sim ou Não? ")
                 if pergunta[0].upper() == "S":
                     os.system("cls")
-                    parametro = menu_listar()
+                    parametro = menu_relatorio()
                     os.system("cls")
                 else:
                     os.system("cls")
@@ -1832,7 +1831,7 @@ Total de alunos: {qnt_aluno}
                 pergunta = input("Deseja continuar listando? Sim ou Não? ")
                 if pergunta[0].upper() == "S":
                     os.system("cls")
-                    parametro = menu_listar()
+                    parametro = menu_relatorio()
                     os.system("cls")
                 else:
                     os.system("cls")
@@ -1874,7 +1873,7 @@ Alunos Reprovados: {qnt_reprovado}
                 os.system("cls")
                 if pergunta[0].upper() == "S":
                     os.system("cls")
-                    parametro = menu_listar()
+                    parametro = menu_relatorio()
                     os.system("cls")
                 else:
                     os.system("cls")
@@ -1896,17 +1895,19 @@ Alunos Reprovados: {qnt_reprovado}
                     for media_aluno in aluno:
                         if nome_turma == aluno[media_aluno]["Turma"]:
                             medias[aluno[media_aluno]["Nome"]] = boletim[media_aluno]["Média"] 
-
-
+                            
+    
                     if boletim.get(str(codigo)):
                         print(f"\n{'-' * 15} {nome_turma} {'-' * 15}\nMedias dos alunos em ordem crescente: \n")
                         for i in sorted(medias, key = medias.get):
-                            print(f"{f'Aluno: {i}'.ljust(20)}        {f'Média: {medias[i]}'}")         
+                            print(f"{f'Aluno: {i}'.ljust(20)}        {f'Média: {medias[i]}'}")
+                        print(f"{'-' * 43}")
+                                 
 
                 pergunta = input("\nDeseja continuar listando? Sim ou Não? ")
                 if pergunta[0].upper() == "S":
                     os.system("cls")
-                    parametro = menu_listar()
+                    parametro = menu_relatorio()
                     os.system("cls")
                 else:
                     os.system("cls")
