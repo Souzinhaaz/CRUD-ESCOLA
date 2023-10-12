@@ -1,22 +1,12 @@
 {
     "1": {
-        "Nome": "Agricultura",
+        "Nome": "GTI",
         "Turno": "Matutino",
-        "Ano": "4\u00b0"
+        "Ano": "3\u00b0"
     },
     "2": {
-        "Nome": "GTI",
-        "Turno": "Vespertino",
-        "Ano": "5\u00b0"
-    },
-    "3": {
-        "Nome": "Agropecu\u00e1ria",
+        "Nome": "Agricultura",
         "Turno": "Noturno",
-        "Ano": "5\u00b0"
-    },
-    "4": {
-        "Nome": "matem\u00e1tica",
-        "Turno": "Matutino",
-        "Ano": "5\u00b0"
+        "Ano": "6\u00b0"
     }
 }

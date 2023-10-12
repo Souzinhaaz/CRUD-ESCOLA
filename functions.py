@@ -2,24 +2,6 @@ import json
 import os
 import time
 
-# Cria o modelo do menu principal
-def menu_principal():
-    pergunta = input(f""" {'-' * 15} Escola {'-' * 15}
-
-1 - Cadastrar
-2 - Editar
-3 - Remover
-4 - Pesquisar
-5 - Listar
-6 - Gerar relatório
-0 - Sair do programa
-          
-{'-' * 40}
-""")
-    
-    return pergunta
-    
-
 def abrirArquivo():
     with open("turmas.json", "r+", encoding="utf-8") as turmas_json, open("alunos.json", "r+", encoding="utf-8") as alunos_json, open("boletim.json", "r+", encoding="utf-8") as boletins_json:
         turma = json.load(turmas_json)
@@ -42,6 +24,23 @@ def guardarBoletim(guardar):
     with open("boletim.json", "w", encoding="utf-8") as boletins_json:
         boletins_json.seek(0, 0)
         json.dump(guardar, boletins_json, indent=4)
+
+# Cria o modelo do menu principal
+def menu_principal():
+    pergunta = input(f""" {'-' * 15} Escola {'-' * 15}
+
+1 - Cadastrar
+2 - Editar
+3 - Remover
+4 - Pesquisar
+5 - Listar
+6 - Gerar relatório
+0 - Sair do programa
+          
+{'-' * 40}
+""")
+    
+    return pergunta
 
 
 # Cria o modelo do menu cadastro
@@ -141,7 +140,6 @@ Ano: {turma[i]["Ano"]}
 
 {'-' * 40}
 """)
-    
 
 def lisAlunos(i):
     with open("turmas.json", "r", encoding="utf-8") as turma, open("alunos.json", "r", encoding="utf-8") as aluno:
@@ -159,7 +157,6 @@ Telefone: {aluno[i]["Telefone"]}
 
 {'-' * 40}
 """)
-    
 
 def lisAlunosBoletim(i):
     with open("turmas.json", "r", encoding="utf-8") as turma, open("alunos.json", "r", encoding="utf-8") as aluno, open("boletim.json", "r", encoding="utf-8") as boletim:
@@ -203,8 +200,6 @@ Vazio
 
 {'-' * 40}
 """)
-        
-
 
 # Funções para retornar modelo de pesquisas
 def rturma(i, parametro):
@@ -290,8 +285,6 @@ def verifica():
     if not os.path.exists("boletim.json"):
         with open("boletim.json", "w", encoding="utf-8") as arq:
             json.dump({}, arq)
-    
-
 
 # Cria a função para cadastrar
 def cadastrar(parametro):
@@ -362,7 +355,6 @@ def cadastrar(parametro):
                 
         # Usuário vai cadastrar um aluno
         elif parametro == "2":
-
             # Verifica se existe alguma turma
             if len(nova_turma) > 0:
                 # A variavel novo_aluno vai receber o dicionário que está no alunos_json e a nova_turma o que está em turmas_json
@@ -611,7 +603,6 @@ def editar(parametro):
                         if pergunta[0].upper() == "S":
                             os.system("cls")
                             print(f"""{'-' * 15} Edição {'-' * 15}""")
-
                             novo_ano = input("\nDigite o novo ano: ")
 
                             # Verifica se o ano da turma está correto
@@ -787,16 +778,18 @@ def editar(parametro):
                         if pergunta[0].upper() == "S":
                             os.system("cls")
                             print(f"""{'-' * 15} Edição {'-' * 15}""")
-                            nova_turma = input("\nDigite o código da turma: ")
+                            nova_turma = input("\nDigite o nome da nova turma: ")
                             if not nova_turma in turmas:
                                 print("Essa turma não existe, por favor digite outra!!")
-                                nova_turma = input("\nDigite o código da turma existente: ")
+                                nova_turma = input("\nDigite o nome de uma turma existente: ")
                             else:
                                 pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
                                 if pergunta[0].upper() == "S":
                                     alunos[codigo]["Turma"] = turmas[nova_turma]["Nome"]
+                                    boletins[codigo]["Turma"] = turmas[nova_turma]["Nome"]
 
                                     guardarAluno(alunos)
+                                    guardarBoletim(boletins)
                                     print("\nNova turma registrada com sucesso!!")
                                     time.sleep(2)
                                     os.system("cls")
@@ -886,7 +879,6 @@ def editar(parametro):
                                 parametro = menu_editar()
                                 os.system("cls")
 
-
                     elif pergunta.upper() == "TURMA":
                         print(f"\n{boletins[codigo]['Turma']}\n")
 
@@ -935,6 +927,7 @@ def editar(parametro):
                             pergunta = input("\nTem certeza que deseja editar? Sim ou Não? ")
                             if pergunta[0].upper() == "S":
                                 boletins[codigo]["Notas"] = notas_aluno
+                                boletins[codigo]["Média"] = sum(notas_aluno) / len(notas_aluno)
 
                                 guardarBoletim(boletins)
                                 print("Novas notas registradas com sucesso!!")
@@ -1064,7 +1057,6 @@ def editar(parametro):
             os.system("cls")
         
 def remover(parametro):
-
     verifica()
 
     # Loop para não sair da opção de parametro
@@ -1072,17 +1064,46 @@ def remover(parametro):
         turma, aluno, boletim = abrirArquivo()
         # Se o usuário escolher remover turma
         if parametro == "1": 
-            codigo = input("Digite o código da turma que você deseja remover: ")
+            if len(turma) > 0:
+                codigo = input("Digite o código da turma que você deseja remover: ")
 
-            if codigo in turma:
-                print(f"\n{turma[codigo]}\nEssa é a turma que você selecionou\n")
-                pergunta = input("Você tem certeza que deseja excluir? Sim ou Não? ")
+                if codigo in turma:
+                    print(f"\n{turma[codigo]}\nEssa é a turma que você selecionou\n")
+                    pergunta = input("Você tem certeza que deseja excluir? Sim ou Não? ")
 
-                if pergunta[0].upper() == "S":
-                    if len(turma) > 1:
+                    if pergunta[0].upper() == "S":
+                        if len(turma) > 1:
 
-                        # Se for o ultimo dicionário vai remover
-                        if int(codigo) == len(turma):
+                            # Se for o ultimo dicionário vai remover
+                            if int(codigo) == len(turma):
+                                # Obtém o nome da turma que será removida
+                                nome_turma_removida = turma[codigo]["Nome"]
+
+                                # Remove todos os alunos com o mesmo nome da turma removida
+                                alunos_para_remover = []
+                                for id_alunos, dados_aluno in aluno.items():
+                                    if dados_aluno["Turma"] == nome_turma_removida:
+                                        alunos_para_remover.append(id_alunos)
+
+                                # Remove os alunos do dicionário de alunos
+                                for id_aluno in alunos_para_remover:
+                                    del aluno[id_aluno]
+                                
+                                novo_aluno = {}
+                                contador = 1
+                                # Itere sobre o dicionário original e reorganize as chaves
+                                for chave, valor in sorted(aluno.items()):
+                                    novo_aluno[str(contador)] = valor
+                                    contador += 1
+                                
+                                del turma[codigo]
+
+                                guardarTurma(turma)
+                                guardarAluno(novo_aluno)
+                                print("\nTurma removida com sucesso!")
+                                time.sleep(2)
+                                os.system("cls")
+                                break
 
                             # Obtém o nome da turma que será removida
                             nome_turma_removida = turma[codigo]["Nome"]
@@ -1096,7 +1117,43 @@ def remover(parametro):
                             # Remove os alunos do dicionário de alunos
                             for id_aluno in alunos_para_remover:
                                 del aluno[id_aluno]
-                            
+
+                            novo_aluno = {}
+                            contador = 1
+                            # Itere sobre o dicionário original e reorganize as chaves
+                            for chave, valor in sorted(aluno.items()):
+                                novo_aluno[str(contador)] = valor
+                                contador += 1   
+
+                            # Código para reescrever o código digitado pelo seu sucessor
+                            turma[codigo] = turma.pop(str(int(codigo) + 1)) # Reescrever no código deletado o dicionário que estava a frente
+
+                            for i in range(1, len(turma) + 1): # Vai percorrer todos os dicionários na turma
+                                if str(i) in turma:
+                                    turma[str(i)] = turma[str(i)]
+                                else:
+                                    turma[str(i)] = turma.pop(str(i + 1))
+                        
+                            guardarTurma(turma)
+                            guardarAluno(novo_aluno)
+                            print("\nTurma removida com sucesso!")
+                            time.sleep(2)
+                            os.system("cls")
+                            break              
+                        else:
+                            # Obtém o nome da turma que será removida
+                            nome_turma_removida = turma[codigo]["Nome"]
+
+                            # Remove todos os alunos com o mesmo nome da turma removida
+                            alunos_para_remover = []
+                            for id_alunos, dados_aluno in aluno.items():
+                                if dados_aluno["Turma"] == nome_turma_removida:
+                                    alunos_para_remover.append(id_alunos)
+
+                            # Remove os alunos do dicionário de alunos
+                            for id_aluno in alunos_para_remover:
+                                del aluno[id_aluno]
+
                             novo_aluno = {}
                             contador = 1
                             # Itere sobre o dicionário original e reorganize as chaves
@@ -1104,110 +1161,75 @@ def remover(parametro):
                                 novo_aluno[str(contador)] = valor
                                 contador += 1
                             
-                            del turma[codigo]
-
-                            guardarTurma(turma)
                             guardarAluno(novo_aluno)
-                            print("\nTurma removida com sucesso!")
-                            time.sleep(2)
-                            os.system("cls")
-                            break
-
-                        # Obtém o nome da turma que será removida
-                        nome_turma_removida = turma[codigo]["Nome"]
-
-                        # Remove todos os alunos com o mesmo nome da turma removida
-                        alunos_para_remover = []
-                        for id_alunos, dados_aluno in aluno.items():
-                            if dados_aluno["Turma"] == nome_turma_removida:
-                                alunos_para_remover.append(id_alunos)
-
-                        # Remove os alunos do dicionário de alunos
-                        for id_aluno in alunos_para_remover:
-                            del aluno[id_aluno]
-
-
-                        novo_aluno = {}
-                        contador = 1
-                        # Itere sobre o dicionário original e reorganize as chaves
-                        for chave, valor in sorted(aluno.items()):
-                            novo_aluno[str(contador)] = valor
-                            contador += 1   
-
-                        # Código para reescrever o código digitado pelo seu sucessor
-                        turma[codigo] = turma.pop(str(int(codigo) + 1)) # Reescrever no código deletado o dicionário que estava a frente
-
-                        for i in range(1, len(turma) + 1): # Vai percorrer todos os dicionários na turma
-                            if str(i) in turma:
-                                turma[str(i)] = turma[str(i)]
-                            else:
-                                turma[str(i)] = turma.pop(str(i + 1))
-                     
-                        guardarTurma(turma)
-                        guardarAluno(novo_aluno)
-                        print("\nTurma removida com sucesso!")
-                        time.sleep(2)
-                        os.system("cls")
-                        break              
+                            with open("turmas.json", "w", encoding="utf-8") as turmas_json:
+                                json.dump({}, turmas_json)
+                                print("\nTurma removida com sucesso!")
+                                time.sleep(2)
+                                os.system("cls")
+                                break      
                     else:
-                        # Obtém o nome da turma que será removida
-                        nome_turma_removida = turma[codigo]["Nome"]
+                        os.system("cls")
+                        parametro = menu_remover()
+                        os.system("cls")
 
-                        # Remove todos os alunos com o mesmo nome da turma removida
-                        alunos_para_remover = []
-                        for id_alunos, dados_aluno in aluno.items():
-                            if dados_aluno["Turma"] == nome_turma_removida:
-                                alunos_para_remover.append(id_alunos)
-
-                        # Remove os alunos do dicionário de alunos
-                        for id_aluno in alunos_para_remover:
-                            del aluno[id_aluno]
-
-                        novo_aluno = {}
-                        contador = 1
-                        # Itere sobre o dicionário original e reorganize as chaves
-                        for chave, valor in sorted(aluno.items()):
-                            novo_aluno[str(contador)] = valor
-                            contador += 1
-                        
-                        guardarAluno(novo_aluno)
-                        with open("turmas.json", "w", encoding="utf-8") as turmas_json:
-                            json.dump({}, turmas_json)
-                            print("\nTurma removida com sucesso!")
-                            time.sleep(2)
-                            os.system("cls")
-                            break      
                 else:
+                    os.system("cls")
+                    print("Nenhuma turma com esse código, por favor, crie uma!")
+                    time.sleep(1.5)
                     os.system("cls")
                     parametro = menu_remover()
                     os.system("cls")
 
             else:
+                print("Nenhum valor cadastrado em turmas, por favor cadastrar!")
+                time.sleep(2)
                 os.system("cls")
-                print("Nenhuma turma com esse código, por favor, crie uma!")
-                time.sleep(1.5)
-                os.system("cls")
-                parametro = menu_remover()
+                parametro = menu_editar()
                 os.system("cls")
 
+                        
         # Se o usuário escolher remover alunos
         elif parametro == "2":
-            
-            codigo = input("Digite o código do(a) aluno(a) que você deseja remover: ")
+            if len(aluno) > 0:
+                codigo = input("Digite o código do(a) aluno(a) que você deseja remover: ")
 
-            if codigo in aluno:
-                print(f"\n{aluno[codigo]}\nEsse foi o aluno que você selecionou\n")
-                pergunta = input("Você tem certeza que quer excluir? Sim ou Não? ")
-                if pergunta[0].upper() == "S":
-                    # Se tiver mais de um aluno no dicionário
-                    if len(aluno) > 1:
+                if codigo in aluno:
+                    print(f"\n{aluno[codigo]}\nEsse foi o aluno que você selecionou\n")
+                    pergunta = input("Você tem certeza que quer excluir? Sim ou Não? ")
+                    if pergunta[0].upper() == "S":
+                        # Se tiver mais de um aluno no dicionário
+                        if len(aluno) > 1:
 
-                        # Se for o último dicionário vai remover
-                        if int(codigo) == len(aluno):
+                            # Se for o último dicionário vai remover
+                            if int(codigo) == len(aluno):
+                                # Obtém o nome do aluno que será removido
+                                nome_aluno_removido = aluno[codigo]["Nome"]
+
+                                # Remove todos os boletins com o mesmo nome da turma removida
+                                boletins_para_remover = []
+                                for id_boletins, dados_boletins in boletim.items():
+                                    if boletim[id_boletins].get("Matrícula"):
+                                        if dados_boletins["Matrícula"] == nome_aluno_removido:
+                                            boletins_para_remover.append(id_boletins)
+                                    else:
+                                        continue
+
+                                # Remove os boletins do dicionário de boletins
+                                for id_boletim in boletins_para_remover:
+                                    boletim[id_boletim] = {}
+
+                                del aluno[codigo]
+
+                                guardarAluno(aluno)
+                                guardarBoletim(boletim)
+                                print("\nAluno(a) removido(a) com sucesso!")
+                                time.sleep(2)
+                                os.system("cls")
+                                break
 
                             # Obtém o nome do aluno que será removido
                             nome_aluno_removido = aluno[codigo]["Nome"]
-
 
                             # Remove todos os boletins com o mesmo nome da turma removida
                             boletins_para_remover = []
@@ -1222,114 +1244,103 @@ def remover(parametro):
                             for id_boletim in boletins_para_remover:
                                 boletim[id_boletim] = {}
 
-                            del aluno[codigo]
+                            # Código para reescrever o código digitado pelo seu sucessor
+                            aluno[codigo] = aluno.pop(str(int(codigo) + 1)) # Reescrever no código deletado o dicionário que estava a frente
+
+                            for i in range(1, len(aluno) + 1): # Vai percorrer todos os dicionários no aluno
+                                if str(i) in aluno:
+                                    aluno[str(i)] = aluno[str(i)]
+                                else:
+                                    aluno[str(i)] = aluno.pop(str(i + 1))
 
                             guardarAluno(aluno)
-                            guardarBoletim(boletim)
+                            guardarBoletim(boletim)    
                             print("\nAluno(a) removido(a) com sucesso!")
                             time.sleep(2)
                             os.system("cls")
                             break
 
-                        # Obtém o nome do aluno que será removido
-                        nome_aluno_removido = aluno[codigo]["Nome"]
+                        # Se tiver apenas 1 aluno no dicionário
+                        else:
+                            # Obtém o nome do aluno que será removido
+                            nome_aluno_removido = aluno[codigo]["Nome"]
 
-                        # Remove todos os boletins com o mesmo nome da turma removida
-                        boletins_para_remover = []
-                        for id_boletins, dados_boletins in boletim.items():
-                            if boletim[id_boletins].get("Matrícula"):
-                                if dados_boletins["Matrícula"] == nome_aluno_removido:
-                                    boletins_para_remover.append(id_boletins)
-                            else:
-                                continue
+                            # Remove todos os boletins com o mesmo nome da turma removida
+                            boletins_para_remover = []
+                            for id_boletins, dados_boletins in boletim.items():
+                                if boletim[id_boletins].get("Matrícula"):
+                                    if dados_boletins["Matrícula"] == nome_aluno_removido:
+                                        boletins_para_remover.append(id_boletins)
+                                else:
+                                    continue
 
-                        # Remove os boletins do dicionário de boletins
-                        for id_boletim in boletins_para_remover:
-                            boletim[id_boletim] = {}
+                            # Remove os boletins do dicionário de boletins
+                            for id_boletim in boletins_para_remover:
+                                boletim[id_boletim] = {}
 
-                        # Código para reescrever o código digitado pelo seu sucessor
-                        aluno[codigo] = aluno.pop(str(int(codigo) + 1)) # Reescrever no código deletado o dicionário que estava a frente
-
-                        for i in range(1, len(aluno) + 1): # Vai percorrer todos os dicionários no aluno
-                            if str(i) in aluno:
-                                aluno[str(i)] = aluno[str(i)]
-                            else:
-                                aluno[str(i)] = aluno.pop(str(i + 1))
-
-                        guardarAluno(aluno)
-                        guardarBoletim(boletim)    
-                        print("\nAluno(a) removido(a) com sucesso!")
-                        time.sleep(2)
-                        os.system("cls")
-                        break
-
-                    # Se tiver apenas 1 aluno no dicionário
+                            guardarBoletim(boletim)
+                            with open("alunos.json", "w", encoding="utf-8") as alunos_json:
+                                json.dump({}, alunos_json)    
+                                print("\nAluno removido com sucesso!")
+                                time.sleep(2)
+                                os.system("cls")
+                                break
                     else:
-                        # Obtém o nome do aluno que será removido
-                        nome_aluno_removido = aluno[codigo]["Nome"]
-
-                        # Remove todos os boletins com o mesmo nome da turma removida
-                        boletins_para_remover = []
-                        for id_boletins, dados_boletins in boletim.items():
-                            if boletim[id_boletins].get("Matrícula"):
-                                if dados_boletins["Matrícula"] == nome_aluno_removido:
-                                    boletins_para_remover.append(id_boletins)
-                            else:
-                                continue
-
-                        # Remove os boletins do dicionário de boletins
-                        for id_boletim in boletins_para_remover:
-                            boletim[id_boletim] = {}
-
-                        guardarBoletim(boletim)
-                        with open("alunos.json", "w", encoding="utf-8") as alunos_json:
-                            json.dump({}, alunos_json)    
-                            print("\nAluno removido com sucesso!")
-                            time.sleep(2)
-                            os.system("cls")
-                            break
+                        os.system("cls")
+                        parametro = menu_remover()
+                        os.system("cls")
+                
                 else:
+                    os.system("cls")
+                    print("Nenhum aluno(o) com esse código, por favor, crie um(a)!")
+                    time.sleep(1.5)
                     os.system("cls")
                     parametro = menu_remover()
                     os.system("cls")
-            
+
             else:
+                print("Nenhum valor cadastrado em alunos, por favor cadastrar!")
+                time.sleep(2)
                 os.system("cls")
-                print("Nenhum aluno(o) com esse código, por favor, crie um(a)!")
-                time.sleep(1.5)
-                os.system("cls")
-                parametro = menu_remover()
+                parametro = menu_editar()
                 os.system("cls")
 
         # Se o usuário esolher remover boletim
         elif parametro == "3":
+            if len(boletim) > 0:
+                codigo = input("Digite o código do boletim que deseja remover: ")
 
-            codigo = input("Digite o código do boletim que deseja remover: ")
+                if codigo in boletim:
+                    print(f"\n{boletim[codigo]}\nEsse foi o boletim que você selecionou\n")
+                    pergunta = input("Você tem certeza que quer excluir? Sim ou Não? ")
+                    if pergunta[0].upper() == "S":
+                        
+                        boletim[codigo] = {}
 
-            if codigo in boletim:
-                print(f"\n{boletim[codigo]}\nEsse foi o boletim que você selecionou\n")
-                pergunta = input("Você tem certeza que quer excluir? Sim ou Não? ")
-                if pergunta[0].upper() == "S":
-                    
-                    boletim[codigo] = {}
+                        guardarBoletim(boletim)
+                        print("\nBoletim removido com sucesso!")
+                        time.sleep(2)
+                        os.system("cls")
+                        break
+                        
+                    else:
+                        os.system("cls")
+                        parametro = menu_remover()
+                        os.system("cls")
 
-                    guardarBoletim(boletim)
-                    print("\nBoletim removido com sucesso!")
-                    time.sleep(2)
-                    os.system("cls")
-                    break
-                    
                 else:
+                    os.system("cls")
+                    print("Nenhum boletim com esse código, por favor, crie um!")
+                    time.sleep(1.5)
                     os.system("cls")
                     parametro = menu_remover()
                     os.system("cls")
 
             else:
+                print("Nenhum valor cadastrado em boletins, por favor cadastrar!")
+                time.sleep(2)
                 os.system("cls")
-                print("Nenhum boletim com esse código, por favor, crie um!")
-                time.sleep(1.5)
-                os.system("cls")
-                parametro = menu_remover()
+                parametro = menu_editar()
                 os.system("cls")
 
         elif parametro == "4":
@@ -1351,121 +1362,128 @@ def pesquisar(parametro):
         if parametro == "1":
             if os.path.exists("turmas.json"):
                 os.system("cls")
-                opcao = input("Como você quer pesquisar a turma? pelo código[1], nome[2], turno[3], ano[4] ou sair[5]? ")
-                os.system("cls")
-
-                # Usuário seleciona pelo código
-                if opcao == "1":
-                    codigo = input("\nDigite o código da turma: ")
+                if len(turma) > 0:
+                    opcao = input("Como você quer pesquisar a turma? pelo código[1], nome[2], turno[3], ano[4] ou sair[5]? ")
                     os.system("cls")
-                    if codigo in turma:
+
+                    # Usuário seleciona pelo código
+                    if opcao == "1":
+                        codigo = input("\nDigite o código da turma: ")
+                        os.system("cls")
+                        if codigo in turma:
+                            for i in turma:
+                                rturma(i, codigo)
+                                break
+
+                            pergunta = input("\nDeseja pesquisar outra turma? Sim ou Não? ")
+                            if pergunta[0].upper() == "N":
+                                os.system("cls")
+                                parametro = menu_pesquisar()
+                                os.system("cls")
+                        else:
+                            print("O código inserido não existe no sistema!")
+                            time.sleep(1.5)
+                            os.system("cls")
+
+                    elif opcao == "2":
+                        nome = input("\nDigite o nome da turma:")
+                        os.system("cls")
+
                         for i in turma:
-                            rturma(i, codigo)
-                            break
+                            if nome.upper() == turma[str(i)]["Nome"].upper():
+                                existe = True
+                                break
+                            else:
+                                existe = False
+
+                        if existe:
+                            for i in turma:
+                                if nome.upper() == turma[str(i)]["Nome"].upper():
+                                    codigo = str(i)
+                                    rturma(i, codigo)
+                        else:
+                            print("O nome inserido não existe no sistema!")
+                            time.sleep(1.5)
+                            os.system("cls")    
+
+                        pergunta = input("\nDeseja pesquisar outra turma? Sim ou Não? ")
+                        if pergunta[0].upper() == "N":
+                            os.system("cls")
+                            parametro = menu_pesquisar()
+                            os.system("cls")       
+
+                    elif opcao == "3":
+                        turno = input("Digite o turno da sua turma: ")        
+                        os.system("cls")
+
+                        for i in turma:
+                            if turno.upper() == turma[str(i)]["Turno"].upper():
+                                existe = True
+                                break
+                            else:
+                                existe = False
+                            
+                        if existe:
+                            for i in turma:
+                                if turno.upper() == turma[str(i)]["Turno"].upper():
+                                    codigo = str(i)
+                                    rturma(i, codigo)
+                        else:
+                            print("O turno inserido não existe no sistema!")
+                            time.sleep(1.5)
+                            os.system("cls")
 
                         pergunta = input("\nDeseja pesquisar outra turma? Sim ou Não? ")
                         if pergunta[0].upper() == "N":
                             os.system("cls")
                             parametro = menu_pesquisar()
                             os.system("cls")
-                    else:
-                        print("O código inserido não existe no sistema!")
-                        time.sleep(1.5)
+                            
+
+                    elif opcao == "4":
+                        ano = input("Digite o ano da sua turma: ")
                         os.system("cls")
 
-                elif opcao == "2":
-                    nome = input("\nDigite o nome da turma:")
-                    os.system("cls")
-
-                    for i in turma:
-                        if nome.upper() == turma[str(i)]["Nome"].upper():
-                            existe = True
-                            break
-                        else:
-                            existe = False
-
-                    if existe:
-                        for i in turma:
-                            if nome.upper() == turma[str(i)]["Nome"].upper():
-                                codigo = str(i)
-                                rturma(i, codigo)
-                    else:
-                        print("O nome inserido não existe no sistema!")
-                        time.sleep(1.5)
-                        os.system("cls")    
-
-                    pergunta = input("\nDeseja pesquisar outra turma? Sim ou Não? ")
-                    if pergunta[0].upper() == "N":
-                        os.system("cls")
-                        parametro = menu_pesquisar()
-                        os.system("cls")       
-
-                elif opcao == "3":
-                    turno = input("Digite o turno da sua turma: ")        
-                    os.system("cls")
-
-                    for i in turma:
-                        if turno.upper() == turma[str(i)]["Turno"].upper():
-                            existe = True
-                            break
-                        else:
-                            existe = False
-                        
-                    if existe:
-                        for i in turma:
-                            if turno.upper() == turma[str(i)]["Turno"].upper():
-                                codigo = str(i)
-                                rturma(i, codigo)
-                    else:
-                        print("O turno inserido não existe no sistema!")
-                        time.sleep(1.5)
-                        os.system("cls")
-
-                    pergunta = input("\nDeseja pesquisar outra turma? Sim ou Não? ")
-                    if pergunta[0].upper() == "N":
-                        os.system("cls")
-                        parametro = menu_pesquisar()
-                        os.system("cls")
-                        
-
-                elif opcao == "4":
-                    ano = input("Digite o ano da sua turma: ")
-                    os.system("cls")
-
-                    for i in turma:
-                        if ano == turma[str(i)]["Ano"][0]:
-                            existe = True
-                        else:
-                            existe = False
-                    
-                    if existe:
                         for i in turma:
                             if ano == turma[str(i)]["Ano"][0]:
-                                codigo = str(i)
-                                rturma(i, codigo)
-                    else:
-                        print("O ano inserido não existe no sistema!")
-                        time.sleep(1.5)
-                        os.system("cls")
+                                existe = True
+                            else:
+                                existe = False
+                        
+                        if existe:
+                            for i in turma:
+                                if ano == turma[str(i)]["Ano"][0]:
+                                    codigo = str(i)
+                                    rturma(i, codigo)
+                        else:
+                            print("O ano inserido não existe no sistema!")
+                            time.sleep(1.5)
+                            os.system("cls")
 
-                    pergunta = input("\nDeseja pesquisar outra turma? Sim ou Não? ")
-                    if pergunta[0].upper() == "N":
+                        pergunta = input("\nDeseja pesquisar outra turma? Sim ou Não? ")
+                        if pergunta[0].upper() == "N":
+                            os.system("cls")
+                            parametro = menu_pesquisar()
+                            os.system("cls")    
+
+                    elif opcao == "5":
                         os.system("cls")
                         parametro = menu_pesquisar()
-                        os.system("cls")    
+                        os.system("cls")
 
-                elif opcao == "5":
-                    os.system("cls")
-                    parametro = menu_pesquisar()
-                    os.system("cls")
+                    else:
+                        print("Opção inválida")
+                        time.sleep(1)
+                        os.system("cls")
+                        parametro = menu_pesquisar()
+                        os.system("cls")
 
                 else:
-                    print("Opção inválida")
-                    time.sleep(1)
+                    print("Nenhum valor cadastrado em turmas, por favor cadastrar!")
+                    time.sleep(2)
                     os.system("cls")
-                    parametro = menu_pesquisar()
-                    os.system("cls")
-                    
+                    parametro = menu_editar()
+                    os.system("cls")    
             else:
                 os.system("cls")
                 print("Ainda não foi cadastrado nenhuma turma")
@@ -1475,68 +1493,74 @@ def pesquisar(parametro):
         elif parametro == "2":
             if os.path.exists("alunos.json"):
                 os.system("cls")
-                opcao = input("Como você quer pesquisar o(a) aluno(a)? matricula[1], nome[2] ou sair[3]? ")
-                os.system("cls")
-
-                if opcao == "1":
-                    matricula = input("Digite a matricula do aluno(a): ")
+                if len(alunos) > 0:
+                    opcao = input("Como você quer pesquisar o(a) aluno(a)? matricula[1], nome[2] ou sair[3]? ")
                     os.system("cls")
 
-                    if matricula in alunos:
-                        for i in alunos:
-                            raluno(i, matricula)
-                            break
+                    if opcao == "1":
+                        matricula = input("Digite a matricula do aluno(a): ")
+                        os.system("cls")
 
-                        pergunta = input("\nDeseja pesquisar outro aluno: Sim ou Não? ")
+                        if matricula in alunos:
+                            for i in alunos:
+                                raluno(i, matricula)
+                                break
+
+                            pergunta = input("\nDeseja pesquisar outro aluno: Sim ou Não? ")
+                            if pergunta[0].upper() == "N":
+                                os.system("cls")
+                                parametro = menu_pesquisar()
+                                os.system("cls")
+
+                        else:
+                            print("A matricula inserida não existe no sistema!")
+                            time.sleep(1.5)
+                            os.system("cls")
+                        
+                    elif opcao == "2":
+                        nome = input("\nDigite o nome do aluno(a): ")
+                        os.system("cls")
+
+                        for i in alunos:
+                            if nome.upper() == alunos[str(i)]["Nome"].upper():
+                                existe = True
+                                break
+                            else:
+                                existe = False
+
+                        if existe:
+                            for i in alunos:
+                                if nome.upper() == alunos[str(i)]["Nome"].upper():
+                                    codigo = str(i)
+                                    raluno(i, codigo)
+                        else:
+                            print("O nome inserido não existe no sistema!")
+                            time.sleep(1.5)
+                            os.system("cls")    
+
+                        pergunta = input("\nDeseja pesquisar outro nome? Sim ou Não? ")
                         if pergunta[0].upper() == "N":
                             os.system("cls")
                             parametro = menu_pesquisar()
                             os.system("cls")
 
-                    else:
-                        print("A matricula inserida não existe no sistema!")
-                        time.sleep(1.5)
-                        os.system("cls")
-                    
-                elif opcao == "2":
-                    nome = input("\nDigite o nome do aluno(a): ")
-                    os.system("cls")
-
-                    for i in alunos:
-                        if nome.upper() == alunos[str(i)]["Nome"].upper():
-                            existe = True
-                            break
-                        else:
-                            existe = False
-
-                    if existe:
-                        for i in alunos:
-                            if nome.upper() == alunos[str(i)]["Nome"].upper():
-                                codigo = str(i)
-                                raluno(i, codigo)
-                    else:
-                        print("O nome inserido não existe no sistema!")
-                        time.sleep(1.5)
-                        os.system("cls")    
-
-                    pergunta = input("\nDeseja pesquisar outro nome? Sim ou Não? ")
-                    if pergunta[0].upper() == "N":
+                    elif opcao == "3":
                         os.system("cls")
                         parametro = menu_pesquisar()
                         os.system("cls")
 
-
-                elif opcao == "3":
-                    os.system("cls")
-                    parametro = menu_pesquisar()
-                    os.system("cls")
-
+                    else:
+                        print("Opção inválida")
+                        time.sleep(1)
+                        os.system("cls")
+                        parametro = menu_pesquisar()
+                        os.system("cls")
                 else:
-                    print("Opção inválida")
-                    time.sleep(1)
+                    print("Nenhum valor cadastrado em alunos, por favor cadastrar!")
+                    time.sleep(2)
                     os.system("cls")
-                    parametro = menu_pesquisar()
-                    os.system("cls")
+                    parametro = menu_editar()
+                    os.system("cls")    
 
             else:
                 os.system("cls")
@@ -1546,60 +1570,67 @@ def pesquisar(parametro):
         elif parametro == "3":
             if os.path.exists("boletim.json"):
                 os.system("cls")
-                opcao = input("Como você quer pesquisar o boletim? código do aluno[1], nome do aluno[2] ou sair[3]? ")
-                os.system("cls")
-
-                if opcao == "1":
-                    codigo = input("\nDigite o código do boletim: ")
+                if len(boletim) > 0:
+                    opcao = input("Como você quer pesquisar o boletim? código do aluno[1], nome do aluno[2] ou sair[3]? ")
                     os.system("cls")
 
-                    if codigo in boletim:
+                    if opcao == "1":
+                        codigo = input("\nDigite o código do boletim: ")
+                        os.system("cls")
+
+                        if codigo in boletim:
+                            for i in boletim:
+                                rboletim(i, codigo)
+                                break
+
+                            pergunta = input("\nDeseja pesquisar outro boletim? Sim ou Não? ")
+                            if pergunta[0].upper() == "N":
+                                os.system("cls")
+                                parametro = menu_pesquisar()
+                                os.system("cls")
+                        else:
+                            print("O código inserido não existe no sistema!")
+                            time.sleep(1.5)
+                            os.system("cls")
+
+                    elif opcao == "2":
+                        nome_aluno = input("\nDigite o nome do aluno(a): ")
+                        os.system("cls")
+
                         for i in boletim:
-                            rboletim(i, codigo)
-                            break
+                            if nome_aluno.upper() == boletim[str(i)]["Nome"].upper():
+                                existe = True
+                                break
+                            else:
+                                existe = False
+
+                        if existe:
+                            for i in alunos:
+                                if nome_aluno.upper() == boletim[str(i)]["Nome"].upper():
+                                    codigo = str(i)
+                                    rboletim(i, codigo)
+                        else:
+                            print("O nome inserido não existe no sistema!")
+                            time.sleep(1.5)
+                            os.system("cls")    
 
                         pergunta = input("\nDeseja pesquisar outro boletim? Sim ou Não? ")
                         if pergunta[0].upper() == "N":
                             os.system("cls")
                             parametro = menu_pesquisar()
                             os.system("cls")
-                    else:
-                        print("O código inserido não existe no sistema!")
-                        time.sleep(1.5)
-                        os.system("cls")
 
-                elif opcao == "2":
-                    nome_aluno = input("\nDigite o nome do aluno(a): ")
-                    os.system("cls")
-
-                    for i in boletim:
-                        if nome_aluno.upper() == boletim[str(i)]["Nome"].upper():
-                            existe = True
-                            break
-                        else:
-                            existe = False
-
-                    if existe:
-                        for i in alunos:
-                            if nome_aluno.upper() == boletim[str(i)]["Nome"].upper():
-                                codigo = str(i)
-                                rboletim(i, codigo)
-                    else:
-                        print("O nome inserido não existe no sistema!")
-                        time.sleep(1.5)
-                        os.system("cls")    
-
-                    pergunta = input("\nDeseja pesquisar outro boletim? Sim ou Não? ")
-                    if pergunta[0].upper() == "N":
+                    elif opcao == "3":
                         os.system("cls")
                         parametro = menu_pesquisar()
                         os.system("cls")
+                else:
+                    print("Nenhum valor cadastrado em boletins, por favor cadastrar!")
+                    time.sleep(2)
+                    os.system("cls")
+                    parametro = menu_editar()
+                    os.system("cls")    
 
-                elif opcao == "3":
-                    os.system("cls")
-                    parametro = menu_pesquisar()
-                    os.system("cls")
-                
         elif parametro == "4":
             os.system("cls")
             break
@@ -1804,7 +1835,6 @@ Total de alunos: {qnt_aluno}
                     os.system("cls")
                     break  
 
-
             else:
                 print("Não existe nenhum aluno!")
                 time.sleep(1.5)
@@ -1844,7 +1874,6 @@ Alunos Reprovados: {qnt_reprovado}
                     os.system("cls")
                     break  
 
-
             else:
                 print("Não existe nenhum aluno!")
                 time.sleep(1.5)
@@ -1856,8 +1885,7 @@ Alunos Reprovados: {qnt_reprovado}
         elif parametro == "4":
             if len(turma) > 0:
                 for codigo in turma:
-                    medias = {}
-                    nome_turma = turma[codigo]["Nome"]
+                    nome_turma, medias = turma[codigo]["Nome"], {}
 
                     if boletim.get(str(codigo)) or aluno.get(str(codigo)):
                         for media_aluno in aluno:
