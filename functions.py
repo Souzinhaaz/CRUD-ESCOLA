@@ -234,7 +234,7 @@ Turma: {aluno[parametro]["Turma"]}
 
 Email: {aluno[parametro]["Email"]}
 
-Telefone: {aluno[parametro["Telefone"]]}
+Telefone: {aluno[parametro]["Telefone"]}
 
 {'-' * 40}
 """)
@@ -1483,7 +1483,7 @@ def pesquisar(parametro):
                     os.system("cls")
 
                     if matricula in alunos:
-                        for matricula in alunos:
+                        for i in alunos:
                             raluno(i, matricula)
                             break
 
@@ -1676,6 +1676,7 @@ def listar(parametro):
 
         # Listar Alunos Aprovados e Boletins por Turma
         elif parametro == "4":
+            existe = False
 
             if len(aluno) > 0:
                 for i in aluno:
@@ -1683,8 +1684,6 @@ def listar(parametro):
                         if boletim[i]["Situação"] == "Aprovado":
                             lisAlunosBoletim(i)
                             existe = True
-                        else:
-                            existe = False
                     
                 if not existe:
                     os.system("cls")
@@ -1712,6 +1711,7 @@ def listar(parametro):
 
         # Listar Alunos Reprovados e Boletins por Turma
         elif parametro == "5":
+            existe = False
 
             if len(aluno) > 0:
                 for i in aluno:
@@ -1719,8 +1719,6 @@ def listar(parametro):
                         if boletim[i]["Situação"] == "Reprovado":
                             lisAlunosBoletim(i)
                             existe = True
-                        else:
-                            existe = False
                 
                 if not existe:
                     os.system("cls")
@@ -1818,9 +1816,7 @@ Total de alunos: {qnt_aluno}
         elif parametro == "3":
             if len(turma) > 0:
                 for codigo in turma:
-                    qnt_aprovado = 0
-                    qnt_reprovado = 0
-                    qnt_aluno = 0
+                    qnt_aprovado, qnt_reprovado, qnt_aluno = 0, 0, 0
                     nome_turma = turma[codigo]["Nome"]
                     for aluno_aprovado in aluno:
                         if nome_turma == aluno[aluno_aprovado]["Turma"] and boletim[aluno_aprovado]["Situação"] == "Aprovado":
@@ -1856,22 +1852,29 @@ Alunos Reprovados: {qnt_reprovado}
                 parametro = menu_relatorio()
                 os.system("cls")
 
+        # maiores e menores médias, por turma
         elif parametro == "4":
             if len(turma) > 0:
                 for codigo in turma:
                     medias = {}
                     nome_turma = turma[codigo]["Nome"]
-                    for media_aluno in aluno:
-                        if nome_turma == aluno[media_aluno]["Turma"]:
-                            medias[aluno[media_aluno]["Nome"]] = boletim[media_aluno]["Média"] 
+
+                    if boletim.get(str(codigo)) or aluno.get(str(codigo)):
+                        for media_aluno in aluno:
+                            if nome_turma == aluno[media_aluno]["Turma"]:
+                                medias[aluno[media_aluno]["Nome"]] = boletim[media_aluno]["Média"] 
                             
-    
-                    if boletim.get(str(codigo)):
-                        print(f"\n{'-' * 15} {nome_turma} {'-' * 15}\nMedias dos alunos em ordem crescente: \n")
-                        for i in sorted(medias, key = medias.get):
-                            print(f"{f'Aluno: {i}'.ljust(20)}        {f'Média: {medias[i]}'}")
+                        if medias:
+                            print(f"\n{'-' * 15} {nome_turma} {'-' * 15}\nMedias dos alunos em ordem crescente: \n")
+                            for i in sorted(medias, key = medias.get):
+                                print(f"{f'Aluno: {i}'.ljust(20)}        {f'Média: {medias[i]}'}")
+                        else:
+                            print(f"\n{'-' * 15} {nome_turma} {'-' * 15}\n\nNão há alunos com médias.\n")
                         print(f"{'-' * 43}")
-                                 
+                        
+                    else:
+                        print(f"\n{'-' * 15} {nome_turma} {'-' * 15}\n")
+                        print("Não há boletins ou alunos para esta turma")       
 
                 pergunta = input("\nDeseja continuar listando? Sim ou Não? ")
                 if pergunta[0].upper() == "S":
@@ -1882,7 +1885,6 @@ Alunos Reprovados: {qnt_reprovado}
                     os.system("cls")
                     break  
 
-
             else:
                 print("Não existe nenhum aluno!")
                 time.sleep(1.5)
@@ -1890,6 +1892,8 @@ Alunos Reprovados: {qnt_reprovado}
                 parametro = menu_relatorio()
                 os.system("cls")
 
+        elif parametro == "5":
+            
 
         elif parametro == "6":
             os.system("cls")
