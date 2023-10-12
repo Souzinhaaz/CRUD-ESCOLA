@@ -1893,7 +1893,44 @@ Alunos Reprovados: {qnt_reprovado}
                 os.system("cls")
 
         elif parametro == "5":
-            
+            if len(turma) > 0:
+                for codigo in turma:
+                    limite = {}
+                    nome_turma = turma[codigo]["Nome"]
+
+                    if boletim.get(str(codigo)) or aluno.get(str(codigo)):
+                        for faltas in aluno:
+                            if nome_turma == aluno[faltas]["Turma"]:
+                                limite[aluno[faltas]["Nome"]] = boletim[faltas]["Quantidade de Faltas"]
+
+                        if limite:
+                            print(f"\n{'-' * 15} {nome_turma} {'-' * 15}\nFalta dos alunos em ordem crescente: \n")
+                            for i in sorted(limite, key = limite.get):
+                                print(f"{f'Aluno: {i}'.ljust(20)}        {f'Faltas: {limite[i]}'}")
+                        else:
+                            print(f"\n{'-' * 15} {nome_turma} {'-' * 15}\n\nNão há alunos com faltas.\n")
+                        print(f"{'-' * 43}")
+
+                    else:
+                        print(f"\n{'-' * 15} {nome_turma} {'-' * 15}\n")
+                        print("Não há boletins ou alunos para esta turma")  
+
+                pergunta = input("\nDeseja continuar listando? Sim ou Não? ")
+                if pergunta[0].upper() == "S":
+                    os.system("cls")
+                    parametro = menu_relatorio()
+                    os.system("cls")
+                else:
+                    os.system("cls")
+                    break
+
+            else:
+                print("Não existe nenhum aluno!")
+                time.sleep(1.5)
+                os.system("cls")
+                parametro = menu_relatorio()
+                os.system("cls")
+
 
         elif parametro == "6":
             os.system("cls")
