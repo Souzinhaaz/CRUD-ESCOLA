@@ -18,6 +18,34 @@ def menu_principal():
 """)
     return pergunta
 
+def menu_creditos():
+    print(f"""FIM DO PROGRAMA!!!
+    
+AUTOR: GUSTAVO DE SOUZA OLIVEIRA
+DURAÇÃO DO PROJETO: 2 MÊSES 
+
+OFERECIMENTO: 
+
+IF BAIANO
+VALDEMIR TAE KWON
+FATINHA
+FÁBIO NUNES
+EURES RIBEIRO
+DELAVÊGA
+PETELECO LANCHES
+EDSON DO ESPETINHO
+CHICO DO BREGA
+TONIN BOGUÉ
+CADINHA
+ABRAÃO FAZ O A
+ANDRE PIKA DE ASSOVIO
+LEO DO ACARAJE
+BENVINDO DA BARBEARIA
+GILSON(VAI ACOMPANHAR BENVINDO)
+D2 BOMBEIRO
+
+""")
+
 # Cria o modelo do menu cadastro
 def menu_cadastro():
     parametro = input(f"""{'-' * 15} Cadastro {'-' * 15}

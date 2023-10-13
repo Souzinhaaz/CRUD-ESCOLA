@@ -41,6 +41,6 @@ while True:
 
     elif opcao == "0":
         os.system("cls")
-        print("FIM DO PROGRAMA!!\n")
+        menu_creditos()
         break
 
