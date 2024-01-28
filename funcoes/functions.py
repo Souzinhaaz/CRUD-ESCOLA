@@ -235,53 +235,53 @@ Vazio
     
 # Função para verificar se existe os arquivos necessários e cria-los
 def verifica():
-    if not os.path.exists("turmas.json"):
-        with open("turmas.json", "w", encoding="utf-8") as arq:
+    if not os.path.exists("arquivos/turmas.json"):
+        with open("arquivos/turmas.json", "w", encoding="utf-8") as arq:
             json.dump({}, arq)
 
-    if not os.path.exists("alunos.json"):
-        with open("alunos.json", "w", encoding="utf-8") as arq:
+    if not os.path.exists("arquivos/alunos.json"):
+        with open("arquivos/alunos.json", "w", encoding="utf-8") as arq:
             json.dump({}, arq)
 
-    if not os.path.exists("boletim.json"):
-        with open("boletim.json", "w", encoding="utf-8") as arq:
+    if not os.path.exists("arquivos/boletim.json"):
+        with open("arquivos/boletim.json", "w", encoding="utf-8") as arq:
             json.dump({}, arq)
 
 # Função para abrir os arquivos
 def abrirArquivos():
-    with open("turmas.json", "r+", encoding="utf-8") as turmas_json, open("alunos.json", "r+", encoding="utf-8") as alunos_json, open("boletim.json", "r+", encoding="utf-8") as boletins_json:
+    with open("arquivos/turmas.json", "r+", encoding="utf-8") as turmas_json, open("arquivos/alunos.json", "r+", encoding="utf-8") as alunos_json, open("arquivos/boletim.json", "r+", encoding="utf-8") as boletins_json:
         turma = json.load(turmas_json)
         aluno = json.load(alunos_json)
         boletim = json.load(boletins_json)
     return turma, aluno, boletim
 
 def abrirTurmas():
-    with open("turmas.json", "r", encoding="utf-8") as turmas_json:
+    with open("arquivos/turmas.json", "r", encoding="utf-8") as turmas_json:
         turma = json.load(turmas_json)
     return turma
 
 def abrirAlunos():
-    with open("alunos.json", "r", encoding="utf-8") as alunos_json:
+    with open("arquivos/alunos.json", "r", encoding="utf-8") as alunos_json:
         aluno = json.load(alunos_json)
     return aluno
 
 def abrirBoletins():
-    with open("boletim.json", "r", encoding="utf-8") as boletins_json:
+    with open("arquivos/boletim.json", "r", encoding="utf-8") as boletins_json:
         boletim = json.load(boletins_json)
     return boletim
         
 def guardarTurma(guardar):
-    with open("turmas.json", "w", encoding="utf-8") as turmas_json:
+    with open("arquivos/turmas.json", "w", encoding="utf-8") as turmas_json:
         turmas_json.seek(0, 0)
         json.dump(guardar, turmas_json, indent=4)
 
 def guardarAluno(guardar):
-    with open("alunos.json", "w", encoding="utf-8") as alunos_json:
+    with open("arquivos/alunos.json", "w", encoding="utf-8") as alunos_json:
         alunos_json.seek(0, 0)
         json.dump(guardar, alunos_json, indent=4)
 
 def guardarBoletim(guardar):
-    with open("boletim.json", "w", encoding="utf-8") as boletins_json:
+    with open("arquivos/boletim.json", "w", encoding="utf-8") as boletins_json:
         boletins_json.seek(0, 0)
         json.dump(guardar, boletins_json, indent=4)                  
 

@@ -1,11 +1,11 @@
-from funções.functions import *
+from funcoes.functions import *
 import os
-from funções.cadastro import *
-from funções.editar import *
-from funções.remover import *
-from funções.pesquisar import *
-from funções.listar import *
-from funções.relatorio import *
+from funcoes.cadastro import *
+from funcoes.editar import *
+from funcoes.remover import *
+from funcoes.pesquisar import *
+from funcoes.listar import *
+from funcoes.relatorio import *
 
 
 os.system("cls")

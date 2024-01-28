@@ -1,6 +1,6 @@
 import sys
 sys.path.append('c:\\Users\\gusta\\OneDrive\\Área de Trabalho\\Programação\\Projetos Pessoais\\API-ESCOLA\\funções')
-from functions import *
+from funcoes.functions import *
 
 # Cria a função para cadastrar
 def cadastrar(parametro):

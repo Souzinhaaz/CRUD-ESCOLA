@@ -1,6 +1,6 @@
 import sys
 sys.path.append('c:\\Users\\gusta\\OneDrive\\Área de Trabalho\\Programação\\Projetos Pessoais\\API-ESCOLA\\funções')
-from functions import *
+from funcoes.functions import *
 
 def pesquisar(parametro):
     verifica()
@@ -8,7 +8,7 @@ def pesquisar(parametro):
         turma, alunos, boletim = abrirArquivos()
         # Loop para não sair da função
         if parametro == "1":
-            if os.path.exists("turmas.json"):
+            if os.path.exists("arquivos/turmas.json"):
                 os.system("cls")
                 if len(turma) > 0:
                     opcao = input("Como você quer pesquisar a turma? pelo código, nome, turno, ano ou sair? ")
@@ -138,7 +138,7 @@ def pesquisar(parametro):
 
         # Pesquisar aluno
         elif parametro == "2":
-            if os.path.exists("alunos.json"):
+            if os.path.exists("arquivos/alunos.json"):
                 os.system("cls")
                 if len(alunos) > 0:
                     opcao = input("Como você quer pesquisar o(a) aluno(a)? matricula, nome ou sair? ")
@@ -215,7 +215,7 @@ def pesquisar(parametro):
 
         # Pesquisar Boletim
         elif parametro == "3":
-            if os.path.exists("boletim.json"):
+            if os.path.exists("arquivos/boletim.json"):
                 os.system("cls")
                 if len(boletim) > 0:
                     opcao = input("Como você quer pesquisar o boletim? pelo CÓDIGO do aluno, NOME do aluno ou sair[3]? ")
